@@ -1,0 +1,419 @@
+/* ==========================================================================
+   PÁGINA DE CONTATO - ESTILO PREMIUM (HERO IMAGE & SPLIT CARD)
+   ========================================================================== */
+
+/* Seção Principal - Imagem de fundo cobrindo toda a tela com Parallax */
+.contato-hero {
+    position: relative;
+    background-image: url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=2000&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; 
+    padding: 120px 0 100px 0; /* Correção: Padding ajustado para não ficar muito alto */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Película escura sobre a foto de fundo para dar contraste e leitura */
+.contato-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
+}
+
+/* Container de alinhamento */
+.contato-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* --- O CARTÃO CENTRAL DIVIDIDO (SPLIT CARD) --- */
+.contato-card {
+    background: #ffffff;
+    border-radius: 16px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.45);
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ==========================================================================
+   LADO ESQUERDO: INFORMAÇÕES (METADE VERDE COM TEXTOS CLAROS FORÇADOS)
+   ========================================================================== */
+.card-info {
+    flex: 1;
+    background-color: var(--verde-escuro, #1e3322); /* Fundo verde escuro da marca */
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Forçando cores claras para ignorar qualquer interferência de outros CSS */
+.card-info .subtitulo-card {
+    color: #a7d08c !important; /* Verde folha bem claro e elegante */
+    font-weight: 600;
+    letter-spacing: 2px;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 25px;
+}
+
+.card-info .titulo-card {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 38px;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    color: #ffffff !important; /* Branco absoluto */
+}
+
+.card-info .desc-card {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 50px;
+    color: rgba(255, 255, 255, 0.85) !important; /* Branco ligeiramente suave */
+}
+
+/* Lista de dados (WhatsApp e Endereço) */
+.dados-card {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.dado-item-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.card-info .dado-item-card i {
+    font-size: 28px;
+    color: #a7d08c !important; /* Ícone no mesmo tom claro do subtítulo */
+}
+
+.card-info .dado-item-card strong {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.5) !important; /* Label cinza claro sutil */
+    margin-bottom: 4px;
+}
+
+.card-info .dado-item-card p {
+    font-size: 16px;
+    font-weight: 400;
+    color: #ffffff !important; /* Texto principal branco */
+    margin: 0;
+}
+
+
+/* ==========================================================================
+   LADO DIREITO: FORMULÁRIO (CAIXA CLARA)
+   ========================================================================== */
+.card-form {
+    flex: 1.2;
+    padding: 60px 50px;
+    background-color: #ffffff; /* Caixa limpa e clara */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-clean {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-group-clean {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group-clean label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #555555;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Caixas de input modernas em tom cinza claro com bordas suaves */
+.form-clean input,
+.form-clean textarea {
+    width: 100%;
+    background: #f7f9f7; 
+    border: 1px solid #e2e8e2;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--verde-escuro, #1e3322);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-clean textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+/* Efeito ao clicar nas caixas de input */
+.form-clean input:focus,
+.form-clean textarea:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: var(--verde-folha, #8bae7c);
+    box-shadow: 0 0 0 4px rgba(139, 174, 124, 0.15);
+}
+
+/* Cor do texto de exemplo (Placeholder) */
+.form-clean input::placeholder,
+.form-clean textarea::placeholder {
+    color: #b0b8b0;
+}
+
+/* Botão de Envio estilo Editorial combinando com a marca */
+.btn-clean-zap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background-color: var(--verde-escuro, #1e3322); 
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-clean-zap i {
+    font-size: 18px;
+}
+
+.btn-clean-zap:hover {
+    background-color: var(--verde-folha, #8bae7c);
+    color: var(--verde-escuro, #1e3322);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(61, 90, 53, 0.15);
+}
+
+
+/* ==========================================================================
+   RESPONSIVO COMPLETO (CELULAR E TABLET)
+   ========================================================================== */
+@media (max-width: 992px) {
+    .contato-card {
+        flex-direction: column; /* Transforma o cartão em uma coluna única em tablets */
+        max-width: 600px;
+    }
+    
+    .card-info, .card-form {
+        flex: none;
+        width: 100%;
+        padding: 45px 35px;
+    }
+}
+
+@media (max-width: 768px) {
+    .contato-hero {
+        padding: 100px 0 60px 0; /* Ajusta o espaçamento superior no telemóvel */
+    }
+
+    .card-info .titulo-card {
+        font-size: 30px; /* Reduz tamanho do título em ecrãs pequenos */
+    }
+
+    .card-info, .card-form {
+        padding: 40px 25px; /* Reduz margens internas no mobile */
+    }
+    
+    .btn-clean-zap {
+        width: 100%; /* Botão ocupa toda a largura no telemóvel */
+    }
+}
+
+
+
+/* ==========================================================================
+   SEÇÃO DE DÚVIDAS FREQUENTES (FAQ) - OTIMIZADO PARA LISTAS LONGAS
+   ========================================================================== */
+.faq-section {
+    background-color: var(--bg-principal, #fafaf8); /* Fundo claro sutil */
+    padding: 120px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.faq-container {
+    max-width: 850px; /* Largura ideal para leitura de listas extensas */
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+/* Cabeçalho do FAQ */
+.faq-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.subtitulo-faq {
+    color: var(--verde-folha, #8bae7c);
+    font-weight: 600;
+    letter-spacing: 3px;
+    font-size: 11px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.titulo-faq {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px;
+    color: var(--verde-escuro, #1e3322);
+    font-weight: 300;
+    margin-bottom: 15px;
+}
+
+.desc-faq {
+    font-size: 15px;
+    color: #777777;
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* --- A ESTRUTURA DA LISTA --- */
+.faq-lista {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #e8e8e8; /* Primeira linha superior da lista */
+}
+
+.faq-item {
+    border-bottom: 1px solid #e8e8e8; /* Linha sutil separando cada dúvida */
+    transition: background-color 0.3s ease;
+}
+
+/* Botão interativo da Pergunta */
+.faq-pergunta {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 24px 10px; /* Respiro interno confortável */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--verde-escuro, #1e3322);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Pequeno destaque ao passar o mouse por cima */
+.faq-pergunta:hover {
+    color: var(--verde-folha, #8bae7c);
+    padding-left: 15px; /* Efeito discreto de movimento */
+}
+
+/* O Ícone de Mais (+) */
+.faq-icone {
+    font-size: 18px;
+    color: var(--verde-folha, #8bae7c);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-left: 20px;
+}
+
+/* --- ABINHA DESLIZANTE DA RESPOSTA --- */
+.faq-resposta {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Conteúdo interno da resposta */
+.faq-resposta-conteudo {
+    padding: 5px 10px 30px 10px; /* Dá espaço antes de fechar a linha */
+    font-size: 15px;
+    line-height: 1.7;
+    color: #666666;
+}
+
+.faq-resposta-conteudo p {
+    margin: 0 0 12px 0;
+}
+
+.faq-resposta-conteudo p:last-child {
+    margin-bottom: 0;
+}
+
+/* --- ESTADOS ATIVOS (QUANDO A PERGUNTA É ABERTA) --- */
+.faq-item.ativo {
+    background-color: rgba(139, 174, 124, 0.02); /* Fundo sutilíssimo na pergunta aberta */
+}
+
+.faq-item.ativo .faq-icone {
+    transform: rotate(45deg); /* O sinal de "+" vira um "X" perfeitamente */
+    color: var(--verde-escuro, #1e3322);
+}
+
+.faq-item.ativo .faq-pergunta {
+    color: var(--verde-folha, #8bae7c);
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   RESPONSIVO DO FAQ (CELULAR)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .faq-section {
+        padding: 80px 0;
+    }
+
+    .titulo-faq {
+        font-size: 30px;
+    }
+
+    .desc-faq {
+        font-size: 14px;
+    }
+
+    .faq-pergunta {
+        font-size: 15px;
+        padding: 20px 5px;
+    }
+
+    .faq-resposta-conteudo {
+        font-size: 14px;
+        padding-bottom: 20px;
+    }
+}

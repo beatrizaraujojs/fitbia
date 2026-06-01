@@ -1,0 +1,1775 @@
+/* ==========================================
+   1. VARIÁVEIS E SETUP INICIAL
+   ========================================== */
+:root {
+  --bg-principal: #FAF9F6;  
+  --verde-escuro: #2D4030;  
+  --verde-oliva: #30352f;   
+  --verde-folha: #3C8A4B;   
+  --texto-principal: #1A241B; 
+  --texto-secundario: #666666; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-principal);
+    color: var(--texto-principal);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden; 
+}
+
+/* Container para limitar a largura do site no desktop */
+.container {
+    max-width: 1500px;
+    margin: 0 auto; 
+    width: 100%;
+    padding: 0 5%; 
+}
+
+/* =========================================
+   MODAL DE LOGIN (modal.css)
+   ========================================= */
+
+/* Fundo escuro transparente que cobre a tela toda */
+.modal-overlay {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(26, 36, 27, 0.6); /* Cor baseada no seu texto-principal com opacidade */
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px; /* Para não encostar nas bordas no celular */
+}
+
+/* A caixinha do modal */
+.modal-box {
+    background-color: var(--bg-principal);
+    width: 100%;
+    max-width: 400px;
+    border-radius: 16px;
+    padding: 32px;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: abrirModal 0.3s ease-out;
+}
+
+/* Botão de fechar (X) */
+.fechar-modal {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.fechar-modal:hover {
+    color: var(--verde-escuro);
+}
+
+/* Cabeçalho do modal */
+.modal-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h2 {
+    color: var(--verde-escuro);
+    margin-bottom: 8px;
+}
+
+.modal-header p {
+    color: var(--texto-secundario);
+    font-size: 14px;
+}
+
+/* Formulário */
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: var(--texto-principal);
+    font-weight: 500;
+}
+
+.input-group input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--verde-folha);
+}
+
+/* Botão de Submit */
+.btn-entrar {
+    background-color: var(--verde-escuro);
+    color: var(--bg-principal);
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 8px;
+}
+
+.btn-entrar:hover {
+    background-color: var(--verde-oliva);
+}
+
+/* Rodapé do Modal */
+.modal-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--texto-secundario);
+}
+
+.modal-footer a {
+    color: var(--verde-folha);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.modal-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Animação suave ao abrir */
+@keyframes abrirModal {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   SUBMENUS - DESKTOP (PC)
+   ========================================== */
+@media (min-width: 993px) {
+    .menu-item-com-submenu {
+        position: relative;
+        display: inline-block;
+        padding: 10px 0; /* Para o mouse não escapar ao descer pro submenu */
+    }
+
+    .submenu {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background-color: #ffffff;
+        min-width: 200px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 10px 0;
+        
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* O submenu aparece ao passar o mouse */
+    .menu-item-com-submenu:hover .submenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .submenu a {
+        padding: 10px 20px;
+        font-size: 14px;
+        color: var(--verde-escuro) !important;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+        transition: all 0.2s ease;
+        display: block; /* Para ocupar a linha toda */
+    }
+
+    .submenu a:last-child {
+        border-bottom: none;
+    }
+
+    .submenu a:hover {
+        background-color: #f7f9f7;
+        color: var(--verde-folha) !important;
+        padding-left: 25px;
+    }
+}
+
+/* ==========================================
+   SUBMENUS - MOBILE (CELULAR)
+   ========================================== */
+/* ==========================================
+   SUBMENUS - MOBILE (CELULAR) - ALINHAMENTO CORRIGIDO
+   ========================================== */
+@media (max-width: 992px) {
+    /* Garante que o contêiner dos itens com submenu se comporte direito */
+    .menu-item-com-submenu {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Força o alinhamento no centro */
+        margin: 5px 0;
+    }
+
+    /* O link principal que tem a setinha (Nossa Casinha / Contato) */
+    .menu-item-com-submenu > a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px; /* Espacinho perfeito entre o texto e a seta */
+        width: 100%;
+    }
+
+    /* O submenu (os links que caem pra baixo) */
+    .submenu {
+        display: none; /* Começa escondido */
+        flex-direction: column;
+        width: 100%;
+        background-color: transparent; /* Fundo transparente fica mais chique no centralizado */
+        margin: 5px 0 10px 0;
+        border-left: none; /* Tirei a linha lateral que empurrava pro lado */
+    }
+
+    .submenu a {
+        padding: 10px 15px;
+        font-size: 14px;
+        color: #777; /* Texto um pouquinho mais claro para diferenciar dos botões principais */
+        display: block;
+        text-align: center; /* Centraliza os sub-itens também */
+        border-bottom: none;
+    }
+
+    /* Efeito de clique no submenu do celular */
+    .submenu a:active {
+        color: var(--verde-folha) !important;
+    }
+
+    /* Quando o JavaScript adiciona a classe, ele aparece perfeitamente centralizado */
+    .submenu.aberto {
+        display: flex;
+    }
+
+    /* Adicione estas regras à classe que abre o seu menu 
+       (pode ser .ativo, .active, ou .aberto dependendo do seu JS original) */
+    .nav-menu.ativo, 
+    .nav-menu.active, 
+    .nav-menu.aberto,
+    .nav-menu.show {
+        max-height: 100vh !important; /* Permite que a caixa cresça até o tamanho total da tela */
+        overflow-y: auto !important; /* Se o menu ficar muito grande, permite rolar apenas o menu */
+        padding-bottom: 40px !important; /* Dá um respiro de fundo branco lá no final */
+        background-color: var(--bg-principal, #fafaf8) !important; /* Garante a cor de fundo */
+    }
+}
+
+/* ==========================================
+   2. CABEÇALHO (HEADER) FIXO E ÍCONES
+   ========================================== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: var(--bg-principal);
+    /* Removemos a sombra aqui para não dividir com a barra de baixo */
+    box-shadow: none; 
+}
+
+.header-container {
+    display: flex;
+    align-items: center;
+    height: 90px;
+}
+
+
+/* ==========================================
+   LOGO TYPOGRAPHY (Elegante e Fina)
+   ========================================== */
+.logo-link {
+    text-decoration: none;
+}
+
+.logo-wrapper {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px; 
+    font-weight: 300; /* Deixa a letra bem fina e elegante, igual a original */
+    color: var(--verde-escuro);
+    letter-spacing: 3px; /* Espaçamento maior entre as letras */
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.logo-wrapper:hover {
+    transform: scale(1.02); 
+}
+
+/* Estilo específico para a letra A */
+.letra-a {
+    position: relative;
+    display: inline-block;
+    /* Mantém a mesma cor para não quebrar a harmonia, mas destaca com a folha */
+}
+
+/* Posiciona a folha fina embutida no A */
+.folha-logo {
+    position: absolute;
+    font-size: 24px; /* Folha um pouco maior e imponente */
+    top: -10px; /* Sobe a folha */
+    right: -12px; /* Posiciona no topo direito do A */
+    color: var(--verde-folha); /* A folha recebe o verde mais vivo */
+    transform: rotate(15deg); /* Leve inclinação natural */
+    pointer-events: none;
+}
+
+
+/* Empurra o menu para a direita, deixando os ícones no final */
+.nav-menu {
+    margin-left: auto; 
+    margin-right: 40px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--texto-principal);
+    margin: 0 15px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--verde-folha);
+}
+
+/* Ícones de Usuário e Carrinho */
+.header-icones {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-icones a, .menu-toggle {
+    color: var(--verde-escuro);
+    font-size: 26px;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.header-icones a:hover, .menu-toggle:hover {
+    color: var(--verde-folha);
+    transform: scale(1.1);
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* ==========================================
+   3. SEÇÃO HERO (EQUILIBRADA NO DESKTOP)
+   ========================================== */
+.hero-container {
+    display: flex;
+    align-items: center; /* Centraliza verticalmente e deixa natural na horizontal */
+    justify-content: space-between;
+    min-height: calc(100vh - 90px);
+}
+
+.hero-texto {
+    max-width: 50%;
+}
+
+.tag {
+    color: var(--verde-folha);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 15px;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5rem; 
+    line-height: 1.1;
+    color: var(--verde-escuro);
+    margin-bottom: 20px;
+}
+
+p {
+    color: var(--texto-secundario);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 90%;
+}
+
+.btn-principal {
+    display: inline-block;
+    background-color: var(--verde-escuro);
+    color: #fff;
+    padding: 15px 40px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(45, 64, 48, 0.2); 
+    transition: background 0.3s, transform 0.3s;
+}
+
+.btn-principal:hover {
+    background-color: var(--verde-folha);
+    transform: translateY(-3px);
+}
+
+/* ==========================================
+   4. IMAGEM E MANCHA VERDE (DIREITA)
+   ========================================== */
+.hero-imagem {
+    position: relative;
+    width: 45%;
+    display: flex;
+    justify-content: flex-end; /* Empurra a imagem para a direita */
+    align-items: center;
+}
+
+.hero-imagem::before {
+    content: '';
+    position: absolute;
+    width: 110%;
+    height: 120%;
+    background-color: var(--verde-escuro);
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    z-index: -1; 
+    right: -15%; /* Crava a mancha verde na lateral direita, oposta ao texto */
+}
+
+.prato-destaque {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 50%;
+    box-shadow: -15px 15px 30px rgba(0,0,0,0.15); 
+}
+
+/* ==========================================
+   BARRA DE FILTROS (SUB-MENU CATEGORIAS)
+   ========================================== */
+.filtros-bar {
+    background-color: var(--bg-principal);
+    padding: 20px 0 25px 0; 
+    border-top: 1px solid rgba(0,0,0,0.05);
+    
+    /* Alteramos para relative para ela rolar junto com a página */
+    position: relative; 
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02); 
+}
+.filtros-container {
+    display: flex;
+    gap: 15px; /* Aumentei o espaço entre os botões */
+    
+    /* Permite scroll se não couber, mas esconde a barra padrão feia */
+    overflow-x: auto; 
+    overflow-y: hidden; /* Impede a barra de rolagem vertical de aparecer e cortar o botão */
+    
+    /* Espaço extra dentro do container para o 'pulinho' do hover não cortar */
+    padding: 5px 5%; 
+    
+    /* Alinha os itens para não ficarem grudados no fundo */
+    align-items: center; 
+    
+    /* Garante que o scroll no telemóvel flui suavemente */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; 
+}
+
+/* Oculta a scrollbar em vários navegadores para ficar limpo */
+.filtros-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+.filtros-container {
+    -ms-overflow-style: none;  /* IE e Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.filtro-btn {
+    background-color: #8A958A; 
+    border: none;
+    color: #FFFFFF; 
+    padding: 12px 24px; /* Botões um pouquinho mais largos e altos */
+    border-radius: 12px; 
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    white-space: nowrap; 
+    transition: all 0.3s ease;
+    
+    /* Previne que o botão amasse em telas pequenas */
+    flex-shrink: 0; 
+}
+
+/* Hover nos botões normais (inativos) */
+.filtro-btn:hover {
+    background-color: var(--verde-oliva);
+    transform: translateY(-3px); /* Ajustei o pulinho */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Sombra no hover para dar destaque */
+}
+
+/* ==========================================
+   ESTILO DO BOTÃO ATIVO E HOVER DELE
+   ========================================== */
+.filtro-btn.ativo {
+    background-color: var(--verde-escuro); 
+    color: #FFFFFF;
+    box-shadow: 0 4px 10px rgba(45, 64, 48, 0.3); 
+}
+
+.filtro-btn.ativo:hover {
+    background-color: var(--verde-folha); 
+    transform: translateY(-3px);
+}
+
+/* ==========================================
+   NOVO: DECORAÇÃO DE FUNDO (FOLHA) E AJUSTE DE IMAGEM
+   ========================================== */
+.hero {
+    position: relative; /* Necessário para segurar a folha absoluta */
+    overflow: hidden; /* Impede que a folha vaze pra fora da seção */
+    z-index: 1;
+}
+
+.folha-decoracao {
+    position: absolute;
+    top: 15%;
+    left: -5%; /* Deixa a folha nascendo de fora da tela */
+    width: 450px; 
+    opacity: 0.05; /* Deixa BEM fraquinha, igual ao seu print */
+    transform: rotate(15deg); /* Dá uma leve inclinada natural */
+    z-index: -1; 
+    pointer-events: none; 
+}
+
+/* Correção para a imagem principal nunca amassar */
+.prato-destaque {
+    width: 100%;
+    max-width: 400px; 
+    aspect-ratio: 1 / 1; /* Força ser um quadrado perfeito pra fazer o círculo */
+    object-fit: cover; /* Corta as sobras da imagem preservando a proporção */
+    border-radius: 50%;
+    box-shadow: -15px 15px 30px rgba(0,0,0,0.15); 
+    flex-shrink: 0; /* Avisa o layout que essa imagem NÃO pode ser espremida */
+}
+
+/* ==========================================
+   5. RESPONSIVIDADE (MOBILE E TABLET)
+   ========================================== */
+@media (max-width: 900px) {
+    
+    .header-container {
+        justify-content: space-between; 
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    /* Transforma o menu em uma gaveta no celular */
+    .nav-menu {
+        margin: 0;
+        position: absolute;
+        top: 90px; 
+        left: 0;
+        width: 100%;
+        background-color: var(--bg-principal);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+        max-height: 0; 
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-menu.ativo {
+        max-height: 300px; 
+        padding: 20px 0;
+    }
+
+    .nav-menu a {
+        margin: 15px 0;
+        font-size: 18px;
+    }
+
+    /* Hero no Celular: Força o texto para a esquerda */
+    .hero-container {
+        flex-direction: column;
+        align-items: flex-start; /* Alinha o bloco principal à esquerda */
+        gap: 50px;
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+
+    .hero-texto {
+        max-width: 100%;
+        text-align: left; /* Garante que o texto fique na lateral */
+    }
+
+    h1 {
+        font-size: 2.5rem; 
+    }
+
+    .hero-imagem {
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto; /* Centraliza apenas a imagem e a mancha */
+        justify-content: center;
+    }
+
+    .hero-imagem::before {
+        width: 100%;
+        height: 100%;
+        right: 0;
+        border-radius: 50%; /* Bolinha perfeita no mobile para não estourar a tela */
+    }
+}
+
+
+
+/* ==========================================
+   GRADE DE PRODUTOS
+   ========================================== */
+
+
+/* ==========================================
+   CONFIGURAÇÃO DA SEÇÃO DE CARDÁPIO
+   ========================================== */
+.cardapio-produtos {
+    padding: 80px 0; /* Mais espaço para não ficar sufocado */
+    background-color: var(--verde-oliva); /* Verde oliva claríssimo para o fundo da seção */
+    border-radius: 50px 50px 0 0; /* Curva no topo para "abraçar" a seção anterior */
+    position: relative;
+    z-index: 1;
+}
+
+/* Estilo do Título da Seção */
+.secao-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.subtitulo {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--bg-principal);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.titulo-secao {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 36px;
+    font-weight: 300; /* Fino para combinar com a logo */
+    color: var(--bg-principal);
+}
+
+.titulo-secao .destaque {
+    font-weight: 700; /* Dá ênfase no nome da marca */
+    color: var(--bg-principal);
+}
+
+/* Ajuste nos Cards para brilharem no fundo verde */
+.produto-card {
+    /* ... mantenha o código anterior, mas adicione: */
+    box-shadow: 0 15px 35px rgba(45, 64, 48, 0.05); /* Sombra levemente esverdeada */
+}
+
+
+
+.produtos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Faz os cards se ajustarem sozinhos */
+    gap: 30px;
+}
+
+/* O CARD */
+.produto-card {
+    background-color: #FFFFFF;
+    border-radius: 24px; /* Bem arredondado como na sua referência */
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.produto-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+}
+
+/* Mancha dentro do card (discreta) */
+.mancha-card {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: var(--verde-folha);
+    opacity: 0.08;
+    filter: blur(30px);
+    border-radius: 50%;
+    top: -20px;
+    right: -20px;
+    z-index: 0;
+}
+
+/* FOTO DO PRODUTO */
+.produto-foto {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.produto-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.produto-card:hover .produto-foto img {
+    transform: scale(1.1);
+}
+
+/* INFORMAÇÕES */
+.produto-info {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    z-index: 1;
+}
+
+.produto-nome {
+    font-size: 18px;
+    color: var(--verde-escuro);
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.produto-desc {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+/* PREÇO E BOTÃO */
+.produto-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.produto-preco {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--verde-escuro);
+}
+
+.add-btn {
+    background-color: var(--verde-escuro);
+    color: #FFFFFF;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: background 0.3s ease;
+}
+
+.add-btn:hover {
+    background-color: var(--verde-oliva);
+}
+
+/* Cores de Fundo Intercaladas para os Cards */
+.produto-card.cor-1 { background-color: #f1f3f0; } /* Verde acinzentado clarinho */
+.produto-card.cor-2 { background-color: #fdfaf5; } /* Tom palha/creme */
+.produto-card.cor-3 { background-color: #ebf0e9; } /* Verde oliva bem suave */
+
+/* Ajustando as manchas internas para cada cor de card */
+.produto-card.cor-1 .mancha-card { background: var(--verde-oliva); opacity: 0.1; }
+.produto-card.cor-2 .mancha-card { background: #d4a373; opacity: 0.1; }
+.produto-card.cor-3 .mancha-card { background: var(--verde-folha); opacity: 0.1; }
+
+/* Estilo do Card (Melhorado) */
+.produto-card {
+    background-color: #FFFFFF; /* Padrão se não tiver classe de cor */
+    border-radius: 30px; /* Bordas bem generosas */
+    overflow: hidden;
+    position: relative;
+    border: none;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+}
+
+.produto-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* Mancha orgânica dentro do card */
+.mancha-card {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: -40px;
+    right: -40px;
+    filter: blur(40px);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* Ajuste na tipografia do card para combinar com a logo fina */
+.produto-nome {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--verde-escuro);
+}
+
+.produto-desc {
+    font-weight: 300;
+    color: #666;
+}
+
+/* ==========================================
+   DIFERENCIAIS PREMIUM E MINIMALISTA
+   ========================================== */
+
+   /* ==========================================
+   CORES DO TÍTULO - DIFERENCIAIS PREMIUM
+   ========================================== */
+
+/* Subtítulo (A NOSSA ESSÊNCIA) */
+.diferenciais-premium .subtitulo {
+    color: var(--verde-folha);
+    font-weight: 700;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Título Principal (O padrão Fit Bia de qualidade) */
+.diferenciais-premium .titulo-secao {
+    color: var(--verde-oliva) !important; /* Força o uso da cor oliva que querias */
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300; /* Estilo fino e elegante */
+    font-size: 36px;
+}
+
+/* Destaque para a marca (Fit Bia) dentro do título */
+.diferenciais-premium .titulo-secao .destaque {
+    color: var(--verde-escuro);
+    font-weight: 700; /* Mais grosso para dar ênfase */
+}
+
+.diferenciais-premium {
+    padding: 100px 0;
+    background-color: var(--bg-principal); 
+}
+
+.diferenciais-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+}
+
+.dif-card {
+    padding: 50px 30px;
+    text-align: center;
+    background-color: var(--bg-principal); /* Fundo bege muito clarinho */
+    border: 1px solid rgba(90, 107, 83, 0.1); /* Borda fina e sofisticada */
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* A mágica do Premium: Linha que cresce no hover */
+.dif-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--verde-oliva);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
+}
+
+/* O que acontece ao passar o mouse */
+.dif-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+    background-color: #ffffff;
+    border-color: transparent;
+}
+
+.dif-card:hover::before {
+    transform: scaleX(1);
+}
+
+.dif-icone {
+    font-size: 55px;
+    color: var(--verde-oliva);
+    margin-bottom: 25px;
+}
+
+.dif-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400; /* Mantém a elegância sem ficar pesado */
+    font-size: 20px;
+    color: var(--verde-escuro);
+    margin-bottom: 15px;
+    letter-spacing: 1px;
+}
+
+.dif-card p {
+    font-size: 15px;
+    color: #777;
+    line-height: 1.7;
+    font-weight: 300;
+}
+
+/* Responsividade para manter o padrão no celular */
+@media (max-width: 768px) {
+    .diferenciais-grid-premium {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0 20px;
+    }
+}
+
+
+
+
+/* ==========================================
+   PASSO A PASSO VISUAL (V2)
+   ========================================== */
+.como-funciona-v2 {
+    padding: 100px 0;
+    background-color: var(--verde-oliva);
+}
+
+/* ==========================================
+   AJUSTE DE COR DOS TÍTULOS (VAR OLIVA)
+   ========================================== */
+
+/* Subtítulo (aquele texto menor em cima) */
+.como-funciona-v2 .subtitulo {
+    color: var(--bg-principal); /* Usei a folha aqui para um contraste sutil */
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* Título Principal da Sessão */
+.como-funciona-v2 .titulo-secao {
+    color: var(--bg-principal) !important; /* Força o uso da cor oliva */
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300; /* Mantendo a elegância fina da logo */
+}
+
+/* O nome "3 etapas" ou o que estiver em destaque */
+.como-funciona-v2 .titulo-secao .destaque {
+    color: var(--bg-principal);
+    font-weight: 700;
+}
+
+/* Títulos dos blocos (O Cardápio, O Pedido, etc) */
+.passo-conteudo h3 {
+    color: var(--bg-principal);
+    font-weight: 400; /* Um pouquinho mais de peso para leitura */
+}
+
+.passo-bloco {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    margin-bottom: 120px;
+}
+
+/* Inverte a ordem (foto na direita) automaticamente nos blocos marcados */
+.passo-bloco.reverso {
+    flex-direction: row-reverse;
+}
+
+.passo-imagem {
+    flex: 1;
+    position: relative;
+    max-width: 500px;
+}
+
+.passo-imagem img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 40px; /* Bordas bem curvas para seguir o estilo orgânico */
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.50);
+}
+
+/* Número gigante atrás ou do lado da foto */
+.numero-bg {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    font-size: 120px;
+    font-weight: 900;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--verde-escuro);
+    opacity: 0.1; /* Fica como uma marca d'água gigante */
+    z-index: -1;
+}
+
+.passo-conteudo {
+    flex: 1;
+    padding: 20px;
+}
+
+.passo-conteudo h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--bg-principal);
+    margin-bottom: 20px;
+}
+
+.passo-conteudo p {
+    font-size: 18px;
+    color: var(--bg-principal);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 30px;
+}
+
+.detalhe-cor {
+    width: 60px;
+    height: 6px;
+    border-radius: 10px;
+}
+
+/* RESPONSIVIDADE DO PASSO A PASSO */
+@media (max-width: 768px) {
+    .passo-bloco, .passo-bloco.reverso {
+        flex-direction: column; /* Tudo vira uma coluna no celular */
+        gap: 40px;
+        margin-bottom: 80px;
+        text-align: center;
+    }
+
+    .passo-imagem img {
+        height: 300px;
+    }
+
+    .numero-bg {
+        font-size: 80px;
+        top: -20px;
+        left: 0;
+    }
+
+    .detalhe-cor {
+        margin: 0 auto;
+    }
+}
+
+/* ==========================================
+   SEÇÃO NOSSA CASINHA E HISTÓRIA
+   ========================================== */
+.nossa-casinha {
+    padding: 100px 0;
+    background-color: #ebf0e9; /* Um verde oliva beeeem clarinho */
+    overflow: hidden;
+}
+
+.casinha-grid {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
+
+/* --- LADO DO TEXTO --- */
+.casinha-texto {
+    flex: 1;
+}
+
+.casinha-texto .subtitulo {
+    color: var(--verde-folha);
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.casinha-texto .titulo-secao {
+    color: var(--verde-oliva);
+    font-size: 38px;
+    font-weight: 300;
+    margin-bottom: 25px;
+    line-height: 1.2;
+}
+
+.casinha-texto .destaque {
+    font-weight: 700;
+    color: var(--verde-escuro);
+}
+
+.casinha-texto p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    font-weight: 300;
+}
+
+/* Cardzinho de Endereço */
+.card-endereco {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(45, 64, 48, 0.08);
+    margin-top: 40px;
+    border-left: 5px solid var(--verde-oliva); /* Detalhe elegante na lateral */
+}
+
+.icone-local {
+    font-size: 35px;
+    color: var(--verde-oliva);
+    margin-right: 20px;
+}
+
+.info-local h4 {
+    color: var(--verde-escuro);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.info-local p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* --- LADO DAS FOTOS (Composição) --- */
+.casinha-fotos {
+    flex: 1;
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blob-casinha {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: var(--verde-folha);
+    opacity: 0.15;
+    filter: blur(50px);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+/* Efeito de colagem/sobreposição nas fotos */
+.foto-principal {
+    position: absolute;
+    width: 320px;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 30px;
+    z-index: 1;
+    left: 20px;
+    box-shadow: -15px 15px 40px rgba(0,0,0,0.1);
+}
+
+.foto-secundaria {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%; /* Foto redondinha para quebrar o padrão */
+    z-index: 2;
+    right: 10px;
+    bottom: -20px;
+    border: 8px solid #ebf0e9; /* Borda na cor do fundo para recortar a foto principal */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* ==========================================
+   INTERAÇÕES INTELIGENTES (HOVER & TOUCH)
+   ========================================== */
+
+/* 1. FEEDBACK DE TOQUE (MOBILE & PC)
+   O que acontece no exato momento do clique/toque */
+.logo-wrapper:active,
+.add-btn:active,
+.filtro-btn:active {
+    transform: scale(0.92); /* Dá aquela "afundadinha" de botão real */
+    transition: transform 0.1s;
+}
+
+.produto-card:active,
+.dif-card:active,
+.passo-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s;
+}
+
+/* 2. EFEITOS DE MOUSE (APENAS COMPUTADORES)
+   O @media (hover: hover) impede bugs no celular */
+@media (hover: hover) {
+    
+    /* Logo */
+    .logo-wrapper:hover { 
+        transform: scale(1.02); 
+    }
+    
+    /* Botões */
+    .add-btn:hover { 
+        background-color: var(--verde-oliva); 
+    }
+    
+    /* Filtros do Cardápio */
+    .filtro-btn:not(.ativo):hover { 
+        background-color: #f4f7f2; 
+        color: var(--verde-oliva);
+    }
+    
+    /* Cards de Produtos */
+    .produto-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+    
+    .produto-card:hover .produto-foto img {
+        transform: scale(1.1);
+    }
+    
+    /* Cards de Diferenciais (Premium) */
+    .dif-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+        background-color: #ffffff;
+        border-color: transparent;
+    }
+    
+    .dif-card:hover::before { 
+        transform: scaleX(1); 
+    }
+    
+    /* Passo a Passo */
+    .passo-item:hover { 
+        transform: translateY(-10px); 
+    }
+}
+
+
+/* ==========================================
+   INTERAÇÕES INTELIGENTES (À PROVA DE BALAS: PC E MOBILE)
+   ========================================== */
+
+/* 1. FEEDBACK DE CLIQUE/TOQUE (A "afundadinha" no momento do toque) */
+.logo-wrapper:active,
+.btn-principal:active,
+.add-btn:active,
+.filtro-btn:active {
+    transform: scale(0.92) !important;
+    transition: transform 0.1s;
+}
+
+.produto-card:active,
+.dif-card:active,
+.passo-item:active {
+    transform: scale(0.98) !important;
+    transition: transform 0.1s;
+}
+
+/* 2. EFEITOS VISUAIS (Mouse no PC e Toque no Celular) */
+
+/* Logo */
+.logo-wrapper:hover, .logo-wrapper:active { 
+    transform: scale(1.02); 
+}
+
+/* Botão Fazer Pedido Principal */
+.btn-principal:hover, .btn-principal:active {
+    background-color: var(--verde-folha);
+    box-shadow: 0 15px 25px rgba(45, 64, 48, 0.3);
+}
+
+/* Botões de Adicionar ao Carrinho */
+.add-btn:hover, .add-btn:active { 
+    background-color: var(--verde-oliva); 
+}
+
+/* Filtros do Cardápio */
+.filtro-btn:not(.ativo):hover, .filtro-btn:not(.ativo):active { 
+    background-color: #f4f7f2; 
+    color: var(--verde-oliva);
+}
+
+/* Cards de Produtos */
+.produto-card:hover, .produto-card:active {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.produto-card:hover .produto-foto img, .produto-card:active .produto-foto img {
+    transform: scale(1.1);
+}
+
+/* Cards de Diferenciais (Premium) */
+.dif-card:hover, .dif-card:active {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+    background-color: #ffffff;
+    border-color: transparent;
+}
+
+.dif-card:hover::before, .dif-card:active::before { 
+    transform: scaleX(1); 
+}
+
+
+
+/* ==========================================
+   SEÇÃO DE DEPOIMENTOS
+   ========================================== */
+.depoimentos {
+    padding: 100px 0;
+    background-color: #ffffff; /* Fundo limpo para destacar os cards */
+}
+
+/* Força as cores do título para manter a identidade */
+.depoimentos .subtitulo {
+    color: var(--verde-folha);
+}
+
+.depoimentos .titulo-secao {
+    color: var(--verde-oliva) !important;
+}
+
+.depoimentos .destaque {
+    color: var(--verde-escuro);
+}
+
+.depoimentos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 60px;
+}
+
+/* O Card do Depoimento */
+.depoimento-card {
+    background-color: var(--bg-principal); /* Fundo palha/creme da paleta */
+    padding: 40px 30px;
+    border-radius: 24px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    /* Transição para o hover PC e toque no Mobile */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.depoimento-card:hover, .depoimento-card:active {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+}
+
+/* Ícone de aspas decorativo */
+.aspas {
+    font-size: 45px;
+    color: var(--verde-oliva);
+    opacity: 0.15;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+/* Cor das estrelas (Dourado padrão de reviews) */
+.estrelas {
+    color: #F5C518; 
+    font-size: 18px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+/* Texto do cliente */
+.texto-depoimento {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+    font-weight: 300;
+    font-style: italic;
+    flex-grow: 1; /* Joga o nome do cliente lá pro final do card */
+    margin-bottom: 30px;
+}
+
+/* Bloco inferior: Foto e Nome */
+.cliente-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 20px;
+}
+
+.cliente-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--verde-folha); /* Borda verde charmosa na foto */
+}
+
+.cliente-nome {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: var(--verde-escuro);
+    font-size: 16px;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+    .depoimentos-grid {
+        grid-template-columns: 1fr; /* Um abaixo do outro no celular */
+        padding: 0 20px;
+    }
+}
+
+/* ==========================================
+   RESPONSIVIDADE PREMIUM - NOSSA CASINHA (SOBRE)
+   ========================================== */
+
+/* 1. TABLETS / NOTEBOOKS PEQUENOS (Entre 769px e 1100px) 
+   Mantém lado a lado, mas reduz a escala como uma miniatura do PC */
+@media (max-width: 1100px) and (min-width: 769px) {
+    .casinha-grid {
+        gap: 30px; /* Reduz o buraco entre texto e foto */
+        align-items: center; 
+    }
+    
+    .casinha-texto {
+        flex: 1.2; /* Dá um pouco mais de prioridade de espaço para o texto */
+    }
+
+    .casinha-texto .titulo-secao {
+        font-size: 30px; /* Evita que o título quebre muito */
+        margin-bottom: 15px;
+    }
+
+    .casinha-texto p {
+        font-size: 14px; /* Texto levemente menor para não criar blocos pesados */
+        margin-bottom: 15px;
+    }
+
+    .card-endereco {
+        margin-top: 25px;
+        padding: 15px;
+    }
+
+    .icone-local {
+        font-size: 28px;
+        margin-right: 15px;
+    }
+
+    /* Encolhe a composição de fotos para não esmagar o texto esquerdo */
+    .casinha-fotos {
+        flex: 1;
+        height: 400px;
+    }
+
+    .blob-casinha {
+        width: 300px;
+        height: 300px;
+    }
+
+    .foto-principal {
+        width: 100%;
+        max-width: 260px; /* Foto mais estreita */
+        height: 360px;
+        left: 0;
+    }
+
+    .foto-secundaria {
+        width: 150px;
+        height: 150px;
+        right: 0;
+        bottom: 10px;
+        border-width: 6px;
+    }
+}
+
+/* 2. CELULARES (Até 768px) 
+   Quebra em coluna, mas mantém a elegância do alinhamento à esquerda */
+@media (max-width: 768px) {
+    .nossa-casinha {
+        padding: 60px 0; 
+    }
+
+    .ocultar-mobile {
+        display: none; /* Esconde parágrafo extra para não cansar a leitura */
+    }
+
+    .casinha-grid {
+        flex-direction: column;
+        text-align: left; /* Mantém a leitura natural na lateral */
+        gap: 40px;
+    }
+
+    .casinha-texto .titulo-secao {
+        font-size: 28px; 
+    }
+
+    .card-endereco {
+        flex-direction: column; 
+        align-items: flex-start;
+        gap: 10px;
+        padding: 20px;
+    }
+
+    /* Fotos viram o centro das atenções no mobile */
+    .casinha-fotos {
+        height: auto; 
+        width: 100%;
+        display: flex;
+        justify-content: center; 
+        position: relative;
+        padding-bottom: 30px; 
+    }
+
+    .blob-casinha {
+        width: 280px;
+        height: 280px;
+        top: 40%;
+    }
+
+    .foto-principal {
+        position: relative;
+        left: 0;
+        width: 100%;
+        max-width: 320px; 
+        height: auto; 
+        aspect-ratio: 3 / 4; 
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    .foto-secundaria {
+        right: 0; 
+        bottom: 0;
+        width: 140px; 
+        height: 140px;
+        border-width: 6px; 
+    }
+}
+
+
+
+/* ==========================================
+   RODAPÉ (FOOTER) ESCURO PREMIUM
+   ========================================== */
+.footer-escuro {
+    background-color: var(--verde-escuro);
+    color: var(--bg-principal);
+    padding: 80px 0 0 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(250, 249, 246, 0.1); /* Linha divisória sutil */
+}
+
+.footer-col h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--bg-principal);
+    margin-bottom: 25px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.footer-desc {
+    color: rgba(250, 249, 246, 0.6) !important;
+    font-size: 14px;
+    line-height: 1.7;
+    font-weight: 300;
+    max-width: 100% !important;
+    margin: 0;
+}
+
+.footer-col p {
+    color: rgba(250, 249, 246, 0.6);
+    font-size: 14px;
+    line-height: 1.6;
+    font-weight: 300;
+    margin-bottom: 15px;
+}
+
+.footer-col p span {
+    color: var(--bg-principal);
+    font-weight: 500;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+    color: rgba(250, 249, 246, 0.6);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 300;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+/* Interação nos links do rodapé (PC e Mobile) */
+.footer-col ul li a:hover, .footer-col ul li a:active {
+    color: var(--verde-folha);
+    padding-left: 6px; /* Dá um leve empurrãozinho elegante */
+}
+
+/* Ícones de Redes Sociais */
+.footer-sociais {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.footer-sociais a {
+    color: var(--bg-principal);
+    font-size: 26px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-sociais a:hover, .footer-sociais a:active {
+    color: var(--verde-folha);
+    transform: translateY(-4px);
+}
+
+/* Copyright e Assinatura */
+.footer-bottom {
+    background-color: #213023; /* Tom ainda mais escuro para o fechamento da tela */
+    padding: 25px 0;
+}
+
+.footer-bottom-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-bottom p {
+    font-size: 12px;
+    color: rgba(250, 249, 246, 0.4);
+    margin: 0;
+    font-weight: 300;
+}
+
+/* ==========================================
+   RESPONSIVIDADE DO FOOTER (TABLET E CELULAR)
+   ========================================== */
+@media (max-width: 992px) {
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr); /* Vira uma grade 2x2 em tablets */
+        gap: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-escuro {
+        padding-top: 60px;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr; /* 1 coluna inteira e direta no celular */
+        gap: 35px;
+        padding-bottom: 40px;
+    }
+    
+    .footer-bottom-container {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}

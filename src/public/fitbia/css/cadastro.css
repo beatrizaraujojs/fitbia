@@ -1,0 +1,111 @@
+/* =========================================
+   TELA DE CADASTRO (cadastro.css)
+   ========================================= */
+
+/* Centraliza a caixa no meio da tela */
+.cadastro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ocupa 100% da altura da tela */
+    padding: 20px;
+}
+
+/* A caixa branca do formulário */
+.cadastro-box {
+    background-color: #FFFFFF;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Cabeçalho */
+.cadastro-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.cadastro-header h2 {
+    color: var(--verde-escuro);
+    margin-bottom: 8px;
+    font-size: 28px;
+}
+
+.cadastro-header p {
+    color: var(--texto-secundario);
+    font-size: 15px;
+}
+
+/* Formulário e Inputs */
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 14px;
+    color: var(--texto-principal);
+    font-weight: 600;
+}
+
+.input-group input {
+    padding: 14px;
+    border: 1px solid #E0E0E0;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: var(--verde-folha);
+    box-shadow: 0 0 0 3px rgba(60, 138, 75, 0.1); /* Efeito de brilho suave no foco */
+}
+
+/* Botão principal */
+.btn-cadastrar {
+    background-color: var(--verde-escuro);
+    color: var(--bg-principal);
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-cadastrar:hover {
+    background-color: var(--verde-oliva);
+}
+
+/* Rodapé */
+.cadastro-footer {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 14px;
+    color: var(--texto-secundario);
+}
+
+.cadastro-footer a {
+    color: var(--verde-folha);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.cadastro-footer a:hover {
+    color: var(--verde-escuro);
+    text-decoration: underline;
+}

@@ -1,0 +1,329 @@
+/* =========================================
+   PÁGINA DE CHECKOUT (checkout.css)
+   ========================================= */
+
+.checkout-container {
+    padding-top: 50px;
+    padding-bottom: 60px;
+}
+
+/* Cabeçalho */
+.checkout-header {
+    background-color: var(--verde-escuro);
+    padding: 24px 30px;
+    border-radius: 12px;
+    margin-bottom: 35px;
+    border-left: 5px solid var(--verde-folha);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-titulos {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-header h2 {
+    color: #FFFFFF;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.checkout-header p {
+    color: #E2E8F0;
+    font-size: 15px;
+}
+
+.header-icone-check {
+    font-size: 48px;
+    color: var(--verde-folha);
+    opacity: 0.8;
+}
+
+/* Layout */
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+@media (min-width: 992px) {
+    .checkout-layout {
+        grid-template-columns: 2.2fr 1fr;
+    }
+}
+
+/* Seções de Formulário */
+.checkout-formularios {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.checkout-secao {
+    background-color: #FFFFFF;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(26, 36, 27, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.checkout-secao h3 {
+    color: var(--verde-escuro);
+    font-size: 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #F0F0F0;
+    padding-bottom: 12px;
+}
+
+/* Inputs */
+.form-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.flex-row {
+    flex-direction: row;
+    gap: 16px;
+}
+
+.w-50 {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.input-group label, .w-50 label {
+    font-size: 14px;
+    color: var(--texto-principal);
+    font-weight: 600;
+}
+
+.input-group input, .w-50 input {
+    padding: 12px;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus, .w-50 input:focus {
+    border-color: var(--verde-folha);
+}
+
+/* Opções de Pagamento (Estilo moderno com botões rádio ocultos) */
+.opcoes-pagamento {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.opcao-card {
+    cursor: pointer;
+}
+
+.opcao-card input[type="radio"] {
+    display: none; /* Esconde o botão rádio padrão */
+}
+
+.opcao-conteudo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.opcao-conteudo i {
+    font-size: 24px;
+    color: var(--texto-secundario);
+}
+
+.opcao-conteudo span {
+    font-weight: 500;
+    color: var(--texto-principal);
+}
+
+/* Quando selecionado (checked) */
+.opcao-card input[type="radio"]:checked + .opcao-conteudo {
+    border-color: var(--verde-folha);
+    background-color: rgba(60, 138, 75, 0.05);
+}
+
+.opcao-card input[type="radio"]:checked + .opcao-conteudo i {
+    color: var(--verde-folha);
+}
+
+/* Resumo Lateral */
+.checkout-resumo {
+    background-color: #FFFFFF;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(26, 36, 27, 0.04);
+    position: static; /* <- Mudado para static (padrão que rola normal) */
+}
+
+.checkout-resumo h3 {
+    color: var(--verde-escuro);
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.resumo-itens p {
+    color: var(--texto-secundario);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.resumo-linha {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: var(--texto-secundario);
+}
+
+.destaque-verde {
+    color: var(--verde-folha);
+    font-weight: 600;
+}
+
+.divisor {
+    border: none;
+    border-top: 1px dashed #E2E8F0;
+    margin: 16px 0;
+}
+
+.total {
+    color: var(--texto-principal);
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 24px;
+}
+
+.btn-confirmar {
+    background-color: var(--verde-folha);
+    color: #FFFFFF;
+    border: none;
+    width: 100%;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-confirmar:hover {
+    background-color: var(--verde-escuro);
+}
+
+.link-voltar {
+    display: block;
+    text-align: center;
+    color: var(--texto-secundario);
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.link-voltar:hover {
+    text-decoration: underline;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .checkout-header { padding: 20px; }
+    .header-icone-check { font-size: 40px; }
+    .flex-row { flex-direction: column; gap: 16px; }
+    .w-50 { width: 100%; }
+}
+
+
+
+/* --- LÓGICA DO CHECKOUT EM ETAPAS --- */
+
+/* Esconde todas as etapas por padrão */
+.etapa-checkout {
+    display: none;
+}
+
+/* Mostra apenas a etapa que estiver ativa */
+.etapa-checkout.ativo {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Subtítulos internos das etapas */
+.subtitulo-checkout {
+    color: var(--verde-escuro);
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Área dos botões de navegação no final de cada etapa */
+.botoes-etapa {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    border-top: 1px solid #F1F5F9;
+    padding-top: 20px;
+}
+
+.btn-proximo {
+    background-color: var(--verde-escuro);
+    color: #FFFFFF;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-proximo:hover {
+    background-color: var(--verde-folha);
+}
+
+.btn-voltar {
+    background-color: #F1F5F9;
+    color: var(--texto-principal);
+    border: 1px solid #E2E8F0;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-voltar:hover {
+    background-color: #E2E8F0;
+}

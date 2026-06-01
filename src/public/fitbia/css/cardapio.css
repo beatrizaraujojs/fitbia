@@ -1,0 +1,171 @@
+
+/* ==========================================
+   PÁGINA INTERNA: CARDÁPIO COMPLETO
+   ========================================== */
+
+/* Cabeçalho da Página */
+.pagina-header {
+    background-color: var(--verde-oliva);
+    padding: 80px 0 40px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.blob-pagina {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    /* background: var(--bg-principal); */
+    opacity: 0.05;
+    filter: blur(60px);
+    border-radius: 50%;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 0;
+}
+
+.header-interno {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.header-interno .subtitulo {
+    color: var(--bg-principal);
+    font-weight: 700;
+    letter-spacing: 2px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.titulo-pagina {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 46px;
+    font-weight: 300;
+    color: var(--bg-principal);
+    margin-bottom: 20px;
+}
+
+.titulo-pagina .destaque {
+    font-weight: 700;
+    color: #bed3ba;
+}
+
+.desc-pagina {
+    font-size: 18px;
+    color: #cdcfccc3;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+/* Ajuste da Barra de Filtros na Página Interna */
+.filtros-pagina {
+    background-color: transparent;
+    border-top: none;
+    padding: 10px 0 50px 0;
+}
+
+.filtros-pagina .filtros-container {
+    justify-content: center; /* Centraliza os filtros no PC */
+}
+
+/* Blocos de Categorias */
+.cardapio-completo {
+    padding-bottom: 100px;
+    background-color: var(--bg-principal);
+}
+
+.categoria-titulo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--verde-escuro);
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(90, 107, 83, 0.1);
+    display: inline-block;
+}
+
+/* Responsividade do Header Interno */
+@media (max-width: 768px) {
+    .pagina-header {
+        padding: 50px 20px 20px 20px;
+    }
+    
+    .titulo-pagina {
+        font-size: 34px;
+    }
+    
+    .filtros-pagina .filtros-container {
+        justify-content: flex-start; /* Volta a permitir scroll lateral no celular */
+    }
+}
+
+
+/* ==========================================
+   BARRA DE PESQUISA PREMIUM
+   ========================================== */
+.pesquisa-box {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    max-width: 600px; /* Largura bem generosa, não ocupa a tela toda */
+    margin: 40px auto 0; /* Dá o espaço perfeito abaixo do texto */
+    padding: 16px 28px; /* Altura confortável para toque */
+    border-radius: 50px; /* Bordas 100% arredondadas (Pílula) */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04); /* Sombra bem difusa e luxuosa */
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    z-index: 10;
+}
+
+/* O que acontece quando o usuário clica para digitar */
+.pesquisa-box:focus-within {
+    box-shadow: 0 20px 40px rgba(60, 138, 75, 0.1); /* Sombra esverdeada */
+    border-color: rgba(60, 138, 75, 0.2);
+    transform: translateY(-3px); /* Levanta levemente */
+}
+
+.pesquisa-box i {
+    font-size: 24px;
+    color: var(--verde-oliva);
+    margin-right: 15px;
+}
+
+.pesquisa-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    color: var(--texto-principal);
+    background: transparent;
+}
+
+.pesquisa-box input::placeholder {
+    color: #a0a0a0;
+    font-weight: 300;
+}
+
+/* ==========================================
+   AJUSTES DE ESPAÇAMENTO DO LAYOUT
+   ========================================== */
+
+/* Reduz o espaço superior dos filtros para grudar mais na pesquisa */
+.filtros-pagina {
+    background-color: transparent;
+    border-top: none;
+    padding: 30px 0 60px 0; /* Era 10px no top, aumentei pra 30px separar da pesquisa */
+}
+
+/* Ajuste Responsivo da Pesquisa */
+@media (max-width: 768px) {
+    .pesquisa-box {
+        margin: 30px 0 0 0; /* No celular, tira o auto para ocupar 100% da caixa */
+        width: 100%;
+    }
+}
