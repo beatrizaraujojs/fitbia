@@ -1,0 +1,442 @@
+/* Importando a fonte Inter nas variações 300 (fina) e 400 (normal) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+/* Reset Básico Unificado */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f3f4f6; /* Fundo cinza bem claro */
+    color: #333;
+    font-weight: 300; /* Deixando a fonte geral mais fina */
+}
+
+h1, h2, h3 {
+    font-weight: 400; /* Deixando os títulos menos gordinhos */
+}
+
+.dash-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+    width: 260px;
+    background-color: #2c2f29; /* Verde Oliva Clássico */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Flexbox aqui garante o logo na esquerda e o X na direita */
+.sidebar-logo {
+    padding: 24px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid #455726; 
+}
+
+/* ESCONDE O X NO PC */
+.btn-fechar-menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.sidebar-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 300; 
+}
+
+.sidebar-nav a:hover, .sidebar-nav a.active {
+    background-color: #646e52; 
+    color: #fff;
+    border-left: 4px solid #a3b18a; 
+}
+
+.sidebar-footer {
+    padding: 24px;
+    border-top: 1px solid #455726;
+}
+
+/* === CONTEÚDO PRINCIPAL === */
+.main-content {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+}
+
+.dash-header {
+    background-color: #fff;
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* ESCONDE O MENU HAMBÚRGUER NO PC */
+.btn-menu-mobile {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #1f2937;
+    cursor: pointer;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.content-area {
+    padding: 32px;
+    flex: 1;
+}
+
+/* === CARDS === */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+
+.stat-card {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-left: 4px solid #10b981;
+}
+
+.stat-card h3 {
+    font-size: 14px;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+/* =========================================
+   RESPONSIVIDADE (MOBILE)
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. MOSTRA o hambúrguer no mobile */
+    .btn-menu-mobile {
+        display: block;
+    }
+
+    /* 2. MOSTRA o X no mobile */
+    .btn-fechar-menu {
+        display: block;
+    }
+
+    /* 3. Configura a sidebar flutuante */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0; 
+        height: 100%; 
+        width: 260px; 
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        overflow-y: auto; 
+    }
+    
+    /* Classe que o JavaScript injeta para abrir */
+    .sidebar.aberta {
+        transform: translateX(0);
+    }
+
+    /* 4. Ajustes de espaçamento */
+    .dash-header {
+        padding: 16px;
+    }
+
+    .content-area {
+        padding: 16px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Esconde o texto de saudação no mobile para não encavalar o cabeçalho */
+    .user-profile span {
+        display: none;
+    }
+    
+    /* Dá um respiro entre o botão e o título caso precise */
+    .header-left h1 {
+        font-size: 1.5rem;
+    }
+}
+
+
+
+
+/* === CARDS E FORMULÁRIOS ADMIN === */
+.admin-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    margin-bottom: 24px;
+}
+
+.card-title {
+    font-size: 18px;
+    color: #1f2937;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-form .form-group {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-form .form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.admin-form .form-row .form-group {
+    flex: 1;
+}
+
+.admin-form label {
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.admin-form input, .admin-form select {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.admin-form input:focus, .admin-form select:focus {
+    border-color: #556b2f; /* Foco Verde Oliva */
+}
+
+.btn-salvar {
+    background-color: #556b2f;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.btn-salvar:hover {
+    background-color: #455726;
+}
+
+/* === TABELAS ADMIN === */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: #f9fafb;
+    color: #6b7280;
+    font-size: 13px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.admin-table td {
+    padding: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+/* Badges e Botões de Ação */
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge-ativo {
+    background-color: #def7ec;
+    color: #03543f;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 8px;
+    color: #9ca3af;
+    transition: color 0.2s;
+}
+
+.btn-action.edit:hover { color: #3b82f6; }
+.btn-action.delete:hover { color: #ef4444; }
+
+.mt-4 { margin-top: 24px; }
+
+
+/* =========================================
+   RESPONSIVIDADE: FORMULÁRIOS E TABELAS
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* Reduz o preenchimento dos cards */
+    .admin-card {
+        padding: 16px;
+    }
+
+    /* Empilha os campos que estavam lado a lado */
+    .admin-form .form-row {
+        flex-direction: column;
+        gap: 0; 
+    }
+
+    /* Mantém a margem entre os campos empilhados */
+    .admin-form .form-row .form-group {
+        margin-bottom: 16px;
+    }
+
+    /* Estica o botão para facilitar o clique no celular */
+    .btn-salvar {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    /* Ajusta a rolagem da tabela para não quebrar a tela */
+    .table-responsive {
+        border: 1px solid #e5e7eb; 
+        border-radius: 6px;
+        -webkit-overflow-scrolling: touch; 
+    }
+
+    /* Impede o texto da tabela de pular linha e esmagar o conteúdo */
+    .admin-table th, 
+    .admin-table td {
+        white-space: nowrap; 
+        padding: 12px;
+    }
+}
+
+
+
+/* === MODAIS DO ADMIN === */
+.admin-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Começa escondido */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Classe que o JS vai usar para abrir o modal */
+.admin-modal-overlay.ativo {
+    display: flex;
+}
+
+.admin-modal-box {
+    background-color: #fff;
+    width: 90%;
+    max-width: 500px; /* Largura máxima do modal */
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: modalAparecer 0.3s ease-out; /* Animação suave */
+}
+
+.admin-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-modal-header h2 {
+    font-size: 18px;
+    color: #1f2937;
+}
+
+.fechar-modal {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #9ca3af;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.fechar-modal:hover {
+    color: #ef4444; /* Fica vermelho ao passar o mouse */
+}
+
+/* Animação do modal subindo um pouquinho */
+@keyframes modalAparecer {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

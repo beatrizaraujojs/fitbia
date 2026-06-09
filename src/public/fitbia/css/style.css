@@ -533,6 +533,11 @@ p {
 }
 
 .filtro-btn {
+    
+    text-decoration: none; /* ❌ Remove a linha embaixo do nome */
+    color: inherit;        /* 🎨 Garante que o texto use a cor original que você definiu */
+    
+
     background-color: #8A958A; 
     border: none;
     color: #FFFFFF; 
