@@ -2,21 +2,30 @@
 
 @push('css')
     <link rel="stylesheet" href="{{ asset('fitbia/css/checkout.css') }}">
+
 @endpush
 
 @section('content')
     <div class="container checkout-container">
         
-        @include('site.checkout.stepper')
+      
 
         <div class="checkout-layout">
+
+         @include('site.checkout.pedidos')
+
+      
             @include('site.checkout.etapas')
 
             @include('site.checkout.resumo')
         </div>
 
     </div>
+
+
+    
 @endsection
+
 
 @push('scripts')
       <!-- numero etapa -->
@@ -83,6 +92,8 @@
         }
     });
 </script>
+
+
 
 <!-- proximo passo -->
 <script>

@@ -24,7 +24,7 @@
                                 <div class="produto-card">
                                     <div class="mancha-card"></div>
                                     <div class="produto-foto">
-                                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=500" alt="{{ $produto->nome_produto }}">
+                                           <img src="{{ asset('fitbia/images/produto/' . $produto->foto_produto) }}" alt="{{ $produto->nome_produto }}">
                                     </div>
                                     <div class="produto-info">
                                         <h3 class="produto-nome">{{ $produto->nome_produto }}</h3>

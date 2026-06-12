@@ -11,7 +11,7 @@
                 <div class="produto-card">
                     <div class="mancha-card"></div>
                     <div class="produto-foto">
-                        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=500" alt="{{ $produto->nome_produto }}">
+                       <img src="{{ asset('fitbia/images/produto/' . $produto->foto_produto) }}" alt="{{ $produto->nome_produto }}">
                     </div>
                     <div class="produto-info">
                         <h3 class="produto-nome">{{ $produto->nome_produto }}</h3>
@@ -191,137 +191,136 @@
         }
 
         // 5. ATUALIZADA: Função de enviar para o carrinho
-       function adicionarAoCarrinho(botao) {
+        function adicionarAoCarrinho(botao) {
 
-        alert("O navegador ouviu o clique! O JavaScript está vivo!");
+            alert("O navegador ouviu o clique! O JavaScript está vivo!");
 
-    let idProduto = botao.getAttribute('data-id');
-    let modal = document.getElementById('modal-' + idProduto);
-    let observacao = modal.querySelector('.campo-observacao textarea').value;
-    
-    let adicionaisEscolhidos = []; 
-    let linhasAdicionais = modal.querySelectorAll('.linha-item');
+            let idProduto = botao.getAttribute('data-id');
+            let modal = document.getElementById('modal-' + idProduto);
+            let observacao = modal.querySelector('.campo-observacao textarea').value;
 
-    linhasAdicionais.forEach(linha => {
-        let qtd = parseInt(linha.querySelector('.qtd').innerText);
-        if (qtd > 0) {
-            let idAdicional = linha.getAttribute('data-id-adicional');
-            adicionaisEscolhidos.push({
-                id: idAdicional,
-                quantidade: qtd
+            let adicionaisEscolhidos = [];
+            let linhasAdicionais = modal.querySelectorAll('.linha-item');
+
+            linhasAdicionais.forEach(linha => {
+                let qtd = parseInt(linha.querySelector('.qtd').innerText);
+                if (qtd > 0) {
+                    let idAdicional = linha.getAttribute('data-id-adicional');
+                    adicionaisEscolhidos.push({
+                        id: idAdicional,
+                        quantidade: qtd
+                    });
+                }
             });
+
+            let itemCarrinho = {
+                produto_id: idProduto,
+                adicionais: adicionaisEscolhidos,
+                observacao: observacao
+            };
+
+            // ---- A MÁGICA DO FETCH COMEÇA AQUI ----
+
+            // 1. Pega o carimbo de segurança que colocamos no Passo 1
+            let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // 2. Muda o texto do botão para o usuário ver que está carregando
+            let btnAvancar = modal.querySelector('.btn-avancar');
+            let textoOriginal = btnAvancar.innerHTML;
+            btnAvancar.innerHTML = "Adicionando...";
+            btnAvancar.disabled = true;
+
+            // 3. O Entregador (Fetch) levando os dados pro Laravel
+            // Substitua por isto:
+            fetch('{{ route("carrinho.adicionar") }}', {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify(itemCarrinho)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        // Atualiza a bolinha vermelha no header!
+                        let bolinhaCarrinho = document.getElementById('contador-carrinho');
+                        if (bolinhaCarrinho) {
+                            bolinhaCarrinho.innerText = data.totalItens;
+                            bolinhaCarrinho.style.display = 'inline-block';
+                        }
+
+                        // Volta o botão ao normal e fecha o modal
+                        btnAvancar.innerHTML = textoOriginal;
+                        btnAvancar.disabled = false;
+
+                        let btnFechar = modal.querySelector('.btn-fechar');
+                        fecharModal(btnFechar);
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao adicionar no carrinho:", error);
+                    alert("Erro ao enviar! Confira o console.");
+
+                    // Volta o botão ao normal se der erro
+                    btnAvancar.innerHTML = textoOriginal;
+                    btnAvancar.disabled = false;
+                });
         }
-    });
 
-    let itemCarrinho = {
-        produto_id: idProduto,
-        adicionais: adicionaisEscolhidos,
-        observacao: observacao
-    };
 
-    // ---- A MÁGICA DO FETCH COMEÇA AQUI ----
-    
-    // 1. Pega o carimbo de segurança que colocamos no Passo 1
-    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Pega o que está na URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const idCategoriaEscolhida = urlParams.get('cat');
 
-    // 2. Muda o texto do botão para o usuário ver que está carregando
-    let btnAvancar = modal.querySelector('.btn-avancar');
-    let textoOriginal = btnAvancar.innerHTML;
-    btnAvancar.innerHTML = "Adicionando...";
-    btnAvancar.disabled = true;
+            // Pega o texto da busca e transforma tudo em minúsculo para não ter erro de maiúscula/minúscula
+            const termoBusca = urlParams.get('busca') ? urlParams.get('busca').toLowerCase() : null;
 
-    // 3. O Entregador (Fetch) levando os dados pro Laravel
-    // Substitua por isto:
-    fetch('{{ route("carrinho.adicionar") }}', {
-   
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify(itemCarrinho)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.sucesso) {
-            // Atualiza a bolinha vermelha no header!
-            let bolinhaCarrinho = document.getElementById('contador-carrinho');
-            if (bolinhaCarrinho) {
-                bolinhaCarrinho.innerText = data.totalItens;
-                bolinhaCarrinho.style.display = 'inline-block';
+            // 2. Destaca o botão de categoria correto lá no topo
+            if (idCategoriaEscolhida) {
+                document.querySelectorAll('.filtro-btn').forEach(btn => {
+                    btn.classList.remove('ativo');
+                    if (btn.getAttribute('data-id') === idCategoriaEscolhida) {
+                        btn.classList.add('ativo');
+                    }
+                });
             }
 
-            // Volta o botão ao normal e fecha o modal
-            btnAvancar.innerHTML = textoOriginal;
-            btnAvancar.disabled = false;
-            
-            let btnFechar = modal.querySelector('.btn-fechar');
-            fecharModal(btnFechar);
-        }
-    })
-    .catch(error => {
-        console.error("Erro ao adicionar no carrinho:", error);
-        alert("Erro ao enviar! Confira o console.");
-        
-        // Volta o botão ao normal se der erro
-        btnAvancar.innerHTML = textoOriginal;
-        btnAvancar.disabled = false;
-    });
-}
+            // 3. O super filtro: Categoria + Pesquisa de Texto
+            document.querySelectorAll('.categoria-bloco').forEach(bloco => {
+                let temProdutoVisivel = false;
+                const idBloco = bloco.getAttribute('data-id');
 
+                // Confere se o bloco atual é da categoria que o cliente quer ver
+                const passaCategoria = !idCategoriaEscolhida || idCategoriaEscolhida === 'todos' || idBloco === idCategoriaEscolhida;
 
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Pega o que está na URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const idCategoriaEscolhida = urlParams.get('cat');
-    
-    // Pega o texto da busca e transforma tudo em minúsculo para não ter erro de maiúscula/minúscula
-    const termoBusca = urlParams.get('busca') ? urlParams.get('busca').toLowerCase() : null;
+                // Agora varre cada prato dentro desse bloco
+                bloco.querySelectorAll('.produto-card').forEach(card => {
+                    const nomeProduto = card.querySelector('.produto-nome').innerText.toLowerCase();
+                    const descProduto = card.querySelector('.produto-desc').innerText.toLowerCase();
 
-    // 2. Destaca o botão de categoria correto lá no topo
-    if (idCategoriaEscolhida) {
-        document.querySelectorAll('.filtro-btn').forEach(btn => {
-            btn.classList.remove('ativo');
-            if (btn.getAttribute('data-id') === idCategoriaEscolhida) {
-                btn.classList.add('ativo');
-            }
+                    // Confere se a palavra pesquisada existe no título ou na descrição do prato
+                    const passaTexto = !termoBusca || nomeProduto.includes(termoBusca) || descProduto.includes(termoBusca);
+
+                    // Se bateu com a categoria E tem a palavra pesquisada, mostra o card!
+                    if (passaCategoria && passaTexto) {
+                        card.style.display = ''; // Deixa o CSS original agir
+                        temProdutoVisivel = true;
+                    } else {
+                        card.style.display = 'none'; // Esconde o card
+                    }
+                });
+
+                // Se a categoria inteira ficou sem nenhum produto após a busca (ex: buscou "salmão" na categoria "bebidas"), esconde o título da categoria
+                if (passaCategoria && temProdutoVisivel) {
+                    bloco.style.display = 'block';
+                } else {
+                    bloco.style.display = 'none';
+                }
+            });
         });
-    }
-
-    // 3. O super filtro: Categoria + Pesquisa de Texto
-    document.querySelectorAll('.categoria-bloco').forEach(bloco => {
-        let temProdutoVisivel = false;
-        const idBloco = bloco.getAttribute('data-id');
-
-        // Confere se o bloco atual é da categoria que o cliente quer ver
-        const passaCategoria = !idCategoriaEscolhida || idCategoriaEscolhida === 'todos' || idBloco === idCategoriaEscolhida;
-
-        // Agora varre cada prato dentro desse bloco
-        bloco.querySelectorAll('.produto-card').forEach(card => {
-            const nomeProduto = card.querySelector('.produto-nome').innerText.toLowerCase();
-            const descProduto = card.querySelector('.produto-desc').innerText.toLowerCase();
-
-            // Confere se a palavra pesquisada existe no título ou na descrição do prato
-            const passaTexto = !termoBusca || nomeProduto.includes(termoBusca) || descProduto.includes(termoBusca);
-
-            // Se bateu com a categoria E tem a palavra pesquisada, mostra o card!
-            if (passaCategoria && passaTexto) {
-                card.style.display = ''; // Deixa o CSS original agir
-                temProdutoVisivel = true;
-            } else {
-                card.style.display = 'none'; // Esconde o card
-            }
-        });
-
-        // Se a categoria inteira ficou sem nenhum produto após a busca (ex: buscou "salmão" na categoria "bebidas"), esconde o título da categoria
-        if (passaCategoria && temProdutoVisivel) {
-            bloco.style.display = 'block';
-        } else {
-            bloco.style.display = 'none';
-        }
-    });
-});
-
     </script>
 
     <style>

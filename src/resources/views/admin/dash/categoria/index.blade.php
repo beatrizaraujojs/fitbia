@@ -20,7 +20,7 @@
             <nav class="sidebar-nav">
                 <a href="#" class="active"><i class="ph ph-squares-four"></i> Visão Geral</a>
                 <a href="{{ route('admin.categoria.index') }}"><i class="ph ph-tag"></i> Categorias</a>
-                <a href="#"><i class="ph ph-package"></i> Produtos</a>
+                <a href="{{ route('admin.produto.index') }}"><i class="ph ph-package"></i> Produtos</a>
                 <a href="#"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
                 <a href="#"><i class="ph ph-receipt"></i> Pedidos</a>
             </nav>
@@ -43,10 +43,17 @@
 
             <section class="content-area">
 
+                {{-- MENSAGEM DE SUCESSO --}}
+                @if(session('success'))
+                    <div style="background-color: #def7ec; color: #03543f; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid #31c48d;">
+                        <i class="ph ph-check-circle" style="vertical-align: middle; margin-right: 0.5rem; font-size: 1.25rem;"></i>
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <div class="admin-card">
                     <h2 class="card-title">Nova Categoria</h2>
 
-                    {{-- O action aponta para a rota de salvar que criamos antes --}}
                     <form action="{{ route('admin.categoria.store') }}" method="POST" class="admin-form">
                         @csrf
 
@@ -89,24 +96,23 @@
                                 </tr>
                             </thead>
 
-
                             <tbody>
-                                {{-- Usaremos variáveis dinâmicas aqui depois --}}
                                 @foreach($categorias as $categoria)
                                 <tr>
                                     <td>{{ $categoria->id_categoria }}</td>
                                     <td>{{ $categoria->nome_categoria }}</td>
-
                                     <td>{{ $categoria->ordem_exibicao_categoria ?? 0 }}</td>
 
                                     <td>
                                         @if($categoria->ativa_categoria == 'ATIVO')
-                                        <span class="badge badge-ativo">Ativo</span>
+                                            <span style="background-color: #def7ec; color: #03543f; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Ativo</span>
                                         @else
-                                        <span class="badge" style="background-color: #fde8e8; color: #9b1c1c;">Inativo</span>
+                                            <span style="background-color: #fde8e8; color: #9b1c1c; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Inativo</span>
                                         @endif
                                     </td>
+                                    
                                     <td>
+                                        {{-- Botão Editar mantendo seus data-attributes --}}
                                         <button type="button" class="btn-action edit" title="Editar"
                                             data-id="{{ $categoria->id_categoria }}"
                                             data-nome="{{ $categoria->nome_categoria }}"
@@ -114,7 +120,15 @@
                                             data-status="{{ $categoria->ativa_categoria }}">
                                             <i class="ph ph-pencil-simple"></i>
                                         </button>
-                                        <button class="btn-action delete" title="Desativar"><i class="ph ph-trash"></i></button>
+                                        
+                                        {{-- Formulário de Desativar Categoria --}}
+                                        <form action="{{ route('admin.categoria.destroy', $categoria->id_categoria) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente desativar esta categoria?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-action delete" title="Desativar">
+                                                <i class="ph ph-power"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -141,11 +155,7 @@
                 btnFecharMenu.addEventListener("click", () => sidebar.classList.remove("aberta"));
             }
         });
-
-
     </script>
-
-
 
 </body>
 

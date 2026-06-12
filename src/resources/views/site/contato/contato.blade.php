@@ -19,3 +19,4 @@
         console.log('Script da Home carregado com sucesso!');
     </script>
 @endpush
+

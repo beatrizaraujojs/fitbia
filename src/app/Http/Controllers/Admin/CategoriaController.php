@@ -87,4 +87,20 @@ class CategoriaController extends Controller
             ->route('admin.categoria.index')
             ->with('sucesso', 'Categoria atualizada com sucesso!');
     }
+
+    public function destroy($id)
+    {
+        $categoria = Categoria::findOrFail($id);
+        
+        $categoria->update([
+            'ativa_categoria' => 'INATIVO'
+        ]);
+
+        return redirect()
+            ->route('admin.categoria.index')
+            ->with('success', 'Categoria desativada com sucesso!');
+    }
+    
+
+    
 }

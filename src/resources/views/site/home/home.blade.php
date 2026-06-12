@@ -27,8 +27,10 @@
 @endsection
 
 @push('scripts')
-    <script>
+    <!-- <script>
         // Esse script vai ser empurrado lá pro final do app.blade.php
         console.log('Script da Home carregado com sucesso!');
-    </script>
+    </script> -->
 @endpush
+
+

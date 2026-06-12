@@ -26,9 +26,10 @@
             <nav class="sidebar-nav"> 
                 <a href="#" class="active"><i class="ph ph-squares-four"></i> Visão Geral</a>
                <a href="{{ route('admin.categoria.index') }}"><i class="ph ph-tag"></i> Categorias</a>
-                <a href="#"><i class="ph ph-package"></i> Produtos</a>
+                <a href="{{ route('admin.produto.index') }}"><i class="ph ph-package"></i> Produtos</a>
                 <a href="#"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
-                <a href="#"><i class="ph ph-receipt"></i> Pedidos</a>
+                
+                <a href="#"><i class="ph ph-receipt"></i>Adicionais</a>
             </nav>
             <div class="sidebar-footer">
                 <a href="#"><i class="ph ph-sign-out"></i> Sair do Sistema</a>

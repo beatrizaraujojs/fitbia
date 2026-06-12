@@ -9,10 +9,13 @@ class CardapioController extends Controller
 {
     public function index()
     {
-        // Puxa as categorias ativas, trazendo junto os produtos e os adicionais de cada produto
-        $categorias = Categoria::with('produtos.gruposAdicionais.adicionais')
-            ->where('ativa_categoria', 'ATIVO')
-            ->get();
+        // Puxa categorias ativas e filtra APENAS os produtos ativos junto com seus adicionais
+        $categorias = Categoria::with(['produtos' => function ($query) {
+            $query->where('status_produto', 'ATIVO')
+                  ->with('gruposAdicionais.adicionais'); // Mantém o carregamento dos adicionais
+        }])
+        ->where('ativa_categoria', 'ATIVO')
+        ->get();
 
         // Envia os dados para a sua página do cardápio
         return view('site.cardapio.cardapio', compact('categorias'));
