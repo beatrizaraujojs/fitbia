@@ -78,6 +78,7 @@
 
             <section class="content-area">
 
+                {{-- FORMULÁRIO DE NOVO PRODUTO --}}
                 <div class="admin-card">
                     <h2 class="card-title">Novo Produto</h2>
 
@@ -134,7 +135,36 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn-salvar">Salvar Produto</button>
+                        <div class="form-group" style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 15px;">
+                            <label>Tem grupos adicionais para este produto?</label>
+                            <div style="display: flex; gap: 20px; margin-top: 8px;">
+                                <label style="cursor: pointer;">
+                                    <input type="radio" name="tem_adicionais" value="sim" onclick="document.getElementById('caixa-grupos').style.display='block'"> Sim
+                                </label>
+                                <label style="cursor: pointer;">
+                                    <input type="radio" name="tem_adicionais" value="nao" checked onclick="document.getElementById('caixa-grupos').style.display='none'"> Não
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="caixa-grupos" style="display: none; margin-top: 15px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                            <label style="font-weight: 600; margin-bottom: 10px; display: block; color: #374151;">Selecione os Grupos:</label>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                @if(isset($grupos) && $grupos->count() > 0)
+                                    @foreach($grupos as $grupo)
+                                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                            <input type="checkbox" name="grupos_adicionais[]" value="{{ $grupo->id_grupo_adicional }}"> 
+                                            {{ $grupo->nome_grupo_adicional }} 
+                                            <span style="color: #6b7280; font-size: 13px;">(Mín: {{ $grupo->qtd_min_grupo }} | Máx: {{ $grupo->qtd_max_grupo }})</span>
+                                        </label>
+                                    @endforeach
+                                @else
+                                    <p style="color: #ef4444; font-size: 14px; margin: 0;">Nenhum grupo adicional ativo encontrado no banco de dados.</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-salvar" style="margin-top: 20px;">Salvar Produto</button>
                     </form>
                 </div>
 
@@ -148,6 +178,7 @@
                     @endforeach
                 </div>
 
+                {{-- TABELA DE PRODUTOS CADASTRADOS --}}
                 <div class="admin-card">
                     <h2 class="card-title">Produtos Cadastrados</h2>
 
@@ -164,30 +195,20 @@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-
                             <tbody>
                                 @foreach($produtos as $produto)
-                                {{-- A classe produto-row e o data-categoria são usados pelo JS do filtro --}}
                                 <tr class="produto-row" data-categoria="{{ $produto->id_categoria_fk }}">
-
                                     <td>{{ $produto->id_produto }}</td>
-
                                     <td>{{ $produto->nome_produto }}</td>
-
                                     <td>{{ Str::limit($produto->descricao_produto, 40) }}</td>
-
                                     <td>
                                         @if($produto->foto_produto)
-                                        <img src="{{ asset('fitbia/images/produto/' . $produto->foto_produto) }}"
-                                            alt="{{ $produto->nome_produto }}"
-                                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
+                                        <img src="{{ asset('fitbia/images/produto/' . $produto->foto_produto) }}" alt="{{ $produto->nome_produto }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;">
                                         @else
                                         <span style="color: #999; font-style: italic;">Sem foto</span>
                                         @endif
                                     </td>
-
                                     <td>R$ {{ number_format($produto->preco_base_produto, 2, ',', '.') }}</td>
-
                                     <td>
                                         @if($produto->status_produto == 'ATIVO')
                                         <span style="background-color: #def7ec; color: #03543f; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Ativo</span>
@@ -195,7 +216,6 @@
                                         <span style="background-color: #fde8e8; color: #9b1c1c; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Inativo</span>
                                         @endif
                                     </td>
-
                                     <td>
                                         <button type="button" class="btn-action edit" title="Editar"
                                             data-url="{{ route('admin.produto.update', $produto->id_produto) }}"
@@ -205,6 +225,7 @@
                                             data-status="{{ $produto->status_produto }}"
                                             data-destaque="{{ $produto->destaque_produto }}"
                                             data-categoria="{{ $produto->id_categoria_fk }}"
+                                            data-grupos="{{ $produto->gruposAdicionais->pluck('id_grupo_adicional')->toJson() }}"
                                             onclick="abrirModalEditar(this)">
                                             <i class="ph ph-pencil-simple"></i>
                                         </button>
@@ -276,6 +297,7 @@
                         </select>
                     </div>
 
+                    {{-- CORREÇÃO: ADICIONADO CAMPO DE DESTAQUE PARA NÃO FALHAR A VALIDAÇÃO --}}
                     <div class="form-group">
                         <label for="edit_destaque_produto">Destaque</label>
                         <select id="edit_destaque_produto" name="destaque_produto">
@@ -285,22 +307,47 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="foto_produto">Nova Foto do Produto (Deixe vazio para manter a atual)</label>
-                    <input type="file" name="foto_produto" accept="image/*">
+                <div class="form-group" style="margin-top: 20px; border-top: 1px solid #e5e7eb; padding-top: 15px;">
+                    <label>Tem grupos adicionais para este produto?</label>
+                    <div style="display: flex; gap: 20px; margin-top: 8px;">
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="edit_tem_adicionais" value="sim" onclick="document.getElementById('edit_caixa-grupos').style.display='block'"> Sim
+                        </label>
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="edit_tem_adicionais" value="nao" checked onclick="document.getElementById('edit_caixa-grupos').style.display='none'"> Não
+                        </label>
+                    </div>
+                </div>
+
+                <div id="edit_caixa-grupos" style="display: none; margin-top: 15px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px;">
+                    <label style="font-weight: 600; margin-bottom: 10px; display: block; color: #374151;">Selecione os Grupos:</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        @if(isset($grupos) && $grupos->count() > 0)
+                            @foreach($grupos as $grupo)
+                                <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="grupos_adicionais[]" value="{{ $grupo->id_grupo_adicional }}"> 
+                                    {{ $grupo->nome_grupo_adicional }} 
+                                    <span style="color: #6b7280; font-size: 13px;">(Mín: {{ $grupo->qtd_min_grupo }} | Máx: {{ $grupo->qtd_max_grupo }})</span>
+                                </label>
+                            @endforeach
+                        @else
+                            <p style="color: #ef4444; font-size: 14px; margin: 0;">Nenhum grupo adicional ativo encontrado no banco de dados.</p>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="edit_foto_produto">Nova Foto do Produto (Deixe vazio para manter a atual)</label>
+                    <input type="file" id="edit_foto_produto" name="foto_produto" accept="image/*">
                 </div>
 
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button type="button" onclick="document.getElementById('modalEditarProduto').style.display='none'" class="admin-filtro-btn" style="flex: 1; text-align: center;">Cancelar</button>
                     <button type="submit" class="btn-salvar" style="flex: 2;">Guardar Alterações</button>
                 </div>
-
-
-                
             </form>
         </div>
     </div>
-
 
     {{-- === SISTEMA DE ALERTAS POP-UP === --}}
     @if(session('success'))
@@ -309,40 +356,57 @@
     </script>
     @endif
 
-    <!-- @if($errors->any())
-        <script>
-            let erros = "Oops! Ocorreu um erro na validação:\n\n";
-            @foreach ($errors->all() as $error)
-                erros += "❌ {{ $error }}\n";
-            @endforeach
-            alert(erros);
-        </script>
-    @endif -->
-
-
-    {{-- === SCRIPTS DO MODAL E DO FILTRO === --}}
+    {{-- === SCRIPTS === --}}
     <script>
+        // Função para preencher e abrir o Modal de Edição
         function abrirModalEditar(botao) {
-            // Pega a URL da rota e altera no form
+            // 1. Pega a URL e altera a ação do formulário
             let url = botao.getAttribute('data-url');
             document.getElementById('formEditarProduto').action = url;
-
-            // Preenche os inputs de texto e número
+            
+            // 2. Preenche os inputs normais
             document.getElementById('edit_nome_produto').value = botao.getAttribute('data-nome');
             document.getElementById('edit_preco_base_produto').value = botao.getAttribute('data-preco');
             document.getElementById('edit_descricao_produto').value = botao.getAttribute('data-descricao');
-
-            // Preenche os selects
             document.getElementById('edit_status_produto').value = botao.getAttribute('data-status');
-            document.getElementById('edit_destaque_produto').value = botao.getAttribute('data-destaque');
+            
+            // Preenche o select do destaque
+            let destaqueSelect = document.getElementById('edit_destaque_produto');
+            if(destaqueSelect && botao.getAttribute('data-destaque')){
+                 destaqueSelect.value = botao.getAttribute('data-destaque');
+            }
+
             document.getElementById('edit_id_categoria_fk').value = botao.getAttribute('data-categoria');
 
-            // Abre o modal
+            // 3. LIMPEZA E MARCAÇÃO DOS CHECKBOXES DOS GRUPOS
+            let checkboxes = document.querySelectorAll('#edit_caixa-grupos input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+
+            // Pega os IDs dos grupos que vieram vinculados ao produto
+            let gruposIds = JSON.parse(botao.getAttribute('data-grupos') || '[]');
+
+            if (gruposIds.length > 0) {
+                // Se o produto já tem grupos: ativa o radio "Sim" e exibe a caixinha
+                document.querySelector('input[name="edit_tem_adicionais"][value="sim"]').checked = true;
+                document.getElementById('edit_caixa-grupos').style.display = 'block';
+
+                // Faz o loop marcando cada checkbox correto
+                gruposIds.forEach(id => {
+                    let cb = document.querySelector(`#edit_caixa-grupos input[value="${id}"]`);
+                    if (cb) cb.checked = true;
+                });
+            } else {
+                // Se não tem grupos: ativa o radio "Não" e esconde a caixinha
+                document.querySelector('input[name="edit_tem_adicionais"][value="nao"]').checked = true;
+                document.getElementById('edit_caixa-grupos').style.display = 'none';
+            }
+
+            // Mostra o modal de edição na tela
             document.getElementById('modalEditarProduto').style.display = 'block';
         }
 
+        // Script do Menu Mobile e Filtros das Categorias
         document.addEventListener("DOMContentLoaded", () => {
-            // --- Menu Mobile ---
             const btnMenuMobile = document.getElementById("btn-menu-mobile");
             const btnFecharMenu = document.getElementById("btn-fechar-menu");
             const sidebar = document.querySelector(".sidebar");
@@ -354,17 +418,12 @@
                 btnFecharMenu.addEventListener("click", () => sidebar.classList.remove("aberta"));
             }
 
-            // --- Filtro da Tabela com Memória (sessionStorage) ---
             const filterBtns = document.querySelectorAll('.admin-filtro-btn');
             const productRows = document.querySelectorAll('.produto-row');
-
-            // 1. Verifica se tem algum filtro salvo
             const filtroSalvo = sessionStorage.getItem('filtroProdutoAtivo') || 'todos';
 
-            // 2. Função que aplica o filtro
             function aplicarFiltro(categoriaId) {
                 filterBtns.forEach(b => b.classList.remove('active'));
-
                 const btnAtivo = document.querySelector(`.admin-filtro-btn[data-filter="${categoriaId}"]`);
                 if (btnAtivo) btnAtivo.classList.add('active');
 
@@ -378,10 +437,8 @@
                 });
             }
 
-            // 3. Ao carregar, aplica o filtro salvo
             aplicarFiltro(filtroSalvo);
 
-            // 4. Ao clicar, salva e aplica
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const selectedCategory = this.getAttribute('data-filter');
@@ -393,5 +450,4 @@
     </script>
 
 </body>
-
 </html>

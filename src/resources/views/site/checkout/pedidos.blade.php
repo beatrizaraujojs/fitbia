@@ -70,7 +70,7 @@
                 <span>Total</span>
                 <span>R$ 72,90</span>
             </div>
-          <a href="{{ }}" class="btn-avancar">Finalizar Pedido</a>
+          <a href="" class="btn-avancar">Avançar para entrega</a>
         </div>
 
     </div>

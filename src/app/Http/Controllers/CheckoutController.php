@@ -28,5 +28,21 @@ public function adicionarItem(\Illuminate\Http\Request $request)
             'totalItens' => count($carrinho)
         ]);
     }
+
+
+
+    // Método que você já deve ter para os pedidos
+    public function pedidos()
+    {
+        return view('site.checkout.pedidos');
+    }
+
+    // ADICIONE ESTE MÉTODO PARA AS ETAPAS:
+    public function layout()
+    {
+        // Certifique-se de que o caminho corresponde à pasta (site -> checkout -> etapas.blade.php)
+        return view('site.checkout.layout');
+    }
+
 }
 

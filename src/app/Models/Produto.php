@@ -25,8 +25,13 @@ class Produto extends Model
         return $this->belongsTo(Categoria::class, 'id_categoria_fk', 'id_categoria');
     }
 
-    // Um produto tem muitos grupos de adicionais
+    // ALTERADO: Agora é uma relação Muitos para Muitos (belongsToMany)
     public function gruposAdicionais() {
-        return $this->hasMany(GrupoAdicional::class, 'id_produto_fk', 'id_produto');
+        return $this->belongsToMany(
+            GrupoAdicional::class,
+            'tbl_produto_grupo_adicional', // Nome da tabela intermediária que criou no MySQL
+            'id_produto_fk',               // Chave estrangeira do Produto na tabela pivot
+            'id_grupo_adicional_fk'        // Chave estrangeira do Grupo na tabela pivot
+        );
     }
 }

@@ -17,7 +17,6 @@ use App\Http\Controllers\Admin\CategoriaController;
 
 use App\Http\Controllers\Admin\ProdutoController;
 
-use App\Http\Controllers\Admin\GrupoController;
 
 // 1. Raiz do site abre na Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,8 +29,12 @@ Route::get('/casinha', [CasinhaController::class, 'index'])->name('site.casinha'
 Route::get('/contato', [ContatoController::class, 'index'])->name('site.contato');
 Route::get('/cadastro', [CadastroController::class, 'index'])->name('site.cadastro');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('site.checkout');
-Route::post('/carrinho/adicionar', [CheckoutController::class, 'adicionarItem'])->name('carrinho.adicionar');
-Route::post('/carrinho/adicionar', [CheckoutController::class, 'adicionarItem'])->name('carrinho.adicionar');
+
+// Rota para a página de pedidos (a que você está editando)
+Route::get('/checkout/pedidos', [CheckoutController::class, 'pedidos'])->name('site.checkout.pedidos');
+
+// A NOVA ROTA PARA AS ETAPAS:
+Route::get('/checkout/layout', [CheckoutController::class, 'layout'])->name('site.checkout.layout');
 
 
 
@@ -74,17 +77,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
   // Rota para salvar um novo grupo adicional
   Route::post('/grupo-adicional', [\App\Http\Controllers\Admin\GrupoAdicionalController::class, 'store'])->name('grupo.store');
   
- // Ajuste o caminho para o seu Controller
-
-// Route::post('/admin/grupo/store', [GrupoController::class, 'store'])->name('admin.grupo.store');
 
 
-// Rota para salvar um novo grupo adicional
-Route::post('/grupo-adicional', [\App\Http\Controllers\Admin\GrupoAdicionalController::class, 'store'])->name('grupo.store');
-  
-  // Route::resource('grupos-adicionais', GrupoAdicionalController::class);
-
-
-  // // Pedidos geralmente não tem "create" no admin (vem do cliente), então podemos limitar:
-  // Route::resource('pedidos', PedidoController::class)->except(['create', 'store']);
 });

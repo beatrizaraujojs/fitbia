@@ -44,11 +44,11 @@
             <section class="content-area">
 
                 {{-- MENSAGEM DE SUCESSO --}}
-                @if(session('success'))
-                    <div style="background-color: #def7ec; color: #03543f; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid #31c48d;">
-                        <i class="ph ph-check-circle" style="vertical-align: middle; margin-right: 0.5rem; font-size: 1.25rem;"></i>
-                        {{ session('success') }}
-                    </div>
+                @if(session('sucesso'))
+                <div style="background-color: #def7ec; color: #03543f; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid #31c48d;">
+                    <i class="ph ph-check-circle" style="vertical-align: middle; margin-right: 0.5rem; font-size: 1.25rem;"></i>
+                    {{ session('sucesso') }}
+                </div>
                 @endif
 
                 <div class="admin-card">
@@ -105,22 +105,23 @@
 
                                     <td>
                                         @if($categoria->ativa_categoria == 'ATIVO')
-                                            <span style="background-color: #def7ec; color: #03543f; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Ativo</span>
+                                        <span style="background-color: #def7ec; color: #03543f; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Ativo</span>
                                         @else
-                                            <span style="background-color: #fde8e8; color: #9b1c1c; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Inativo</span>
+                                        <span style="background-color: #fde8e8; color: #9b1c1c; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.875rem; font-weight: bold;">Inativo</span>
                                         @endif
                                     </td>
-                                    
+
                                     <td>
-                                        {{-- Botão Editar mantendo seus data-attributes --}}
+                                        {{-- Botão Editar --}}
                                         <button type="button" class="btn-action edit" title="Editar"
-                                            data-id="{{ $categoria->id_categoria }}"
+                                            data-url="{{ route('admin.categoria.update', $categoria->id_categoria) }}"
                                             data-nome="{{ $categoria->nome_categoria }}"
                                             data-ordem="{{ $categoria->ordem_exibicao_categoria ?? 0 }}"
-                                            data-status="{{ $categoria->ativa_categoria }}">
+                                            data-status="{{ $categoria->ativa_categoria }}"
+                                            onclick="abrirModalEditarCategoria(this)">
                                             <i class="ph ph-pencil-simple"></i>
                                         </button>
-                                        
+
                                         {{-- Formulário de Desativar Categoria --}}
                                         <form action="{{ route('admin.categoria.destroy', $categoria->id_categoria) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente desativar esta categoria?')">
                                             @csrf
@@ -132,7 +133,6 @@
                                     </td>
                                 </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -142,8 +142,72 @@
         </main>
     </div>
 
+    {{-- ========================================== --}}
+    {{-- MODAL DE EDITAR CATEGORIA                  --}}
+    {{-- ========================================== --}}
+    <div class="admin-modal-overlay" id="modal-editar" style="display: none;">
+        <div class="admin-modal-box">
+
+            <div class="admin-modal-header">
+                <h2>Editar Categoria</h2>
+                <button type="button" class="fechar-modal" id="btn-fechar-editar">&times;</button>
+            </div>
+
+            <form action="#" method="POST" class="admin-form" id="form-editar">
+                @csrf
+                @method('PUT')
+
+                <div class="form-group">
+                    <label for="edit_nome_categoria">Nome da Categoria *</label>
+                    <input type="text" id="edit_nome_categoria" name="nome_categoria" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit_ordem">Ordem de Exibição</label>
+                        <input type="number" id="edit_ordem" name="ordem_exibicao_categoria">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_status">Status</label>
+                        <select id="edit_status" name="ativa_categoria">
+                            <option value="ATIVO">Ativo</option>
+                            <option value="INATIVO">Inativo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-salvar">Atualizar Categoria</button>
+            </form>
+
+        </div>
+    </div>
+
+    {{-- ========================================== --}}
+    {{-- SCRIPTS                                    --}}
+    {{-- ========================================== --}}
     <script>
+        // Função para abrir o modal e preencher os dados
+        function abrirModalEditarCategoria(botao) {
+            let url = botao.getAttribute('data-url');
+            let nome = botao.getAttribute('data-nome');
+            let ordem = botao.getAttribute('data-ordem');
+            let status = botao.getAttribute('data-status');
+
+            // Preenche o formulário
+            document.getElementById('form-editar').action = url;
+            document.getElementById('edit_nome_categoria').value = nome;
+            document.getElementById('edit_ordem').value = ordem;
+            document.getElementById('edit_status').value = status;
+
+            // Exibe o modal (pode mudar para 'flex' se ficar desalinhado)
+            // Exibe o modal centralizado usando flex
+            document.getElementById('modal-editar').style.display = 'flex';
+        }
+
+        // Lógica geral da página (Menu e Fechar Modal)
         document.addEventListener("DOMContentLoaded", () => {
+            // -- Menu Mobile --
             const btnMenuMobile = document.getElementById("btn-menu-mobile");
             const btnFecharMenu = document.getElementById("btn-fechar-menu");
             const sidebar = document.querySelector(".sidebar");
@@ -154,6 +218,23 @@
             if (btnFecharMenu && sidebar) {
                 btnFecharMenu.addEventListener("click", () => sidebar.classList.remove("aberta"));
             }
+
+            // -- Fechar Modal --
+            const modalEditar = document.getElementById("modal-editar");
+            const btnFecharEditar = document.getElementById("btn-fechar-editar");
+
+            if (btnFecharEditar) {
+                btnFecharEditar.addEventListener("click", () => {
+                    modalEditar.style.display = 'none';
+                });
+            }
+
+            // Fecha clicando fora da caixa do modal
+            window.addEventListener("click", (e) => {
+                if (e.target === modalEditar) {
+                    modalEditar.style.display = 'none';
+                }
+            });
         });
     </script>
 
