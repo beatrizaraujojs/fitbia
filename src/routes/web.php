@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -8,15 +7,12 @@ use App\Http\Controllers\CasinhaController;
 use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CarrinhoController;
 
-
-
-// Importe os Controllers que vamos usar (você vai criá-los no próximo passo)
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoriaController;
-
+use App\Http\Controllers\Admin\GrupoAdicionalController; 
 use App\Http\Controllers\Admin\ProdutoController;
-
 
 // 1. Raiz do site abre na Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,53 +26,46 @@ Route::get('/contato', [ContatoController::class, 'index'])->name('site.contato'
 Route::get('/cadastro', [CadastroController::class, 'index'])->name('site.cadastro');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('site.checkout');
 
-// Rota para a página de pedidos (a que você está editando)
+// Rota para a página de pedidos
 Route::get('/checkout/pedidos', [CheckoutController::class, 'pedidos'])->name('site.checkout.pedidos');
 
 // A NOVA ROTA PARA AS ETAPAS:
 Route::get('/checkout/layout', [CheckoutController::class, 'layout'])->name('site.checkout.layout');
 
+// === ROTAS DO CARRINHO ===
+Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('site.carrinho');
+Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
+
+// === ROTAS DO CARRINHO ===
+Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('site.carrinho');
+Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
+Route::post('/carrinho/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('carrinho.atualizar'); // <- NOVA LINHA
+Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
 
 
-
-// === ROTAS DO PAINEL ADMIN ===
+// === ROTAS DO PAINEL ADMIN (SEM O MIDDLEWARE WEB REPETIDO) ===
 Route::prefix('admin')->name('admin.')->group(function () {
 
-  // Rota principal do Dash (A tela que acabamos de fazer)
-  // URL: /admin
-  Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // Rota principal do Dash
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-  // // Rotas de CRUD (Cria automaticamente as rotas de index, create, store, edit, update, destroy)
-  // // URL: /admin/categorias, /admin/categorias/create, etc.
-  Route::get('/categorias', [App\Http\Controllers\Admin\CategoriaController::class, 'index'])->name('categoria.index');
+    // Rotas de Categorias
+    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categoria.index');
+    Route::post('/categorias', [CategoriaController::class, 'store'])->name('categoria.store');
+    Route::put('/categoria/{id}', [CategoriaController::class, 'update'])->name('categoria.update');
+    Route::delete('/categoria/{id}', [CategoriaController::class, 'destroy'])->name('categoria.destroy');
 
-  Route::post('/categorias', [CategoriaController::class, 'store'])->name('categoria.store');
+    // Rotas de Produtos
+    Route::get('/produto', [ProdutoController::class, 'index'])->name('produto.index');
+    Route::post('/produto', [ProdutoController::class, 'store'])->name('produto.store');
+    Route::put('/produto/{id}', [ProdutoController::class, 'update'])->name('produto.update');
+    Route::delete('/produto/{id}', [ProdutoController::class, 'destroy'])->name('produto.destroy');
+    Route::get('/produto/{id}/adicionais', [ProdutoController::class, 'adicionais'])->name('produto.adicionais');
 
-
-
-  Route::get('/produto', [ProdutoController::class, 'index'])->name('produto.index');
-  Route::post('/produto', [ProdutoController::class, 'store'])->name('produto.store');
-
-
-  // Rota para editar o produto
-  Route::put('/produto/{id}', [\App\Http\Controllers\Admin\ProdutoController::class, 'update'])->name('produto.update');
-
-  Route::delete('/produto/{id}', [\App\Http\Controllers\Admin\ProdutoController::class, 'destroy'])->name('produto.destroy');
-
-  Route::delete('/categoria/{id}', [\App\Http\Controllers\Admin\CategoriaController::class, 'destroy'])->name('categoria.destroy');
-
-
-  // A rota deve ser do tipo PUT ou PATCH para atualizações
-  // Deixe apenas /categoria e categoria.update, pois o grupo já cuida do "admin"
-  Route::put('/categoria/{id}', [\App\Http\Controllers\Admin\CategoriaController::class, 'update'])->name('categoria.update');
-
-  // Rota para a tela de gerenciar os grupos adicionais de um produto específico
-  Route::get('/produto/{id}/adicionais', [\App\Http\Controllers\Admin\ProdutoController::class, 'adicionais'])->name('produto.adicionais');
-
-
-  // Rota para salvar um novo grupo adicional
-  Route::post('/grupo-adicional', [\App\Http\Controllers\Admin\GrupoAdicionalController::class, 'store'])->name('grupo.store');
-  
-
-
+    // Rotas de Grupos Adicionais
+    Route::get('/grupos-adicionais', [GrupoAdicionalController::class, 'index'])->name('grupoadicional.index');
+    Route::post('/grupos-adicionais', [GrupoAdicionalController::class, 'store'])->name('grupo.store');
+    Route::put('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'update'])->name('grupo.update');
+    Route::delete('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'destroy'])->name('grupo.destroy');
 });

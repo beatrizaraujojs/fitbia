@@ -23,6 +23,7 @@
                     </div>
                 </div>
 
+                {{-- MODAL DO PRODUTO --}}
                 <div class="modal-overlay" id="modal-{{ $produto->id_produto }}">
                     <div class="modal-conteudo">
 
@@ -31,62 +32,75 @@
                             <button class="btn-fechar" data-id="{{ $produto->id_produto }}" onclick="fecharModal(this)">×</button>
                         </div>
 
-                        <div class="modal-corpo">
+                        {{-- === INÍCIO DO FORMULÁRIO DO CARRINHO === --}}
+                        <form action="{{ route('carrinho.adicionar') }}" method="POST" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+                            @csrf
+                            <input type="hidden" name="id_produto" value="{{ $produto->id_produto }}">
 
-                            @foreach($produto->gruposAdicionais as $grupo)
-                            <div class="grupo-adicional" data-max="{{ $grupo->qtd_max_grupo }}" style="margin-bottom: 20px;">
-                                <div class="grupo-titulo">
-                                    <h4>{{ $grupo->nome_grupo_adicional }}</h4>
-                                    <div>
-                                        <span>
-                                            @if($grupo->qtd_min_grupo > 0)
-                                            (Obrigatório, max {{ $grupo->qtd_max_grupo }})
-                                            @else
-                                            (Opcional, max {{ $grupo->qtd_max_grupo }})
-                                            @endif
-                                        </span>
-                                        <small class="msg-erro" style="color: #d32f2f; display: none; font-size: 11px; font-weight: bold; text-align: right; margin-top: 2px;">
-                                            Limite máximo atingido!
-                                        </small>
-                                    </div>
-                                </div>
+                            <div class="modal-corpo">
 
-                                @foreach($grupo->adicionais as $adicional)
-                                <div class="linha-item" data-id-adicional="{{ $adicional->id_adicional }}" data-preco="{{ $adicional->preco_adicional }}">
-                                    <div class="info-item">
-                                        <span class="nome">{{ $adicional->nome_adicional }}</span>
-                                        <span class="preco">
-                                            @if($adicional->preco_adicional > 0)
-                                            + R$ {{ number_format($adicional->preco_adicional, 2, ',', '.') }}
-                                            @else
-                                            Grátis
-                                            @endif
-                                        </span>
+                                @foreach($produto->gruposAdicionais as $grupo)
+                                <div class="grupo-adicional" data-max="{{ $grupo->qtd_max_grupo }}" style="margin-bottom: 20px;">
+                                    <div class="grupo-titulo">
+                                        <h4>{{ $grupo->nome_grupo_adicional }}</h4>
+                                        <div>
+                                            <span>
+                                                @if($grupo->qtd_min_grupo > 0)
+                                                (Obrigatório, max {{ $grupo->qtd_max_grupo }})
+                                                @else
+                                                (Opcional, max {{ $grupo->qtd_max_grupo }})
+                                                @endif
+                                            </span>
+                                            <small class="msg-erro" style="color: #d32f2f; display: none; font-size: 11px; font-weight: bold; text-align: right; margin-top: 2px;">
+                                                Limite máximo atingido!
+                                            </small>
+                                        </div>
                                     </div>
-                                    <div class="controle-qtd">
-                                        <button class="btn-menos" onclick="alterarQtd(this, -1)">-</button>
-                                        <span class="qtd">0</span>
-                                        <button class="btn-mais" onclick="alterarQtd(this, 1)">+</button>
+
+                                    @foreach($grupo->adicionais as $adicional)
+                                    <div class="linha-item" data-id-adicional="{{ $adicional->id_adicional }}" data-preco="{{ $adicional->preco_adicional }}">
+                                        <div class="info-item">
+                                            <span class="nome">{{ $adicional->nome_adicional }}</span>
+                                            <span class="preco">
+                                                @if($adicional->preco_adicional > 0)
+                                                + R$ {{ number_format($adicional->preco_adicional, 2, ',', '.') }}
+                                                @else
+                                                Grátis
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div class="controle-qtd">
+                                            {{-- IMPORTANTE: type="button" impede o botão de enviar o form sozinho --}}
+                                            <button type="button" class="btn-menos" onclick="alterarQtd(this, -1)">-</button>
+                                            
+                                            <span class="qtd">0</span>
+                                            {{-- Este input carrega a quantidade do adicional selecionado --}}
+                                            <input type="hidden" name="adicionais[{{ $adicional->id_adicional }}]" class="input-qtd" value="0">
+                                            
+                                            <button type="button" class="btn-mais" onclick="alterarQtd(this, 1)">+</button>
+                                        </div>
                                     </div>
+                                    @endforeach
+
                                 </div>
                                 @endforeach
 
+                                <div class="campo-observacao">
+                                    <textarea name="observacao" placeholder="Alguma observação? Ex: Tirar cebola..."></textarea>
+                                </div>
                             </div>
-                            @endforeach
 
-                            <div class="campo-observacao">
-                                <textarea placeholder="Alguma observação? Ex: Tirar cebola..."></textarea>
+                            <div class="modal-rodape">
+                                {{-- Botão agora é do tipo SUBMIT para enviar o formulário --}}
+                                <button type="submit" class="btn-avancar">
+                                    Avançar R$
+                                    <span class="valor-btn" data-base="{{ $produto->preco_base_produto }}">
+                                        {{ number_format($produto->preco_base_produto, 2, ',', '.') }}
+                                    </span>
+                                </button>
                             </div>
-                        </div>
-
-                        <div class="modal-rodape">
-                            <button class="btn-avancar" data-id="{{ $produto->id_produto }}" onclick="adicionarAoCarrinho(this)">
-                                Avançar R$
-                                <span class="valor-btn" data-base="{{ $produto->preco_base_produto }}">
-                                    {{ number_format($produto->preco_base_produto, 2, ',', '.') }}
-                                </span>
-                            </button>
-                        </div>
+                        </form>
+                        {{-- === FIM DO FORMULÁRIO === --}}
 
                     </div>
                 </div>
@@ -99,9 +113,6 @@
     </div>
 
     <script>
-        // Variável global para o carrinho (começa zerada)
-        let totalItensCarrinho = 0;
-
         // 1. Função para abrir o modal
         function abrirModal(botao) {
             let idProduto = botao.getAttribute('data-id');
@@ -121,51 +132,48 @@
             }
         }
 
-        // 3. NOVA FUNÇÃO: Calcula o preço dinâmico do modal
+        // 3. Calcula o preço dinâmico do modal
         function atualizarPrecoModal(modal) {
             let spanValor = modal.querySelector('.valor-btn');
             let precoTotal = parseFloat(spanValor.getAttribute('data-base'));
 
-            let linhasAdicionais = modal.querySelectorAll('.linha-item');
-            linhasAdicionais.forEach(linha => {
+            let linesAdicionais = modal.querySelectorAll('.linha-item');
+            linesAdicionais.forEach(linha => {
                 let qtd = parseInt(linha.querySelector('.qtd').innerText);
-                // Pega o valor ou considera 0 se for grátis
                 let precoAdicional = parseFloat(linha.getAttribute('data-preco')) || 0;
 
                 if (qtd > 0 && precoAdicional > 0) {
-                    precoTotal += (qtd * precoAdicional); // Soma (Qtd x Preço)
+                    precoTotal += (qtd * precoAdicional);
                 }
             });
 
-            // Formata para o padrão R$ 0,00 e joga na tela
             spanValor.innerText = precoTotal.toLocaleString('pt-BR', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
         }
 
-        // 4. ATUALIZADA: Função dos botões de + e -
+        // 4. CORRIGIDA: Altera quantidade na tela e no input oculto do formulário
         function alterarQtd(botao, valor) {
             let grupo = botao.closest('.grupo-adicional');
             let maxPermitido = parseInt(grupo.getAttribute('data-max'));
 
             let spanQtdAtual = botao.parentElement.querySelector('.qtd');
+            let inputQtdAtual = botao.parentElement.querySelector('.input-qtd'); // Pega o input escondido
             let qtdItemAtual = parseInt(spanQtdAtual.innerText);
             let msgErro = grupo.querySelector('.msg-erro');
 
-            // Se for para diminuir (-1)
             if (valor < 0) {
                 if (qtdItemAtual + valor >= 0) {
                     spanQtdAtual.innerText = qtdItemAtual + valor;
+                    if (inputQtdAtual) inputQtdAtual.value = qtdItemAtual + valor; // Atualiza o input hidden
                     if (msgErro) msgErro.style.display = 'none';
 
-                    // Atualiza o preço ao diminuir
                     atualizarPrecoModal(botao.closest('.modal-conteudo'));
                 }
                 return;
             }
 
-            // Se for para aumentar (+1)
             let todosSpansQtd = grupo.querySelectorAll('.qtd');
             let totalAtualDoGrupo = 0;
 
@@ -173,33 +181,25 @@
                 totalAtualDoGrupo += parseInt(span.innerText);
             });
 
-            // Trava do limite
             if (totalAtualDoGrupo + valor > maxPermitido) {
                 if (msgErro) {
                     msgErro.style.display = 'block';
-                    setTimeout(() => {
-                        msgErro.style.display = 'none';
-                    }, 2500);
+                    setTimeout(() => { msgErro.style.display = 'none'; }, 2500);
                 }
                 return;
             }
 
             spanQtdAtual.innerText = qtdItemAtual + valor;
+            if (inputQtdAtual) inputQtdAtual.value = qtdItemAtual + valor; // Atualiza o input hidden
 
-            // Atualiza o preço ao aumentar
             atualizarPrecoModal(botao.closest('.modal-conteudo'));
         }
 
-
         document.addEventListener("DOMContentLoaded", () => {
-            // 1. Pega o que está na URL
             const urlParams = new URLSearchParams(window.location.search);
             const idCategoriaEscolhida = urlParams.get('cat');
-
-            // Pega o texto da busca e transforma tudo em minúsculo para não ter erro de maiúscula/minúscula
             const termoBusca = urlParams.get('busca') ? urlParams.get('busca').toLowerCase() : null;
 
-            // 2. Destaca o botão de categoria correto lá no topo
             if (idCategoriaEscolhida) {
                 document.querySelectorAll('.filtro-btn').forEach(btn => {
                     btn.classList.remove('ativo');
@@ -209,32 +209,24 @@
                 });
             }
 
-            // 3. O super filtro: Categoria + Pesquisa de Texto
             document.querySelectorAll('.categoria-bloco').forEach(bloco => {
                 let temProdutoVisivel = false;
                 const idBloco = bloco.getAttribute('data-id');
-
-                // Confere se o bloco atual é da categoria que o cliente quer ver
                 const passaCategoria = !idCategoriaEscolhida || idCategoriaEscolhida === 'todos' || idBloco === idCategoriaEscolhida;
 
-                // Agora varre cada prato dentro desse bloco
                 bloco.querySelectorAll('.produto-card').forEach(card => {
                     const nomeProduto = card.querySelector('.produto-nome').innerText.toLowerCase();
                     const descProduto = card.querySelector('.produto-desc').innerText.toLowerCase();
-
-                    // Confere se a palavra pesquisada existe no título ou na descrição do prato
                     const passaTexto = !termoBusca || nomeProduto.includes(termoBusca) || descProduto.includes(termoBusca);
 
-                    // Se bateu com a categoria E tem a palavra pesquisada, mostra o card!
                     if (passaCategoria && passaTexto) {
-                        card.style.display = ''; // Deixa o CSS original agir
+                        card.style.display = '';
                         temProdutoVisivel = true;
                     } else {
-                        card.style.display = 'none'; // Esconde o card
+                        card.style.display = 'none';
                     }
                 });
 
-                // Se a categoria inteira ficou sem nenhum produto após a busca (ex: buscou "salmão" na categoria "bebidas"), esconde o título da categoria
                 if (passaCategoria && temProdutoVisivel) {
                     bloco.style.display = 'block';
                 } else {
@@ -245,7 +237,7 @@
     </script>
 
     <style>
-        /* --- SEU CSS COMPLETO DO MODAL SE MANTÉM EXATAMENTE AQUI IGUAL --- */
+        /* O seu CSS original do modal permanece intocado aqui */
         .modal-overlay {
             display: none;
             position: fixed;

@@ -45,4 +45,3 @@ public function adicionarItem(\Illuminate\Http\Request $request)
     }
 
 }
-

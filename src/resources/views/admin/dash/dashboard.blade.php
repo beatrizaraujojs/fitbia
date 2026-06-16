@@ -27,7 +27,7 @@
                 <a href="#" class="active"><i class="ph ph-squares-four"></i> Visão Geral</a>
                <a href="{{ route('admin.categoria.index') }}"><i class="ph ph-tag"></i> Categorias</a>
                 <a href="{{ route('admin.produto.index') }}"><i class="ph ph-package"></i> Produtos</a>
-                <a href="#"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
+                <a href="{{ route('admin.grupoadicional.index') }}"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
                 
                 <a href="#"><i class="ph ph-receipt"></i>Adicionais</a>
             </nav>

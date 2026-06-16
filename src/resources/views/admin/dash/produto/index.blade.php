@@ -53,10 +53,10 @@
                 <button id="btn-fechar-menu" class="btn-fechar-menu" aria-label="Fechar Menu"><i class="ph ph-x"></i></button>
             </div>
             <nav class="sidebar-nav">
-                <a href="#" class="active"><i class="ph ph-squares-four"></i> Visão Geral</a>
+                <a href="#"><i class="ph ph-squares-four"></i> Visão Geral</a>
                 <a href="{{ route('admin.categoria.index') }}"><i class="ph ph-tag"></i> Categorias</a>
-                <a href="{{ route('admin.produto.index') }}"><i class="ph ph-package"></i> Produtos</a>
-                <a href="#"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
+                <a href="{{ route('admin.produto.index') }}" class="active"><i class="ph ph-package"></i> Produtos</a>
+                <a href="{{ route('admin.grupoadicional.index') }}"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
                 <a href="#"><i class="ph ph-receipt"></i> Pedidos</a>
             </nav>
             <div class="sidebar-footer">
@@ -81,6 +81,25 @@
                 {{-- FORMULÁRIO DE NOVO PRODUTO --}}
                 <div class="admin-card">
                     <h2 class="card-title">Novo Produto</h2>
+
+                    {{-- === SISTEMA DE ALERTAS EM HTML === --}}
+                    @if(session('success'))
+                        <div style="background-color: #def7ec; color: #03543f; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #bcdecb; font-weight: bold;">
+                            ✅ {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div style="background-color: #fde8e8; color: #9b1c1c; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f8b4b4;">
+                            <strong style="display: block; margin-bottom: 5px;">❌ Erro ao salvar:</strong>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    {{-- ======================================= --}}
 
                     <form action="{{ route('admin.produto.store') }}" method="POST" enctype="multipart/form-data" class="admin-form">
                         @csrf
@@ -230,7 +249,7 @@
                                             <i class="ph ph-pencil-simple"></i>
                                         </button>
 
-                                        <form action="{{ route('admin.produto.destroy', $produto->id_produto) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente desativar/excluir este produto?')">
+                                        <form action="{{ route('admin.produto.destroy', $produto->id_produto) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja desativar este produto? Ele ficará INATIVO no banco de dados e deixará de aparecer para os clientes.')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn-action delete" title="Desativar">
@@ -297,7 +316,6 @@
                         </select>
                     </div>
 
-                    {{-- CORREÇÃO: ADICIONADO CAMPO DE DESTAQUE PARA NÃO FALHAR A VALIDAÇÃO --}}
                     <div class="form-group">
                         <label for="edit_destaque_produto">Destaque</label>
                         <select id="edit_destaque_produto" name="destaque_produto">
@@ -349,28 +367,18 @@
         </div>
     </div>
 
-    {{-- === SISTEMA DE ALERTAS POP-UP === --}}
-    @if(session('success'))
-    <script>
-        alert("Sucesso: {{ session('success') }}");
-    </script>
-    @endif
-
     {{-- === SCRIPTS === --}}
     <script>
         // Função para preencher e abrir o Modal de Edição
         function abrirModalEditar(botao) {
-            // 1. Pega a URL e altera a ação do formulário
             let url = botao.getAttribute('data-url');
             document.getElementById('formEditarProduto').action = url;
             
-            // 2. Preenche os inputs normais
             document.getElementById('edit_nome_produto').value = botao.getAttribute('data-nome');
             document.getElementById('edit_preco_base_produto').value = botao.getAttribute('data-preco');
             document.getElementById('edit_descricao_produto').value = botao.getAttribute('data-descricao');
             document.getElementById('edit_status_produto').value = botao.getAttribute('data-status');
             
-            // Preenche o select do destaque
             let destaqueSelect = document.getElementById('edit_destaque_produto');
             if(destaqueSelect && botao.getAttribute('data-destaque')){
                  destaqueSelect.value = botao.getAttribute('data-destaque');
@@ -378,30 +386,24 @@
 
             document.getElementById('edit_id_categoria_fk').value = botao.getAttribute('data-categoria');
 
-            // 3. LIMPEZA E MARCAÇÃO DOS CHECKBOXES DOS GRUPOS
             let checkboxes = document.querySelectorAll('#edit_caixa-grupos input[type="checkbox"]');
             checkboxes.forEach(cb => cb.checked = false);
 
-            // Pega os IDs dos grupos que vieram vinculados ao produto
             let gruposIds = JSON.parse(botao.getAttribute('data-grupos') || '[]');
 
             if (gruposIds.length > 0) {
-                // Se o produto já tem grupos: ativa o radio "Sim" e exibe a caixinha
                 document.querySelector('input[name="edit_tem_adicionais"][value="sim"]').checked = true;
                 document.getElementById('edit_caixa-grupos').style.display = 'block';
 
-                // Faz o loop marcando cada checkbox correto
                 gruposIds.forEach(id => {
                     let cb = document.querySelector(`#edit_caixa-grupos input[value="${id}"]`);
                     if (cb) cb.checked = true;
                 });
             } else {
-                // Se não tem grupos: ativa o radio "Não" e esconde a caixinha
                 document.querySelector('input[name="edit_tem_adicionais"][value="nao"]').checked = true;
                 document.getElementById('edit_caixa-grupos').style.display = 'none';
             }
 
-            // Mostra o modal de edição na tela
             document.getElementById('modalEditarProduto').style.display = 'block';
         }
 

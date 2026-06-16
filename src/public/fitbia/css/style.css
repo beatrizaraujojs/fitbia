@@ -1778,3 +1778,74 @@ p {
         text-align: center;
     }
 }
+
+
+/* --- CSS PARA DEIXAR O CARRINHO MAIS COMPACTO --- */
+
+.pedidos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Diminui o espaço entre os pratos */
+}
+
+.item-pedido {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px; /* Diminui o respiro interno do card */
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.item-img {
+    width: 65px; /* Deixa a foto bem menor */
+    height: 65px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info h3 {
+    font-size: 15px; /* Nome do prato menor */
+    margin: 0 0 4px 0;
+    color: #1f2937;
+}
+
+.item-desc {
+    font-size: 12px; /* Descrição e observações menores */
+    margin: 0 0 6px 0;
+    color: #6b7280;
+    line-height: 1.3;
+}
+
+.item-preco {
+    font-size: 14px;
+    font-weight: bold;
+    color: #059669;
+    margin: 0;
+}
+
+.item-acoes {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.btn-remover-destaque {
+    font-size: 11px; /* Botão de remover mais discreto */
+    padding: 4px 8px;
+    background: transparent;
+    color: #ef4444;
+    border: 1px solid #fca5a5;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

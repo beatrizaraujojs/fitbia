@@ -8,6 +8,13 @@ class GrupoAdicional extends Model
 {
     protected $table = 'tbl_grupo_adicional';
     protected $primaryKey = 'id_grupo_adicional';
+    // ADICIONE ESTE BLOCO AQUI PARA LIBERAR A EDIÇÃO:
+    protected $fillable = [
+        'nome_grupo_adicional',
+        'qtd_min_grupo',
+        'qtd_max_grupo',
+        'status_grupo'
+    ];
 
     // Um grupo tem muitos adicionais/opções dentro dele (Mantém exatamente igual)
     public function adicionais()
