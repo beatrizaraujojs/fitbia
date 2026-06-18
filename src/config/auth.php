@@ -72,8 +72,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            // Mude de User::class para App\Models\Cliente::class
+            'model' => App\Models\Cliente::class, 
         ],
+    ],
+
 
 
 
@@ -81,7 +84,7 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
-    ],
+
 
     /*
     |--------------------------------------------------------------------------

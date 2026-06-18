@@ -8,6 +8,7 @@ use App\Http\Controllers\ContatoController;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CarrinhoController;
+use App\Http\Controllers\ClienteController;
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoriaController;
@@ -26,6 +27,18 @@ Route::get('/contato', [ContatoController::class, 'index'])->name('site.contato'
 Route::get('/cadastro', [CadastroController::class, 'index'])->name('site.cadastro');
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('site.checkout');
 
+
+
+// Rotas de Visualização (Telas)
+Route::get('/login', [ClienteController::class, 'mostrarLogin'])->name('site.login');
+Route::get('/cadastro', [ClienteController::class, 'mostrarCadastro'])->name('site.cadastro');
+
+// Rotas de Ação (Envio dos Formulários)
+Route::post('/cadastro/salvar', [ClienteController::class, 'registrar'])->name('cliente.registrar');
+Route::post('/login/entrar', [ClienteController::class, 'autenticar'])->name('cliente.autenticar');
+Route::post('/logout', [ClienteController::class, 'logout'])->name('cliente.logout');
+
+
 // Rota para a página de pedidos
 Route::get('/checkout/pedidos', [CheckoutController::class, 'pedidos'])->name('site.checkout.pedidos');
 
@@ -42,6 +55,33 @@ Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('site.carrin
 Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
 Route::post('/carrinho/atualizar/{id}', [CarrinhoController::class, 'atualizar'])->name('carrinho.atualizar'); // <- NOVA LINHA
 Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
+Route::post('/checkout/finalizar', [App\Http\Controllers\CarrinhoController::class, 'finalizarPedido'])->name('pedido.salvar');
+
+Route::post('/painel/endereco', [App\Http\Controllers\ClienteController::class, 'salvarEndereco'])->name('cliente.endereco.salvar');
+
+
+// Rota do Painel (Só acessa quem estiver logado)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/painel', function () {
+        return view('site.painel.index'); // O caminho do seu arquivo blade
+    })->name('site.painel');
+});
+
+
+// Rota do Painel (Só acessa quem estiver logado)
+Route::middleware(['auth'])->group(function () {
+    
+    // A página do painel
+    Route::get('/painel', function () {
+        return view('site.painel.index');
+    })->name('site.painel');
+
+    // A rota que processa o salvamento do perfil
+    Route::post('/painel/atualizar', [App\Http\Controllers\ClienteController::class, 'atualizarPerfil'])->name('cliente.atualizar');
+
+});
+
+
 
 
 // === ROTAS DO PAINEL ADMIN (SEM O MIDDLEWARE WEB REPETIDO) ===
