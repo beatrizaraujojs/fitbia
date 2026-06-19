@@ -19,12 +19,14 @@
                     <i class="ph ph-x"></i>
                 </button>
             </div>
-
             <nav class="sidebar-nav">
                 <a href="#"><i class="ph ph-squares-four"></i> Visão Geral</a>
                 <a href="{{ route('admin.categoria.index') }}"><i class="ph ph-tag"></i> Categorias</a>
                 <a href="{{ route('admin.produto.index') }}"><i class="ph ph-package"></i> Produtos</a>
-                <a href="{{ route('admin.grupoadicional.index') }}" class="active"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
+                <a href="{{ route('admin.grupoadicional.index') }}" class="active" ><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
+
+                {{-- O botão de pedidos com a classe active dinâmica! --}}
+                <a href="{{ route('admin.pedidos') }}" class="{{ request()->routeIs('admin.pedidos') }}"><i class="ph ph-receipt"></i> Pedidos</a>
             </nav>
             <div class="sidebar-footer">
                 <a href="#"><i class="ph ph-sign-out"></i> Sair do Sistema</a>

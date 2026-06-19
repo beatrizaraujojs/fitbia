@@ -12,8 +12,10 @@ use App\Http\Controllers\ClienteController;
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoriaController;
-use App\Http\Controllers\Admin\GrupoAdicionalController; 
+use App\Http\Controllers\Admin\GrupoAdicionalController;
 use App\Http\Controllers\Admin\ProdutoController;
+use App\Http\Controllers\Admin\PedidoController;
+
 
 // 1. Raiz do site abre na Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -70,7 +72,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Rota do Painel (Só acessa quem estiver logado)
 Route::middleware(['auth'])->group(function () {
-    
+
     // A página do painel
     Route::get('/painel', function () {
         return view('site.painel.index');
@@ -78,7 +80,6 @@ Route::middleware(['auth'])->group(function () {
 
     // A rota que processa o salvamento do perfil
     Route::post('/painel/atualizar', [App\Http\Controllers\ClienteController::class, 'atualizarPerfil'])->name('cliente.atualizar');
-
 });
 
 
@@ -108,4 +109,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/grupos-adicionais', [GrupoAdicionalController::class, 'store'])->name('grupo.store');
     Route::put('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'update'])->name('grupo.update');
     Route::delete('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'destroy'])->name('grupo.destroy');
+
+
+// Rotas de Gestão de Pedidos (Painel Admin)
+    Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos');
+    Route::post('/pedidos/{id}/status', [PedidoController::class, 'atualizarStatus'])->name('pedidos.status');
+
+    // NOVA ROTA: Detalhes do Pedido
+    Route::get('/pedidos/{id}/detalhes', [PedidoController::class, 'detalhes'])->name('pedidos.detalhes');
 });

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 
+
+
 class ClienteController extends Controller
 {
     // Exibe a página de login
@@ -107,14 +109,22 @@ class ClienteController extends Controller
 {
     $cliente = auth()->user();
 
-    $request->validate([
-        'nome_cliente'     => 'required|string|max:255',
-        'whatsapp_cliente' => 'required|string',
-        'cpf_cliente'      => 'nullable|string',
-        'data_nascimento'  => 'nullable|date',
-        'senha_cliente'    => 'nullable|string|min:6',
-    ]);
+   $request->validate([
+            'nome_cliente'     => 'required|string|max:255',
+            
+            // Adicionámos a regra 'unique' aqui no WhatsApp também
+            'whatsapp_cliente' => 'required|string|unique:tbl_cliente,whatsapp_cliente,' . $cliente->id_cliente . ',id_cliente',
+            
+            'cpf_cliente'      => 'nullable|string|unique:tbl_cliente,cpf_cliente,' . $cliente->id_cliente . ',id_cliente',
+            'data_nascimento'  => 'nullable|date',
+            'senha_cliente'    => 'nullable|string|min:6',
+        ], [
+            // 2. Mensagens de erro personalizadas
+            'cpf_cliente.unique'      => 'Este CPF já está cadastrado em outra conta da Fit Bia. Verifique se digitou corretamente.',
+            'whatsapp_cliente.unique' => 'Este número de WhatsApp já está cadastrado em outra conta. Por favor, utilize um número diferente.',
+        ]);
 
+        
     $cliente->nome_cliente = $request->nome_cliente;
     $cliente->whatsapp_cliente = $request->whatsapp_cliente;
     $cliente->cpf_cliente = $request->cpf_cliente;

@@ -345,7 +345,7 @@
                 </div>
             </div>
 
-            {{-- RESUMO FINAL --}}
+          {{-- RESUMO FINAL (Com Aviso Inteligente) --}}
             <div class="checkout-resumo">
                 <h3>Resumo do Pedido</h3>
                 <div class="resumo-valores">
@@ -364,6 +364,18 @@
                     </div>
                 </div>
 
+                {{-- AVISO ADICIONADO --}}
+                <div style="background-color: #fff9db; border-left: 4px solid #f59f00; padding: 12px; margin: 15px 0; border-radius: 4px; font-size: 13px; color: #664d03; line-height: 1.4;">
+                    <i class="ph ph-info" style="font-size: 16px; vertical-align: middle; margin-right: 4px;"></i>
+                    <strong>Atenção:</strong> Seu pedido será registrado no sistema e você será redirecionado para concluir o pagamento e a finalização diretamente no WhatsApp.
+                </div>
+
+                {{-- BOTÃO FINAL DE SUBMIT COM CONFIRMAÇÃO --}}
+                <button type="submit" class="btn-confirmar" id="btn-finalizar-checkout" disabled style="opacity: 0.5; cursor: not-allowed" onclick="return confirmarEnvio()">
+                    ENVIAR PEDIDO <i class="ph ph-arrow-right"></i>
+                </button>
+            </div>
+
                 {{-- BOTÃO FINAL DE SUBMIT --}}
                 <button type="submit" class="btn-confirmar" id="btn-finalizar-checkout" disabled style="opacity: 0.5; cursor: not-allowed">
                     ENVIAR PEDIDO <i class="ph ph-arrow-right"></i>
@@ -378,6 +390,8 @@
 @endsection
 
 @push('scripts')
+
+  
 
 <script>
     // 1. TOAST (Mensagens de Sucesso)
@@ -497,6 +511,25 @@
             });
         }
     });
+
+    function confirmarEnvio() {
+        return confirm("Deseja confirmar o envio do seu pedido? Você será direcionado ao WhatsApp da Fit Bia para finalizar!");
+    }
+
 </script>
+
+<script>
+    // Seleciona o formulário de checkout
+    const formCheckout = document.getElementById('fase-checkout');
+    
+    if (formCheckout) {
+        formCheckout.addEventListener('submit', function() {
+            // Segundos antes de ir para o WhatsApp, reescrevemos o histórico do navegador.
+            // Trocamos a URL atual pela URL do Painel de Pedidos.
+            window.history.replaceState(null, '', '{{ route("site.painel") }}');
+        });
+    }
+</script>
+
 
 @endpush
