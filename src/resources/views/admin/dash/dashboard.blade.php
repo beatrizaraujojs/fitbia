@@ -27,9 +27,18 @@
                 <a href="{{ route('admin.produto.index') }}" class="{{ request()->routeIs('admin.produto.index') ? 'active' : '' }}"><i class="ph ph-package"></i> Produtos</a>
                 <a href="{{ route('admin.grupoadicional.index') }}" class="{{ request()->routeIs('admin.grupoadicional.index') ? 'active' : '' }}"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
                 <a href="{{ route('admin.pedidos') }}" class="{{ request()->routeIs('admin.pedidos') ? 'active' : '' }}"><i class="ph ph-receipt"></i> Pedidos</a>
+                <a href="{{ route('admin.usuarios.index') }}" class="{{ request()->routeIs('admin.usuarios.*')}}"><i class="ph ph-users"></i> Usuários</a>
             </nav>
-            <div class="sidebar-footer">
-                <a href="#"><i class="ph ph-sign-out"></i> Sair do Sistema</a>
+             <div class="sidebar-footer" style="padding: 20px;">
+                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                    style="display: flex; align-items: center; justify-content: center; gap: 8px; background-color: hsla(0, 73%, 33%, 1.00); color: #e4c2c2ff; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background-color 0.3s;">
+                    <i class="ph ph-sign-out" style="font-size: 20px;"></i> Sair do Sistema
+                </a>
+
+                {{-- Formulário invisível de segurança do Laravel para fazer o Logout --}}
+                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
         </aside>
 
@@ -45,7 +54,7 @@
                 </div>
                 
                 <div class="user-profile">
-                    <span>Olá, Administrador</span>
+                  <span>Olá, {{ auth('admin')->user()->nome_usuario }}</span>
                     <i class="ph ph-user-circle"></i>
                 </div>
             </header>

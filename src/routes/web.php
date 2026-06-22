@@ -82,39 +82,71 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/painel/atualizar', [App\Http\Controllers\ClienteController::class, 'atualizarPerfil'])->name('cliente.atualizar');
 });
 
+// Rota obrigatória do Laravel para quem for barrado pelo sistema
+Route::get('/bloqueado', function () {
+    return redirect()->route('admin.login');
+})->name('login');
+// === ROTAS DO PAINEL ADMIN ===
 
+Route::get('/arrumar-senha', function () {
+    $usuario = App\Models\Usuario::where('email_usuario', 'barroscorinthias26@gmail.com')->first();
 
+    if ($usuario) {
+        $usuario->senha_usuario = \Illuminate\Support\Facades\Hash::make('beatriz20');
+        $usuario->save();
+        return 'Senha atualizada com sucesso! Pode ir logar.';
+    }
 
-// === ROTAS DO PAINEL ADMIN (SEM O MIDDLEWARE WEB REPETIDO) ===
+    return 'Usuário não encontrado!';
+});
+
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Rota principal do Dash
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // 1. Rotas Públicas do Admin (O Login)
+    Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'mostrarLogin'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.post');
+    Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
 
-    // Rotas de Categorias
-    Route::get('/categorias', [CategoriaController::class, 'index'])->name('categoria.index');
-    Route::post('/categorias', [CategoriaController::class, 'store'])->name('categoria.store');
-    Route::put('/categoria/{id}', [CategoriaController::class, 'update'])->name('categoria.update');
-    Route::delete('/categoria/{id}', [CategoriaController::class, 'destroy'])->name('categoria.destroy');
+    // 2. Rotas Protegidas do Admin (Só entra se estiver logado como Admin)
+    Route::middleware('auth:admin')->group(function () {
 
-    // Rotas de Produtos
-    Route::get('/produto', [ProdutoController::class, 'index'])->name('produto.index');
-    Route::post('/produto', [ProdutoController::class, 'store'])->name('produto.store');
-    Route::put('/produto/{id}', [ProdutoController::class, 'update'])->name('produto.update');
-    Route::delete('/produto/{id}', [ProdutoController::class, 'destroy'])->name('produto.destroy');
-    Route::get('/produto/{id}/adicionais', [ProdutoController::class, 'adicionais'])->name('produto.adicionais');
+        // Rota principal do Dash
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Rotas de Grupos Adicionais
-    Route::get('/grupos-adicionais', [GrupoAdicionalController::class, 'index'])->name('grupoadicional.index');
-    Route::post('/grupos-adicionais', [GrupoAdicionalController::class, 'store'])->name('grupo.store');
-    Route::put('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'update'])->name('grupo.update');
-    Route::delete('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'destroy'])->name('grupo.destroy');
+        // Rotas de Categorias
+        Route::get('/categorias', [CategoriaController::class, 'index'])->name('categoria.index');
+        Route::post('/categorias', [CategoriaController::class, 'store'])->name('categoria.store');
+        Route::put('/categoria/{id}', [CategoriaController::class, 'update'])->name('categoria.update');
+        Route::delete('/categoria/{id}', [CategoriaController::class, 'destroy'])->name('categoria.destroy');
+
+        // Rotas de Produtos
+        Route::get('/produto', [ProdutoController::class, 'index'])->name('produto.index');
+        Route::post('/produto', [ProdutoController::class, 'store'])->name('produto.store');
+        Route::put('/produto/{id}', [ProdutoController::class, 'update'])->name('produto.update');
+        Route::delete('/produto/{id}', [ProdutoController::class, 'destroy'])->name('produto.destroy');
+        Route::get('/produto/{id}/adicionais', [ProdutoController::class, 'adicionais'])->name('produto.adicionais');
+
+        // Rotas de Grupos Adicionais
+        Route::get('/grupos-adicionais', [GrupoAdicionalController::class, 'index'])->name('grupoadicional.index');
+        Route::post('/grupos-adicionais', [GrupoAdicionalController::class, 'store'])->name('grupo.store');
+        Route::put('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'update'])->name('grupo.update');
+        Route::delete('/grupos-adicionais/{id}', [GrupoAdicionalController::class, 'destroy'])->name('grupo.destroy');
+
+        // Rotas de Gestão de Pedidos (Painel Admin)
+        Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos');
+        Route::post('/pedidos/{id}/status', [PedidoController::class, 'atualizarStatus'])->name('pedidos.status');
+        Route::get('/pedidos/{id}/detalhes', [PedidoController::class, 'detalhes'])->name('pedidos.detalhes');
+
+        // Rota de Usuários/Clientes
+        Route::get('/usuarios', [App\Http\Controllers\Admin\UsuarioController::class, 'index'])->name('usuarios.index');
+        // Rotas de Usuários/Clientes
+        Route::get('/usuarios', [App\Http\Controllers\Admin\UsuarioController::class, 'index'])->name('usuarios.index');
+        Route::get('/usuarios/novo', [App\Http\Controllers\Admin\UsuarioController::class, 'create'])->name('usuarios.create'); 
+        Route::post('/usuarios/salvar', [App\Http\Controllers\Admin\UsuarioController::class, 'store'])->name('usuarios.store'); 
 
 
-// Rotas de Gestão de Pedidos (Painel Admin)
-    Route::get('/pedidos', [PedidoController::class, 'index'])->name('pedidos');
-    Route::post('/pedidos/{id}/status', [PedidoController::class, 'atualizarStatus'])->name('pedidos.status');
-
-    // NOVA ROTA: Detalhes do Pedido
-    Route::get('/pedidos/{id}/detalhes', [PedidoController::class, 'detalhes'])->name('pedidos.detalhes');
+        // Rotas de criação de Pedido Manual no Admin
+        Route::get('/pedidos/novo', [App\Http\Controllers\Admin\PedidoController::class, 'create'])->name('pedidos.create');
+        Route::post('/pedidos/salvar', [App\Http\Controllers\Admin\PedidoController::class, 'store'])->name('pedidos.store');
+    });
 });

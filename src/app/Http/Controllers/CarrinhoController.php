@@ -129,78 +129,99 @@ class CarrinhoController extends Controller
         return redirect()->back()->with('success', 'Produto removido com sucesso!');
     }
 
+    // 5. FINALIZAR PEDIDO (Seguro e com WhatsApp para PIX)
     // =========================================================
-    // 5. FINALIZAR PEDIDO (Direto para o WhatsApp)
-    // =========================================================
-   public function finalizarPedido(Request $request)
-{
-    // 1. Verifica se o carrinho existe e não está vazio
-    $carrinho = session()->get('carrinho', []);
-    if (empty($carrinho)) {
-        return redirect()->back()->with('error', 'Seu carrinho está vazio!');
-    }
-
-    // 2. Se o cliente precisar estar logado para finalizar
-    if (!auth()->check()) {
-        return redirect()->back()->with('error', 'Você precisa estar logado para finalizar o pedido.');
-    }
-
-    try {
-        // 3. Criar o registro do Pedido principal
-        $pedido = new Pedido();
-        
-        // Ajuste os nomes dessas colunas de acordo com sua migration/banco:
-        $pedido->id_cliente_fk = auth()->user()->id_cliente; 
-        $pedido->id_endereco_fk = $request->input('id_endereco'); // name do <select> ou <input> no HTML
-        $pedido->forma_pagamento_pedido = $request->input('forma_pagamento'); // name do radio/select no HTML
-        $pedido->observacoes_pedido = $request->input('observacao');
-        $pedido->status_pedido = 'PENDENTE';
-        
-        // Calcula o valor total direto do carrinho salvo na sessão
-        $totalPedido = 0;
-        foreach ($carrinho as $item) {
-            $subtotalItem = $item['preco'] * $item['quantidade'];
-            if (isset($item['adicionais'])) {
-                foreach ($item['adicionais'] as $add) {
-                    $subtotalItem += $add['preco'] * $item['quantidade'];
-                }
-            }
-            $totalPedido += $subtotalItem;
-        }
-        $pedido->valor_total_pedido = $totalPedido;
-        
-        // Salva o pedido principal para gerar o id_pedido
-        $pedido->save();
-
-        // 4. Salvar os itens vinculados a esse pedido
-        foreach ($carrinho as $idProduto => $item) {
-            $itemPedido = new ItemPedido();
-            $itemPedido->id_pedido_fk = $pedido->id_pedido; // Pega o ID gerado acima
-            $itemPedido->id_produto_fk = $idProduto;
-            $itemPedido->quantidade_item = $item['quantidade'];
-            $itemPedido->preco_unitario_item = $item['preco'];
-            $itemPedido->save();
-
-            // Se o item tiver adicionais salvos na sessão, grava na tabela de adicionais
-            if (isset($item['adicionais']) && count($item['adicionais']) > 0) {
-                foreach ($item['adicionais'] as $idAdd => $add) {
-                    $itemAdd = new ItemPedidoAdicional();
-                    $itemAdd->id_item_pedido_fk = $itemPedido->id_item_pedido; // ID do item gerado acima
-                    $itemAdd->id_adicional_fk = $idAdd;
-                    $itemAdd->preco_cobrado_add = $add['preco'];
-                    $itemAdd->save();
-                }
-            }
+    public function finalizarPedido(Request $request)
+    {
+        $carrinho = session()->get('carrinho', []);
+        if (empty($carrinho)) {
+            return redirect()->back()->with('error', 'Seu carrinho está vazio!');
         }
 
-        // 5. Sucesso! Limpa o carrinho da sessão e redireciona
-        session()->forget('carrinho');
+        if (!auth()->check()) {
+            return redirect()->back()->with('error', 'Você precisa estar logado para finalizar o pedido.');
+        }
 
-        return redirect()->route('site.checkout.pedidos')->with('success', 'Pedido realizado com sucesso!');
+        // 🌟 BLINDAGEM: Aceita o nome do campo independente de como estiver no HTML
+        $formaSelecionada = $request->input('pagamento') ?? $request->input('forma_pagamento');
 
-    } catch (\Exception $e) {
-        // Se der qualquer erro no banco, ele vai parar aqui e te mostrar o erro exato
-        return redirect()->back()->with('error', 'Erro ao salvar pedido: ' . $e->getMessage())->withInput();
-    }
+        if (!$formaSelecionada) {
+            // Agora usa o "with('error')" em vez de validate para não gerar conflito de tela
+            return redirect()->back()->with('error', 'Por favor, selecione uma forma de pagamento para continuar.');
+        }
+
+        try {
+            $endereco = Endereco::where('id_cliente_fk', auth()->user()->id_cliente)->first();
+
+            if (!$endereco) {
+                return redirect()->back()->with('error', 'Você precisa cadastrar o seu endereço de entrega no painel antes de finalizar o pedido!');
+            }
+
+            $pedido = new Pedido();
+            $pedido->id_cliente_fk = auth()->user()->id_cliente; 
+            $pedido->id_endereco_fk = $endereco->id_endereco; 
+            $pedido->forma_pagamento_pedido = $formaSelecionada; 
+            $pedido->observacoes_pedido = $request->observacao;
+            $pedido->status_pedido = 'PENDENTE';
+            
+            $totalPedido = 0;
+            foreach ($carrinho as $item) {
+                $subtotalItem = $item['preco'] * $item['quantidade'];
+                if (isset($item['adicionais'])) {
+                    foreach ($item['adicionais'] as $add) {
+                        $subtotalItem += $add['preco'] * $item['quantidade'];
+                    }
+                }
+                $totalPedido += $subtotalItem;
+            }
+            $pedido->valor_total_pedido = $totalPedido;
+            $pedido->save();
+
+            foreach ($carrinho as $idProduto => $item) {
+                $idProdutoReal = $item['id_produto'];
+
+                $itemPedido = new ItemPedido();
+                $itemPedido->id_pedido_fk = $pedido->id_pedido; 
+                $itemPedido->id_produto_fk = $idProdutoReal;
+                $itemPedido->quantidade_item = $item['quantidade'];
+                $itemPedido->preco_unitario_item = $item['preco'];
+                $itemPedido->save();
+
+                if (isset($item['adicionais']) && count($item['adicionais']) > 0) {
+                    foreach ($item['adicionais'] as $add) {
+                        $itemAdd = new ItemPedidoAdicional();
+                        $itemAdd->id_item_pedido_fk = $itemPedido->id_item_pedido; 
+                        $itemAdd->id_adicional_fk = $add['id_adicional'];
+                        $itemAdd->preco_cobrado_add = $add['preco'];
+                        $itemAdd->save();
+                    }
+                }
+            }
+
+            session()->forget('carrinho');
+
+            // 🌟 LÓGICA DO PIX (VAI PRO WHATSAPP)
+            if ($formaSelecionada === 'pix') {
+                $telefoneLoja = '5511999999999'; // AQUI VAI O ZAP DA BIA
+                $numeroFormatado = str_pad($pedido->id_pedido, 4, '0', STR_PAD_LEFT);
+                $valorFormatado = number_format($totalPedido, 2, ',', '.');
+                $nomeCliente = explode(' ', auth()->user()->nome_cliente)[0];
+                
+                $texto = "Olá Fit Bia! Sou o(a) *{$nomeCliente}*.\n\n";
+                $texto .= "Acabei de realizar o pedido *#{$numeroFormatado}* no site.\n";
+                $texto .= "O valor total deu *R$ {$valorFormatado}* e eu escolhi pagar via *PIX*.\n\n";
+                $texto .= "Pode me enviar a chave, por favor?";
+
+                $urlZap = "https://api.whatsapp.com/send?phone={$telefoneLoja}&text=" . urlencode($texto);
+
+                return redirect()->away($urlZap);
+            }
+
+            // 🌟 LÓGICA PARA DINHEIRO OU CARTÃO (VAI PRO PAINEL DIRETO)
+            return redirect()->route('site.painel')->with('success', 'Pedido realizado com sucesso! O pagamento será feito na entrega.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao salvar pedido: ' . $e->getMessage())->withInput();
+        }
     }
 }

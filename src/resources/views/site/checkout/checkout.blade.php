@@ -137,7 +137,7 @@
                 @endif
             </div>
 
-            {{-- RESUMO DO CARRINHO (Botão chama o JavaScript para esconder esta tela e abrir os formulários) --}}
+            {{-- RESUMO DO CARRINHO --}}
             <div class="pedidos-resumo">
                 <h3>Resumo do Pedido</h3>
                 <div class="resumo-linha">
@@ -168,43 +168,33 @@
             <p>Que tal adicionar uma bebida ou sobremesa fit?</p>
             
             <div class="relacionados-grid">
-                {{-- ITEM 1 --}}
                 <div class="card-relacionado">
                     <img src="https://via.placeholder.com/60" alt="Suco Detox">
                     <div class="relacionado-info">
                         <h4>Suco Verde Detox</h4>
                         <span class="relacionado-preco">R$ 12,00</span>
                     </div>
-                    <button class="btn-add-mini" title="Adicionar" onclick="adicionarFixo(1)">
-                        <i class="ph ph-plus"></i>
-                    </button>
+                    <button class="btn-add-mini" title="Adicionar" onclick="adicionarFixo(1)"><i class="ph ph-plus"></i></button>
                 </div>
-                {{-- ITEM 2 --}}
                 <div class="card-relacionado">
                     <img src="https://via.placeholder.com/60" alt="Brownie Fit">
                     <div class="relacionado-info">
                         <h4>Brownie Fit Cacau</h4>
                         <span class="relacionado-preco">R$ 15,00</span>
                     </div>
-                    <button class="btn-add-mini" title="Adicionar" onclick="adicionarFixo(2)">
-                        <i class="ph ph-plus"></i>
-                    </button>
+                    <button class="btn-add-mini" title="Adicionar" onclick="adicionarFixo(2)"><i class="ph ph-plus"></i></button>
                 </div>
-                {{-- ITEM 3 --}}
                 <div class="card-relacionado">
                     <img src="https://via.placeholder.com/60" alt="Salada de Frutas">
                     <div class="relacionado-info">
                         <h4>Salada de Frutas</h4>
                         <span class="relacionado-preco">R$ 10,00</span>
                     </div>
-                    <button class="btn-add-mini" title="Adicionar" onclick="adicionarFixo(3)">
-                        <i class="ph ph-plus"></i>
-                    </button>
+                    <button class="btn-add-mini" title="Adicionar" onclick="adicionarFixo(3)"><i class="ph ph-plus"></i></button>
                 </div>
             </div>
         </div>
 
-        {{-- FORMULÁRIO OCULTO PARA ADD RELACIONADOS --}}
         <form id="form-add-fixo" action="{{ route('carrinho.adicionar') }}" method="POST" style="display: none;">
             @csrf
             <input type="hidden" name="id_produto" id="id-produto-fixo">
@@ -222,7 +212,7 @@
         <div class="checkout-layout">
             <div class="checkout-formularios">
                 
-                {{-- ETAPA 1 (Com os valores do banco embutidos) --}}
+                {{-- ETAPA 1 --}}
                 <div class="checkout-secao etapa-checkout ativo" id="conteudo-etapa-1">
                     <h3><i class="ph ph-map-pin"></i> 1. Onde vamos entregar?</h3>
                     <div class="form-grid">
@@ -260,7 +250,7 @@
                     <h4 class="subtitulo-checkout">Tipo de Pedido</h4>
                     <div class="radio-group-horizontal">
                         <label class="radio-customizado">
-                            <input type="radio" name="tipo_pedido" value="delivery" checked />
+                            <input type="radio" name="pagamento" value="delivery" checked />
                             <i class="ph ph-motorcycle"></i> Delivery
                         </label>
                     </div>
@@ -269,7 +259,7 @@
                     <div class="opcoes-pagamento">
                         <label class="opcao-card">
                             <input type="radio" name="pagamento" value="dinheiro" />
-                            <div class="opcao-conteudo"><span>Dinheiro</span></div>
+                            <div class="opcao-conteudo"><span>Dinheiro na entrega</span></div>
                         </label>
                         <label class="opcao-card">
                             <input type="radio" name="pagamento" value="pix" checked />
@@ -279,13 +269,12 @@
                             <input type="radio" name="pagamento" value="debito" />
                             <div class="opcao-conteudo"><span>Cartão de Débito - Maquininha</span></div>
                         </label>
-                        <div class="step" id="step-2">
-                            <label class="opcao-card">
-                                <input type="radio" name="pagamento" value="credito" />
-                                <div class="opcao-conteudo"><span>Cartão de Crédito - Maquininha</span></div>
-                            </label>
-                        </div>
-                        <div class="botoes-etapa">
+                        <label class="opcao-card">
+                            <input type="radio" name="pagamento" value="credito" />
+                            <div class="opcao-conteudo"><span>Cartão de Crédito - Maquininha</span></div>
+                        </label>
+                        
+                        <div class="botoes-etapa" style="margin-top: 20px;">
                             <button type="button" class="btn-voltar" onclick="irParaEtapa(1)">
                                 <i class="ph ph-arrow-left"></i> Voltar
                             </button>
@@ -296,7 +285,7 @@
                     </div>
                 </div>
 
-                {{-- ETAPA 3 (Com os valores do cliente embutidos) --}}
+                {{-- ETAPA 3 --}}
                 <div class="checkout-secao etapa-checkout" id="conteudo-etapa-3">
                     <h3><i class="ph ph-user"></i> 3. Seus Dados Pessoais</h3>
                     <div class="form-grid">
@@ -335,7 +324,7 @@
                     </div>
                     <div class="input-group" style="margin-top: 20px">
                         <label for="observacoes">OBSERVAÇÕES / CPF NA NOTA</label>
-                        <input type="text" id="observacoes" name="observacoes" placeholder="Ex: Sem cebola, deixar na portaria..." />
+                        <input type="text" id="observacoes" name="observacao" placeholder="Ex: Sem cebola, deixar na portaria..." />
                     </div>
                     <div class="botoes-etapa">
                         <button type="button" class="btn-voltar" onclick="irParaEtapa(3)">
@@ -345,7 +334,7 @@
                 </div>
             </div>
 
-          {{-- RESUMO FINAL (Com Aviso Inteligente) --}}
+            {{-- RESUMO FINAL E BOTÃO (TOTALMENTE CORRIGIDO) --}}
             <div class="checkout-resumo">
                 <h3>Resumo do Pedido</h3>
                 <div class="resumo-valores">
@@ -364,19 +353,13 @@
                     </div>
                 </div>
 
-                {{-- AVISO ADICIONADO --}}
-                <div style="background-color: #fff9db; border-left: 4px solid #f59f00; padding: 12px; margin: 15px 0; border-radius: 4px; font-size: 13px; color: #664d03; line-height: 1.4;">
+                {{-- AVISO INTELIGENTE (Só aparece para PIX) --}}
+                <div id="aviso-whatsapp-pix" style="background-color: #fff9db; border-left: 4px solid #f59f00; padding: 12px; margin: 15px 0; border-radius: 4px; font-size: 13px; color: #664d03; line-height: 1.4; display: none;">
                     <i class="ph ph-info" style="font-size: 16px; vertical-align: middle; margin-right: 4px;"></i>
-                    <strong>Atenção:</strong> Seu pedido será registrado no sistema e você será redirecionado para concluir o pagamento e a finalização diretamente no WhatsApp.
+                    <strong>Atenção:</strong> Como você escolheu <b>PIX</b>, ao enviar o pedido você será redirecionado para concluir o pagamento no nosso WhatsApp.
                 </div>
 
-                {{-- BOTÃO FINAL DE SUBMIT COM CONFIRMAÇÃO --}}
-                <button type="submit" class="btn-confirmar" id="btn-finalizar-checkout" disabled style="opacity: 0.5; cursor: not-allowed" onclick="return confirmarEnvio()">
-                    ENVIAR PEDIDO <i class="ph ph-arrow-right"></i>
-                </button>
-            </div>
-
-                {{-- BOTÃO FINAL DE SUBMIT --}}
+                {{-- BOTÃO FINAL ÚNICO E LIMPO --}}
                 <button type="submit" class="btn-confirmar" id="btn-finalizar-checkout" disabled style="opacity: 0.5; cursor: not-allowed">
                     ENVIAR PEDIDO <i class="ph ph-arrow-right"></i>
                 </button>
@@ -390,8 +373,6 @@
 @endsection
 
 @push('scripts')
-
-  
 
 <script>
     // 1. TOAST (Mensagens de Sucesso)
@@ -417,15 +398,13 @@
         document.getElementById('form-add-fixo').submit();
     }
 
-  // 4. MUDANÇA DE FASE: DO CARRINHO PARA O CHECKOUT (COM PROTEÇÃO DE LOGIN)
+    // 4. MUDANÇA DE FASE: DO CARRINHO PARA O CHECKOUT (COM PROTEÇÃO DE LOGIN)
     function iniciarCheckout() {
         @if(auth()->check())
-            // Se o cliente ESTIVER LOGADO, faz a transição suave para a Fase 2 (Formulários)
             document.getElementById('fase-carrinho').style.display = 'none';
             document.getElementById('fase-checkout').style.display = 'block';
             window.scrollTo({ top: 0, behavior: "smooth" });
         @else
-            // Se o cliente NÃO estiver logado, manda ele para a página de Login!
             alert("Para finalizar seu pedido, faça login ou cadastre-se rapidinho!");
             window.location.href = "{{ url('/login') }}"; 
         @endif
@@ -433,51 +412,51 @@
 
     // 5. NAVEGAÇÃO E VALIDAÇÃO DE ETAPAS DO CHECKOUT
     function irParaEtapa(etapaDestino) {
-        
-        // Antes de avançar, valida a etapa atual (se estiver indo para frente)
         let etapaAtual = etapaDestino - 1;
         
         if (etapaAtual > 0 && etapaDestino > etapaAtual) {
             let secaoAtual = document.getElementById(`conteudo-etapa-${etapaAtual}`);
-            // Pega todos os campos que têm o atributo "required" nesta seção
             let inputsObrigatorios = secaoAtual.querySelectorAll('input[required]');
             let tudoPreenchido = true;
 
             inputsObrigatorios.forEach(input => {
-                if (input.value.trim() === '') {
+                if(input.type === 'radio') {
+                    let radioGroup = document.querySelectorAll(`input[name="${input.name}"]:checked`);
+                    if(radioGroup.length === 0) { tudoPreenchido = false; }
+                } 
+                else if (input.value.trim() === '') {
                     tudoPreenchido = false;
-                    input.style.borderColor = '#ef4444'; // Pinta a borda de vermelho
+                    input.style.borderColor = '#ef4444';
                 } else {
-                    input.style.borderColor = '#d1d5db'; // Volta ao cinza normal
+                    input.style.borderColor = '#d1d5db';
                 }
             });
 
             if (!tudoPreenchido) {
-                alert('Por favor, preencha todos os campos obrigatórios (em vermelho) antes de avançar.');
-                return; // Trava o cliente aqui, não deixa mudar de tela
+                alert('Por favor, preencha todos os campos obrigatórios antes de avançar.');
+                return;
             }
         }
 
-        // Se estiver tudo preenchido, faz a troca de tela visualmente
         document.querySelectorAll('.etapa-checkout').forEach(secao => {
             secao.classList.remove('ativo');
         });
         document.getElementById(`conteudo-etapa-${etapaDestino}`).classList.add('ativo');
 
-        document.querySelectorAll('.step').forEach((passo, index) => {
-            if (index + 1 <= etapaDestino) {
-                passo.classList.add('ativo');
-            } else {
-                passo.classList.remove('ativo');
-            }
-        });
-
-        // Libera o botão final apenas na Etapa 4
         const btnFinalizar = document.getElementById('btn-finalizar-checkout');
+        const avisoPix = document.getElementById('aviso-whatsapp-pix');
+        
         if (etapaDestino === 4) {
             btnFinalizar.disabled = false;
             btnFinalizar.style.opacity = "1";
             btnFinalizar.style.cursor = "pointer";
+
+            let radioSelecionado = document.querySelector('input[name="pagamento"]:checked');
+            if (radioSelecionado && radioSelecionado.value === 'pix' && avisoPix) {
+                avisoPix.style.display = 'block'; 
+            } else if (avisoPix) {
+                avisoPix.style.display = 'none'; 
+            }
         } else {
             btnFinalizar.disabled = true;
             btnFinalizar.style.opacity = "0.5";
@@ -496,7 +475,7 @@
                 let cepDigitado = this.value.replace(/\D/g, '');
                 if (cepDigitado.length === 8) {
                     fetch(`https://viacep.com.br/ws/${cepDigitado}/json/`)
-                        .then(resposta => resposta.json())
+                        .then(resposta => response => resposta.json())
                         .then(dados => {
                             if (!dados.erro) {
                                 document.getElementById('endereco_sp').value = dados.logradouro;
@@ -511,25 +490,6 @@
             });
         }
     });
-
-    function confirmarEnvio() {
-        return confirm("Deseja confirmar o envio do seu pedido? Você será direcionado ao WhatsApp da Fit Bia para finalizar!");
-    }
-
 </script>
-
-<script>
-    // Seleciona o formulário de checkout
-    const formCheckout = document.getElementById('fase-checkout');
-    
-    if (formCheckout) {
-        formCheckout.addEventListener('submit', function() {
-            // Segundos antes de ir para o WhatsApp, reescrevemos o histórico do navegador.
-            // Trocamos a URL atual pela URL do Painel de Pedidos.
-            window.history.replaceState(null, '', '{{ route("site.painel") }}');
-        });
-    }
-</script>
-
 
 @endpush
