@@ -131,6 +131,9 @@ class CarrinhoController extends Controller
 
     // 5. FINALIZAR PEDIDO (Seguro e com WhatsApp para PIX)
     // =========================================================
+    // =========================================================
+    // 5. FINALIZAR PEDIDO (Seguro e com Tradutor para o Banco)
+    // =========================================================
     public function finalizarPedido(Request $request)
     {
         $carrinho = session()->get('carrinho', []);
@@ -142,12 +145,31 @@ class CarrinhoController extends Controller
             return redirect()->back()->with('error', 'Você precisa estar logado para finalizar o pedido.');
         }
 
-        // 🌟 BLINDAGEM: Aceita o nome do campo independente de como estiver no HTML
         $formaSelecionada = $request->input('pagamento') ?? $request->input('forma_pagamento');
 
-        if (!$formaSelecionada) {
-            // Agora usa o "with('error')" em vez de validate para não gerar conflito de tela
-            return redirect()->back()->with('error', 'Por favor, selecione uma forma de pagamento para continuar.');
+        // Se veio vazio OU se o HTML enviou "delivery" como pagamento por engano, barra o erro!
+        if (!$formaSelecionada || $formaSelecionada === 'delivery') {
+            return redirect()->back()->with('error', 'Por favor, selecione uma forma de pagamento válida na Etapa 2.');
+        }
+
+        // 🌟 O GRANDE TRUQUE: O Tradutor para o Banco de Dados
+        $formaBanco = 'DINHEIRO'; // Valor padrão de segurança
+        switch (strtolower($formaSelecionada)) {
+            case 'pix':
+                $formaBanco = 'PIX';
+                break;
+            case 'debito':
+            case 'cartao':
+            case 'cartao_debito':
+                $formaBanco = 'CARTAO_DEBITO';
+                break;
+            case 'credito':
+            case 'cartao_credito':
+                $formaBanco = 'CARTAO_CREDITO';
+                break;
+            case 'dinheiro':
+                $formaBanco = 'DINHEIRO';
+                break;
         }
 
         try {
@@ -160,19 +182,16 @@ class CarrinhoController extends Controller
             $pedido = new Pedido();
             $pedido->id_cliente_fk = auth()->user()->id_cliente; 
             $pedido->id_endereco_fk = $endereco->id_endereco; 
-            $pedido->forma_pagamento_pedido = $formaSelecionada; 
+            
+            // 🌟 SALVANDO COM A PALAVRA EXATA QUE O BANCO EXIGE:
+            $pedido->forma_pagamento_pedido = $formaBanco; 
+            
             $pedido->observacoes_pedido = $request->observacao;
             $pedido->status_pedido = 'PENDENTE';
             
             $totalPedido = 0;
             foreach ($carrinho as $item) {
-                $subtotalItem = $item['preco'] * $item['quantidade'];
-                if (isset($item['adicionais'])) {
-                    foreach ($item['adicionais'] as $add) {
-                        $subtotalItem += $add['preco'] * $item['quantidade'];
-                    }
-                }
-                $totalPedido += $subtotalItem;
+                $totalPedido += $item['preco'] * $item['quantidade']; // O cálculo corrigido de R$ 4,00!
             }
             $pedido->valor_total_pedido = $totalPedido;
             $pedido->save();
@@ -200,9 +219,9 @@ class CarrinhoController extends Controller
 
             session()->forget('carrinho');
 
-            // 🌟 LÓGICA DO PIX (VAI PRO WHATSAPP)
-            if ($formaSelecionada === 'pix') {
-                $telefoneLoja = '5511999999999'; // AQUI VAI O ZAP DA BIA
+            // 🌟 LÓGICA DO PIX (Usa o formaBanco = 'PIX')
+            if ($formaBanco === 'PIX') {
+                $telefoneLoja = '5511981826719'; // O ZAP DA BIA
                 $numeroFormatado = str_pad($pedido->id_pedido, 4, '0', STR_PAD_LEFT);
                 $valorFormatado = number_format($totalPedido, 2, ',', '.');
                 $nomeCliente = explode(' ', auth()->user()->nome_cliente)[0];

@@ -71,6 +71,8 @@ class PedidoController extends Controller
     // =========================================================
    // =========================================================
     // 3. SALVAR O PEDIDO MANUAL NO BANCO DE DADOS
+    // =========================================================// =========================================================
+    // 3. SALVAR O PEDIDO MANUAL NO BANCO DE DADOS (COM TRADUTOR)
     // =========================================================
     public function store(Request $request)
     {
@@ -92,8 +94,31 @@ class PedidoController extends Controller
                 }
             }
 
-            // 🌟 A MÁGICA ACONTECE AQUI: Resolvemos a obrigatoriedade do endereço
-            // Procura o primeiro endereço do cliente. Se não existir, cria um endereço de "Retirada"
+            // 🌟 O GRANDE TRUQUE: Tradutor para o Banco de Dados no Admin!
+            $formaBanco = 'DINHEIRO'; // Valor padrão
+            switch (strtolower($request->forma_pagamento)) {
+                case 'pix':
+                    $formaBanco = 'PIX';
+                    break;
+                case 'debito':
+                case 'cartao':
+                case 'cartao_debito':
+                    $formaBanco = 'CARTAO_DEBITO';
+                    break;
+                case 'credito':
+                case 'cartao_credito':
+                    $formaBanco = 'CARTAO_CREDITO';
+                    break;
+                case 'dinheiro':
+                    $formaBanco = 'DINHEIRO';
+                    break;
+                case 'vale_refeicao':
+                case 'vale':
+                    $formaBanco = 'VALE_REFEICAO';
+                    break;
+            }
+
+            // Cria um endereço de "Retirada" se o cliente não tiver
             $endereco = Endereco::firstOrCreate(
                 ['id_cliente_fk' => $request->id_cliente_fk],
                 [
@@ -109,11 +134,14 @@ class PedidoController extends Controller
             // 2. Cria o registo do Pedido principal
             $pedido = new Pedido();
             $pedido->id_cliente_fk = $request->id_cliente_fk;
-            $pedido->forma_pagamento_pedido = $request->forma_pagamento;
+            
+            // 🌟 Salva usando a palavra EXATA que o banco exige!
+            $pedido->forma_pagamento_pedido = $formaBanco; 
+            
             $pedido->observacoes_pedido = $request->observacao ?? 'Pedido lançado manualmente pelo Admin.';
             $pedido->status_pedido = $request->status_pedido;
             $pedido->valor_total_pedido = $valorTotal;
-            $pedido->id_endereco_fk = $endereco->id_endereco; // Agora envia o ID garantido!
+            $pedido->id_endereco_fk = $endereco->id_endereco; 
             $pedido->save();
 
             // 3. Salva os produtos vinculados a esse pedido

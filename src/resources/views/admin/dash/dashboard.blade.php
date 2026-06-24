@@ -27,7 +27,7 @@
                 <a href="{{ route('admin.produto.index') }}" class="{{ request()->routeIs('admin.produto.index') ? 'active' : '' }}"><i class="ph ph-package"></i> Produtos</a>
                 <a href="{{ route('admin.grupoadicional.index') }}" class="{{ request()->routeIs('admin.grupoadicional.index') ? 'active' : '' }}"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
                 <a href="{{ route('admin.pedidos') }}" class="{{ request()->routeIs('admin.pedidos') ? 'active' : '' }}"><i class="ph ph-receipt"></i> Pedidos</a>
-                <a href="{{ route('admin.usuarios.index') }}" class="{{ request()->routeIs('admin.usuarios.*')}}"><i class="ph ph-users"></i> Usuários</a>
+                <a href="{{ route('admin.usuarios.index') }}" class="{{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}"><i class="ph ph-users"></i> Usuários</a>
             </nav>
              <div class="sidebar-footer" style="padding: 20px;">
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -54,7 +54,7 @@
                 </div>
                 
                 <div class="user-profile">
-                  <span>Olá, {{ auth('admin')->user()->nome_usuario }}</span>
+                  <span>Olá, {{ auth('admin')->user()->nome_usuario ?? 'Admin' }}</span>
                     <i class="ph ph-user-circle"></i>
                 </div>
             </header>
@@ -68,7 +68,7 @@
                     <div class="stat-card" style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid #059669;">
                         <div>
                             <h3 style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Faturamento</h3>
-                            <p class="stat-number" style="font-size: 26px; font-weight: 900; color: #111827; margin: 0;">R$ {{ number_format($receitaTotal, 2, ',', '.') }}</p>
+                            <p class="stat-number" style="font-size: 26px; font-weight: 900; color: #111827; margin: 0;">R$ {{ number_format($receitaTotal ?? 0, 2, ',', '.') }}</p>
                         </div>
                         <div style="background: #ecfdf5; padding: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <i class="ph ph-currency-dollar" style="font-size: 32px; color: #059669;"></i>
@@ -78,7 +78,7 @@
                     <div class="stat-card" style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between;">
                         <div>
                             <h3 style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Total de Pedidos</h3>
-                            <p class="stat-number" style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">{{ $totalPedidos }}</p>
+                            <p class="stat-number" style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">{{ $totalPedidos ?? 0 }}</p>
                         </div>
                         <div style="background: #f0fdf4; padding: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <i class="ph ph-receipt" style="font-size: 32px; color: #16a34a;"></i>
@@ -88,7 +88,7 @@
                     <div class="stat-card" style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between;">
                         <div>
                             <h3 style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Produtos Ativos</h3>
-                            <p class="stat-number" style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">{{ $produtosAtivos }}</p>
+                            <p class="stat-number" style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">{{ $produtosAtivos ?? 0 }}</p>
                         </div>
                         <div style="background: #eff6ff; padding: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <i class="ph ph-package" style="font-size: 32px; color: #2563eb;"></i>
@@ -98,7 +98,7 @@
                     <div class="stat-card" style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; align-items: center; justify-content: space-between;">
                         <div>
                             <h3 style="color: #6b7280; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Categorias</h3>
-                            <p class="stat-number" style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">{{ $totalCategorias }}</p>
+                            <p class="stat-number" style="font-size: 28px; font-weight: 800; color: #111827; margin: 0;">{{ $totalCategorias ?? 0 }}</p>
                         </div>
                         <div style="background: #fdf4ff; padding: 15px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <i class="ph ph-tag" style="font-size: 32px; color: #c026d3;"></i>
@@ -118,7 +118,7 @@
                         <div style="background: #ffffff; padding: 18px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border-left: 4px solid #10b981; display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Ganho de Hoje</span>
-                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoDia, 2, ',', '.') }}</p>
+                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoDia ?? 0, 2, ',', '.') }}</p>
                             </div>
                             <i class="ph ph-calendar-heart" style="font-size: 24px; color: #10b981;"></i>
                         </div>
@@ -127,7 +127,7 @@
                         <div style="background: #ffffff; padding: 18px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border-left: 4px solid #3b82f6; display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Esta Semana</span>
-                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoSemana, 2, ',', '.') }}</p>
+                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoSemana ?? 0, 2, ',', '.') }}</p>
                             </div>
                             <i class="ph ph-calendar-blank" style="font-size: 24px; color: #3b82f6;"></i>
                         </div>
@@ -136,7 +136,7 @@
                         <div style="background: #ffffff; padding: 18px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border-left: 4px solid #8b5cf6; display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Este Mês</span>
-                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoMes, 2, ',', '.') }}</p>
+                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoMes ?? 0, 2, ',', '.') }}</p>
                             </div>
                             <i class="ph ph-chart-line-up" style="font-size: 24px; color: #8b5cf6;"></i>
                         </div>
@@ -145,7 +145,7 @@
                         <div style="background: #ffffff; padding: 18px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); border-left: 4px solid #f59e0b; display: flex; align-items: center; justify-content: space-between;">
                             <div>
                                 <span style="font-size: 12px; color: #6b7280; font-weight: 600;">Balanço Anual</span>
-                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoAno, 2, ',', '.') }}</p>
+                                <p style="font-size: 18px; font-weight: 800; color: #111827; margin: 4px 0 0 0;">R$ {{ number_format($faturamentoAno ?? 0, 2, ',', '.') }}</p>
                             </div>
                             <i class="ph ph-trend-up" style="font-size: 24px; color: #f59e0b;"></i>
                         </div>
@@ -192,10 +192,10 @@
                                 labels: ['Pendentes', 'Preparando', 'Entregues', 'Cancelados'],
                                 datasets: [{
                                     data: [
-                                        {{ $graficoStatus['Pendentes'] }},
-                                        {{ $graficoStatus['Preparando'] }},
-                                        {{ $graficoStatus['Entregues'] }},
-                                        {{ $graficoStatus['Cancelados'] }}
+                                        {{ $graficoStatus['Pendentes'] ?? 0 }},
+                                        {{ $graficoStatus['Preparando'] ?? 0 }},
+                                        {{ $graficoStatus['Entregues'] ?? 0 }},
+                                        {{ $graficoStatus['Cancelados'] ?? 0 }}
                                     ],
                                     backgroundColor: ['#f59e0b', '#3b82f6', '#10b981', '#ef4444'], // Cores sólidas e vivas
                                     borderWidth: 0, // Sem borda branca feia
@@ -221,9 +221,9 @@
                                 datasets: [{
                                     label: 'Pedidos',
                                     data: [
-                                        {{ $graficoPagamento['PIX'] }},
-                                        {{ $graficoPagamento['Cartão'] }},
-                                        {{ $graficoPagamento['Dinheiro'] }}
+                                        {{ $graficoPagamento['PIX'] ?? 0 }},
+                                        {{ $graficoPagamento['Cartão'] ?? 0 }},
+                                        {{ $graficoPagamento['Dinheiro'] ?? 0 }}
                                     ],
                                     backgroundColor: '#2b4231', // Verde Fit Bia
                                     borderRadius: 8, // Barras redondinhas em cima

@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
-   public function index()
+    public function index()
     {
         // 1. Cards Gerais
         $totalPedidos = Pedido::count();
@@ -39,7 +39,6 @@ class DashboardController extends Controller
             ->whereYear('created_at', $hoje->year)
             ->sum('valor_total_pedido');
 
-
         // 3. Gráficos (Status)
         $graficoStatus = [
             'Pendentes'  => Pedido::where('status_pedido', 'PENDENTE')->count(),
@@ -48,10 +47,10 @@ class DashboardController extends Controller
             'Cancelados' => Pedido::where('status_pedido', 'CANCELADO')->count(),
         ];
 
-        // 4. Gráficos (Pagamento)
+        // 4. Gráficos (Pagamento) - CORRIGIDO PARA PEGAR DEBITO E CREDITO JUNTOS
         $graficoPagamento = [
             'PIX'      => Pedido::where('forma_pagamento_pedido', 'PIX')->count(),
-            'Cartão'   => Pedido::where('forma_pagamento_pedido', 'CARTAO')->count(),
+            'Cartão'   => Pedido::whereIn('forma_pagamento_pedido', ['CARTAO_DEBITO', 'CARTAO_CREDITO'])->count(),
             'Dinheiro' => Pedido::where('forma_pagamento_pedido', 'DINHEIRO')->count(),
         ];
 
@@ -60,7 +59,7 @@ class DashboardController extends Controller
             'produtosAtivos', 
             'totalCategorias',
             'receitaTotal',
-            'faturamentoDia',      // Novas variáveis enviadas para a view
+            'faturamentoDia',
             'faturamentoSemana',
             'faturamentoMes',
             'faturamentoAno',

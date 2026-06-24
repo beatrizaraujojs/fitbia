@@ -244,13 +244,15 @@
                     </div>
                 </div>
 
-                {{-- ETAPA 2 --}}
+              {{-- ETAPA 2 (CORRIGIDA DEFINITIVAMENTE) --}}
                 <div class="checkout-secao etapa-checkout" id="conteudo-etapa-2">
                     <h3><i class="ph ph-moped"></i> 2. Tipo de Entrega e Pagamento</h3>
+                    
                     <h4 class="subtitulo-checkout">Tipo de Pedido</h4>
                     <div class="radio-group-horizontal">
                         <label class="radio-customizado">
-                            <input type="radio" name="pagamento" value="delivery" checked />
+                            {{-- 🌟 CORREÇÃO CRÍTICA: name alterado para 'tipo_pedido' para não quebrar o grupo de pagamento! --}}
+                            <input type="radio" name="tipo_pedido" value="delivery" checked />
                             <i class="ph ph-motorcycle"></i> Delivery
                         </label>
                     </div>
@@ -261,14 +263,18 @@
                             <input type="radio" name="pagamento" value="dinheiro" />
                             <div class="opcao-conteudo"><span>Dinheiro na entrega</span></div>
                         </label>
+                        
                         <label class="opcao-card">
                             <input type="radio" name="pagamento" value="pix" checked />
                             <div class="opcao-conteudo"><span>PIX (Chave exibida após o envio)</span></div>
                         </label>
+                        
+                        {{-- 🌟 AJUSTE: Voltamos para 'debito' e 'credito' para alinhar perfeitamente com seu banco --}}
                         <label class="opcao-card">
                             <input type="radio" name="pagamento" value="debito" />
                             <div class="opcao-conteudo"><span>Cartão de Débito - Maquininha</span></div>
                         </label>
+                        
                         <label class="opcao-card">
                             <input type="radio" name="pagamento" value="credito" />
                             <div class="opcao-conteudo"><span>Cartão de Crédito - Maquininha</span></div>
