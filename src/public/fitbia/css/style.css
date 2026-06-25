@@ -1639,48 +1639,49 @@ p {
 
 
 /* ==========================================
-   RODAPÉ (FOOTER) ESCURO PREMIUM
+   RODAPÉ (FOOTER) ESCURO
    ========================================== */
 .footer-escuro {
     background-color: var(--verde-escuro);
     color: var(--bg-principal);
-    padding: 80px 0 0 0;
+    padding: 100px 0 0 0; /* Mais respiro no topo */
     font-family: 'Inter', sans-serif;
+}
+
+/* Container centralizado usando o seu .container global */
+.footer-escuro .container {
+    max-width: 1300px; 
+    margin: 0 auto;
+    padding: 0 5%;
 }
 
 .footer-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-    padding-bottom: 60px;
-    border-bottom: 1px solid rgba(250, 249, 246, 0.1); /* Linha divisória sutil */
+    gap: 60px; /* Aumentei bastante o espaço entre as colunas */
+    padding-bottom: 80px; /* Mais espaço no final da grade */
+    /* ✂️ Adeus linha fina ridícula! Removido o border-bottom. */
 }
 
+/* Títulos */
 .footer-col h3 {
     font-family: 'Montserrat', sans-serif;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--bg-principal);
-    margin-bottom: 25px;
+    margin-bottom: 30px; /* Mais distância entre o título e os links */
     letter-spacing: 1.5px;
     text-transform: uppercase;
 }
 
-.footer-desc {
-    color: rgba(250, 249, 246, 0.6) !important;
-    font-size: 14px;
-    line-height: 1.7;
-    font-weight: 300;
-    max-width: 100% !important;
-    margin: 0;
-}
-
-.footer-col p {
-    color: rgba(250, 249, 246, 0.6);
-    font-size: 14px;
-    line-height: 1.6;
+/* Textos e Descrições */
+.footer-col p, .footer-desc {
+    color: rgba(250, 249, 246, 0.7);
+    font-size: 15px;
+    line-height: 1.8; /* Aumentei a altura da linha pra leitura ficar mais leve */
     font-weight: 300;
     margin-bottom: 15px;
+    margin-top: 0;
 }
 
 .footer-col p span {
@@ -1688,54 +1689,53 @@ p {
     font-weight: 500;
 }
 
+/* Links (Menu limpo e espaçado) */
 .footer-col ul {
-    list-style: none;
+    list-style-type: none !important;
     padding: 0;
     margin: 0;
 }
 
 .footer-col ul li {
-    margin-bottom: 12px;
+    margin-bottom: 18px; /* Mais distância entre cada link do menu */
 }
 
 .footer-col ul li a {
-    color: rgba(250, 249, 246, 0.6);
-    text-decoration: none;
-    font-size: 14px;
+    color: rgba(250, 249, 246, 0.7) !important; 
+    text-decoration: none !important; 
+    font-size: 15px;
     font-weight: 300;
-    transition: all 0.3s ease;
     display: inline-block;
+    transition: color 0.3s ease;
 }
 
-/* Interação nos links do rodapé (PC e Mobile) */
-.footer-col ul li a:hover, .footer-col ul li a:active {
-    color: var(--verde-folha);
-    padding-left: 6px; /* Dá um leve empurrãozinho elegante */
+.footer-col ul li a:hover {
+    color: var(--verde-folha) !important;
 }
 
-/* Ícones de Redes Sociais */
+/* Ícones Sociais */
 .footer-sociais {
     display: flex;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 20px; /* Ícones levemente mais soltos */
+    margin-top: 25px;
 }
 
 .footer-sociais a {
-    color: var(--bg-principal);
-    font-size: 26px;
+    color: var(--bg-principal) !important;
+    font-size: 24px;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.footer-sociais a:hover, .footer-sociais a:active {
-    color: var(--verde-folha);
-    transform: translateY(-4px);
+.footer-sociais a:hover {
+    color: var(--verde-folha) !important;
+    transform: translateY(-3px);
 }
 
-/* Copyright e Assinatura */
+/* Faixa Final (Copyright) */
 .footer-bottom {
-    background-color: #213023; /* Tom ainda mais escuro para o fechamento da tela */
-    padding: 25px 0;
+    background-color: #213023; 
+    padding: 30px 0; /* Faixa final levemente mais gordinha e imponente */
 }
 
 .footer-bottom-container {
@@ -1745,40 +1745,24 @@ p {
 }
 
 .footer-bottom p {
-    font-size: 12px;
-    color: rgba(250, 249, 246, 0.4);
+    font-size: 13px;
+    color: rgba(250, 249, 246, 0.5);
     margin: 0;
-    font-weight: 300;
 }
 
-/* ==========================================
-   RESPONSIVIDADE DO FOOTER (TABLET E CELULAR)
-   ========================================== */
+/* Responsividade Básica */
 @media (max-width: 992px) {
     .footer-grid {
-        grid-template-columns: repeat(2, 1fr); /* Vira uma grade 2x2 em tablets */
-        gap: 40px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 50px;
     }
 }
 
 @media (max-width: 576px) {
-    .footer-escuro {
-        padding-top: 60px;
-    }
-    
-    .footer-grid {
-        grid-template-columns: 1fr; /* 1 coluna inteira e direta no celular */
-        gap: 35px;
-        padding-bottom: 40px;
-    }
-    
-    .footer-bottom-container {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
+    .footer-escuro { padding-top: 70px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 45px; padding-bottom: 50px; }
+    .footer-bottom-container { flex-direction: column; gap: 12px; text-align: center; }
 }
-
 
 /* --- CSS PARA DEIXAR O CARRINHO MAIS COMPACTO --- */
 

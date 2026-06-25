@@ -24,7 +24,6 @@
         margin-top: 2px; 
     }
     
-    /* A Caixa do Menu Oculto (Blindada contra quebras de layout) */
     .dropdown-box { 
         visibility: hidden; 
         opacity: 0; 
@@ -42,14 +41,12 @@
         border: 1px solid #eee; 
     }
     
-    /* Mostra o menu suavemente ao passar o rato (Hover) */
     .wrapper-usuario:hover .dropdown-box { 
         visibility: visible; 
         opacity: 1; 
         top: 110%; 
     }
     
-    /* Estilo dos links e botões dentro da caixa */
     .dropdown-box a, .dropdown-box button { 
         display: block; 
         width: 100%; 
@@ -73,6 +70,27 @@
         background: #fee2e2; 
         color: #dc2626; 
     }
+
+    /* --- ESTILOS DA BOLINHA DO CARRINHO --- */
+    .bolinha-carrinho {
+        position: absolute; 
+        top: -5px; 
+        right: -10px; 
+        background-color: #ef4444; 
+        color: white; 
+        border-radius: 50%; 
+        padding: 2px 6px; 
+        font-size: 11px; 
+        font-weight: bold; 
+        border: 2px solid white;
+        transition: transform 0.2s ease;
+        align-items: center; 
+        justify-content: center;
+    }
+
+    .bolinha-carrinho.pular {
+        transform: scale(1.4);
+    }
 </style>
 
 <header class="header">
@@ -80,7 +98,7 @@
 
         <a href="#" class="logo-link" aria-label="Página Inicial">
             <div class="logo-wrapper">
-                FIT BI<span class="letra-a">A<i class="ph-light ph-leaf folha-logo"></i></span>
+             <img src="{{ asset('fitbia/images/produto/FITBIA%20LOGO.svg') }}" alt="Logo Fit Bia" style="width: 140px; height: auto; display: block;">
             </div>
         </a>
 
@@ -150,11 +168,12 @@
 
             <a href="{{ route('site.checkout') }}" style="position: relative; display: inline-block; text-decoration: none; color: inherit;">
                 <i class="ph ph-shopping-cart" style="font-size: 28px;"></i>
-                @if(session('carrinho') && count(session('carrinho')) > 0)
-                    <span style="position: absolute; top: -5px; right: -10px; background-color: #ef4444; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; font-weight: bold; border: 2px solid white;">
-                        {{ count(session('carrinho')) }}
-                    </span>
-                @endif
+                @php
+                    $qtdCarrinho = session('carrinho') ? count(session('carrinho')) : 0;
+                @endphp
+                <span id="contador-carrinho" class="bolinha-carrinho" style="display: {{ $qtdCarrinho > 0 ? 'flex' : 'none' }};">
+                    {{ $qtdCarrinho }}
+                </span>
             </a>
 
             <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menu">

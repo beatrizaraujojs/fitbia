@@ -104,70 +104,77 @@
     }
 }
 
-
 /* ==========================================
-   BARRA DE PESQUISA PREMIUM
+   BARRA DE PESQUISA ULTRA-PREMIUM
    ========================================== */
 .pesquisa-box {
     display: flex;
     align-items: center;
     background-color: #ffffff;
-    max-width: 600px; /* Largura bem generosa, não ocupa a tela toda */
-    margin: 40px auto 0; /* Dá o espaço perfeito abaixo do texto */
-    padding: 16px 28px; /* Altura confortável para toque */
-    border-radius: 50px; /* Bordas 100% arredondadas (Pílula) */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04); /* Sombra bem difusa e luxuosa */
-    border: 1px solid rgba(0, 0, 0, 0.02);
-    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    max-width: 650px; /* Um pouco mais larga e imponente */
+    margin: 40px auto 0;
+    padding: 8px 8px 8px 25px; /* Espaço perfeito interno */
+    border-radius: 60px;
+    box-shadow: 0 15px 40px rgba(45, 64, 48, 0.15); /* Sombra elegante */
+    border: 2px solid transparent;
+    transition: all 0.4s ease;
     position: relative;
     z-index: 10;
 }
 
-/* O que acontece quando o usuário clica para digitar */
 .pesquisa-box:focus-within {
-    box-shadow: 0 20px 40px rgba(60, 138, 75, 0.1); /* Sombra esverdeada */
-    border-color: rgba(60, 138, 75, 0.2);
-    transform: translateY(-3px); /* Levanta levemente */
-}
-
-.pesquisa-box i {
-    font-size: 24px;
-    color: var(--verde-oliva);
-    margin-right: 15px;
+    box-shadow: 0 20px 50px rgba(60, 138, 75, 0.25);
+    border-color: rgba(60, 138, 75, 0.4);
+    transform: translateY(-4px);
 }
 
 .pesquisa-box input {
     border: none;
     outline: none;
     width: 100%;
+    flex: 1;
     font-family: 'Inter', sans-serif;
-    font-size: 16px;
-    color: var(--texto-principal);
+    font-size: 17px; /* Letra um pouco maior e legível */
+    color: var(--verde-escuro);
     background: transparent;
 }
 
 .pesquisa-box input::placeholder {
-    color: #a0a0a0;
-    font-weight: 300;
+    color: #aeb5ae;
+    font-weight: 400;
+    font-style: italic; /* Dá um charme extra */
 }
 
-/* ==========================================
-   AJUSTES DE ESPAÇAMENTO DO LAYOUT
-   ========================================== */
-
-/* Reduz o espaço superior dos filtros para grudar mais na pesquisa */
-.filtros-pagina {
-    background-color: transparent;
-    border-top: none;
-    padding: 30px 0 60px 0; /* Era 10px no top, aumentei pra 30px separar da pesquisa */
+/* Botão de Buscar Estilo Pílula */
+.btn-buscar {
+    background-color: var(--verde-escuro);
+    color: #ffffff;
+    border: none;
+    padding: 0 25px;
+    height: 48px;
+    border-radius: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre o texto e a lupa */
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Ajuste Responsivo da Pesquisa */
-@media (max-width: 768px) {
-    .pesquisa-box {
-        margin: 30px 0 0 0; /* No celular, tira o auto para ocupar 100% da caixa */
-        width: 100%;
-    }
+.btn-buscar i {
+    font-size: 18px;
+    font-weight: bold;
 }
 
+.btn-buscar:hover {
+    background-color: var(--verde-folha);
+    transform: scale(1.03);
+    box-shadow: 0 5px 15px rgba(60, 138, 75, 0.3);
+}
+
+.btn-buscar:active {
+    transform: scale(0.95);
+}
 
