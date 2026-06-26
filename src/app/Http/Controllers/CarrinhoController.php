@@ -129,10 +129,8 @@ class CarrinhoController extends Controller
         return redirect()->back()->with('success', 'Produto removido com sucesso!');
     }
 
-    // 5. FINALIZAR PEDIDO (Seguro e com WhatsApp para PIX)
     // =========================================================
-    // =========================================================
-    // 5. FINALIZAR PEDIDO (Seguro e com Tradutor para o Banco)
+    // 5. FINALIZAR PEDIDO (Redireciona direto para o Whats da Loja)
     // =========================================================
     public function finalizarPedido(Request $request)
     {
@@ -147,61 +145,66 @@ class CarrinhoController extends Controller
 
         $formaSelecionada = $request->input('pagamento') ?? $request->input('forma_pagamento');
 
-        // Se veio vazio OU se o HTML enviou "delivery" como pagamento por engano, barra o erro!
         if (!$formaSelecionada || $formaSelecionada === 'delivery') {
             return redirect()->back()->with('error', 'Por favor, selecione uma forma de pagamento válida na Etapa 2.');
         }
 
-        // 🌟 O GRANDE TRUQUE: O Tradutor para o Banco de Dados
-        $formaBanco = 'DINHEIRO'; // Valor padrão de segurança
+        $formaBanco = 'DINHEIRO';
         switch (strtolower($formaSelecionada)) {
-            case 'pix':
-                $formaBanco = 'PIX';
-                break;
-            case 'debito':
-            case 'cartao':
-            case 'cartao_debito':
-                $formaBanco = 'CARTAO_DEBITO';
-                break;
-            case 'credito':
-            case 'cartao_credito':
-                $formaBanco = 'CARTAO_CREDITO';
-                break;
-            case 'dinheiro':
-                $formaBanco = 'DINHEIRO';
-                break;
+            case 'pix': $formaBanco = 'PIX'; break;
+            case 'debito': case 'cartao': case 'cartao_debito': $formaBanco = 'CARTAO_DEBITO'; break;
+            case 'credito': case 'cartao_credito': $formaBanco = 'CARTAO_CREDITO'; break;
+            case 'dinheiro': $formaBanco = 'DINHEIRO'; break;
         }
 
         try {
+            // PROCURA OU CRIA O ENDEREÇO EM TEMPO REAL
             $endereco = Endereco::where('id_cliente_fk', auth()->user()->id_cliente)->first();
 
-            if (!$endereco) {
-                return redirect()->back()->with('error', 'Você precisa cadastrar o seu endereço de entrega no painel antes de finalizar o pedido!');
+            if ($request->filled('endereco') && $request->filled('numero')) {
+                if (!$endereco) {
+                    $endereco = new Endereco();
+                    $endereco->id_cliente_fk = auth()->user()->id_cliente;
+                }
+                
+                $endereco->rua_endereco = $request->endereco;
+                $endereco->numero_endereco = $request->numero;
+                $endereco->bairro_endereco = $request->bairro;
+                $endereco->cep_endereco = $request->cep;
+                $endereco->complemento_endereco = $request->complemento;
+                $endereco->save();
             }
 
+            if (!$endereco) {
+                return redirect()->back()->with('error', 'Por favor, preencha o seu endereço de entrega na Etapa 1 para prosseguir.');
+            }
+
+            // Monta o endereço legível em texto
+            $textoEndereco = "{$endereco->rua_endereco}, Nº {$endereco->numero_endereco} - {$endereco->bairro_endereco}";
+            if (!empty($endereco->complemento_endereco)) {
+                $textoEndereco .= " ({$endereco->complemento_endereco})";
+            }
+
+            // SALVA O REGISTRO DO PEDIDO NO BANCO
             $pedido = new Pedido();
             $pedido->id_cliente_fk = auth()->user()->id_cliente; 
             $pedido->id_endereco_fk = $endereco->id_endereco; 
-            
-            // 🌟 SALVANDO COM A PALAVRA EXATA QUE O BANCO EXIGE:
             $pedido->forma_pagamento_pedido = $formaBanco; 
-            
             $pedido->observacoes_pedido = $request->observacao;
             $pedido->status_pedido = 'PENDENTE';
             
             $totalPedido = 0;
             foreach ($carrinho as $item) {
-                $totalPedido += $item['preco'] * $item['quantidade']; // O cálculo corrigido de R$ 4,00!
+                $totalPedido += $item['preco'] * $item['quantidade'];
             }
             $pedido->valor_total_pedido = $totalPedido;
             $pedido->save();
 
+            // VINCULA OS ITENS E SUB-ADICIONAIS
             foreach ($carrinho as $idProduto => $item) {
-                $idProdutoReal = $item['id_produto'];
-
                 $itemPedido = new ItemPedido();
                 $itemPedido->id_pedido_fk = $pedido->id_pedido; 
-                $itemPedido->id_produto_fk = $idProdutoReal;
+                $itemPedido->id_produto_fk = $item['id_produto'];
                 $itemPedido->quantidade_item = $item['quantidade'];
                 $itemPedido->preco_unitario_item = $item['preco'];
                 $itemPedido->save();
@@ -217,30 +220,32 @@ class CarrinhoController extends Controller
                 }
             }
 
+            // Limpa o carrinho da sessão
             session()->forget('carrinho');
 
-            // 🌟 LÓGICA DO PIX (Usa o formaBanco = 'PIX')
+            // 🌟 REDIRECIONAMENTO DIRETO PARA O NÚMERO DA BIA (11981826719)
             if ($formaBanco === 'PIX') {
-                $telefoneLoja = '5511981826719'; // O ZAP DA BIA
+                $telefoneLoja = '5511981826719'; // Número da Loja recebendo o pedido
                 $numeroFormatado = str_pad($pedido->id_pedido, 4, '0', STR_PAD_LEFT);
                 $valorFormatado = number_format($totalPedido, 2, ',', '.');
                 $nomeCliente = explode(' ', auth()->user()->nome_cliente)[0];
                 
-                $texto = "Olá Fit Bia! Sou o(a) *{$nomeCliente}*.\n\n";
-                $texto .= "Acabei de realizar o pedido *#{$numeroFormatado}* no site.\n";
+                // Texto pré-definido para o cliente disparar direto para a Bia
+                $texto = "Olá Fit Bia! Meu nome é *{$nomeCliente}*.\n\n";
+                $texto .= "Acabei de fechar o pedido *#{$numeroFormatado}* no site.\n";
                 $texto .= "O valor total deu *R$ {$valorFormatado}* e eu escolhi pagar via *PIX*.\n\n";
-                $texto .= "Pode me enviar a chave, por favor?";
+                $texto .= "O meu endereço de entrega é:\n*{$textoEndereco}*\n\n";
+                $texto .= "Pode me enviar a chave PIX para eu fazer o pagamento, por favor?";
 
                 $urlZap = "https://api.whatsapp.com/send?phone={$telefoneLoja}&text=" . urlencode($texto);
-
                 return redirect()->away($urlZap);
             }
 
-            // 🌟 LÓGICA PARA DINHEIRO OU CARTÃO (VAI PRO PAINEL DIRETO)
-            return redirect()->route('site.painel')->with('success', 'Pedido realizado com sucesso! O pagamento será feito na entrega.');
+            // Se for Dinheiro ou Cartão na entrega, manda o cliente para o painel de histórico dele
+            return redirect()->route('site.painel')->with('success', 'Pedido realizado com sucesso! Acompanhe o status no seu painel.');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao salvar pedido: ' . $e->getMessage())->withInput();
+            return redirect()->back()->with('error', 'Erro ao salvar o pedido: ' . $e->getMessage())->withInput();
         }
     }
 }

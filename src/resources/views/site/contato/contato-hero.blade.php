@@ -1,5 +1,5 @@
 
-    <section class="contato-hero">
+    <section class="contato-hero" id="fale-conosco">
     <div class="container contato-wrapper">
         
         <div class="contato-card">

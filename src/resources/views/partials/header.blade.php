@@ -124,16 +124,16 @@
             <div class="menu-item-com-submenu">
                 <a href="{{ route('site.casinha') }}">Nossa Casinha <i class="ph ph-caret-down"></i></a>
                 <div class="submenu">
-                    <a href="casinha.html#historia">Nossa História</a>
-                    <a href="casinha.html#localizacao">Como Chegar</a>
+                    <a href="{{ route('site.casinha') }}#historia">Nossa História</a>
+                    <a href="{{ route('site.casinha') }}#localizacao">Como Chegar</a>
                 </div>
             </div>
 
             <div class="menu-item-com-submenu">
                 <a href="{{ route('site.contato') }}">Contato <i class="ph ph-caret-down"></i></a>
                 <div class="submenu">
-                    <a href="contato.html#fale-conosco">Fale Conosco</a>
-                    <a href="contato.html#faq">Perguntas Frequentes</a>
+                    <a href="{{ route('site.contato') }}#fale-conosco">Fale Conosco</a>
+                    <a href="{{ route('site.contato') }}#faq">Perguntas Frequentes</a>
                 </div>
             </div>
         </nav>
@@ -227,7 +227,7 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                // LÓGICA DO MODAL DE LOGIN (ABRIR E FECHAR)
+                // LÓGICA DO MODAL DE LOGIN
                 const btnLogin = document.getElementById("btn-abrir-login");
                 const modal = document.getElementById("modal-login");
                 const btnFechar = document.getElementById("fechar-modal");
@@ -249,23 +249,24 @@
                     });
                 }
 
-                // LÓGICA DO SUBMENU MOBILE
+                // LÓGICA DO SUBMENU MOBILE (SEM BLOQUEAR O LINK)
                 const itensComSubmenu = document.querySelectorAll('.menu-item-com-submenu');
                 itensComSubmenu.forEach(item => {
                     const linkPai = item.querySelector('a');
+                    const iconeSeta = linkPai.querySelector('i');
                     const submenu = item.querySelector('.submenu');
 
-                    if (linkPai && submenu) {
-                        linkPai.addEventListener('click', (e) => {
+                    if (linkPai && submenu && iconeSeta) {
+                        iconeSeta.addEventListener('click', (e) => {
                             if (window.innerWidth <= 992) {
-                                e.preventDefault();
+                                e.preventDefault(); // Impede de abrir a página APENAS se clicar na seta
                                 submenu.classList.toggle('aberto');
                             }
                         });
                     }
                 });
 
-                // LÓGICA DO BOTÃO MENU HAMBÚRGUER
+                // LÓGICA DO MENU HAMBÚRGUER
                 const btnMenu = document.getElementById('menu-toggle');
                 const navMenu = document.getElementById('nav-menu');
 

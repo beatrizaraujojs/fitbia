@@ -32,7 +32,7 @@
         <i class="ph ph-tote header-icone-sacola"></i> 
     </div>
 
-    {{-- POP-UP DE SUCESSO INTELIGENTE (ADICIONAR/REMOVER) --}}
+   {{-- POP-UP DE SUCESSO INTELIGENTE (ADICIONAR/REMOVER) --}}
     @if(session('success'))
         @php
             $mensagem = session('success');
@@ -52,6 +52,24 @@
                 <i class="ph ph-x"></i>
             </button>
         </div>
+    @endif
+
+    {{-- POP-UP DE ERRO INTELIGENTE --}}
+    @if(session('error'))
+        <div id="toast-erro" style="position: fixed; top: 80px; right: 20px; background: white; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 15px; padding: 15px 25px; z-index: 10000; border-left: 5px solid #ef4444; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <i class="ph ph-warning-circle" style="color: #ef4444; font-size: 28px;"></i>
+            <div>
+                <h4 style="margin: 0; color: #1f2937; font-size: 16px;">Ops! Algo deu errado</h4>
+                <p style="margin: 2px 0 0 0; color: #6b7280; font-size: 13px;">{{ session('error') }}</p>
+            </div>
+            <button onclick="document.getElementById('toast-erro').style.display='none'" style="background: none; border: none; cursor: pointer; color: #9ca3af; margin-left: 15px; font-size: 20px;">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+        <script>
+            setTimeout(() => { document.getElementById('toast-erro').style.transform = 'translateX(0)'; }, 100);
+            setTimeout(() => { document.getElementById('toast-erro').style.transform = 'translateX(120%)'; }, 7000);
+        </script>
     @endif
 
 
@@ -215,6 +233,13 @@
                 {{-- ETAPA 1 --}}
                 <div class="checkout-secao etapa-checkout ativo" id="conteudo-etapa-1">
                     <h3><i class="ph ph-map-pin"></i> 1. Onde vamos entregar?</h3>
+                    {{-- AVISO DE ENDEREÇO --}}
+                    <div style="background-color: #fffbeb; border-left: 4px solid #f59f00; padding: 12px 16px; margin-bottom: 20px; border-radius: 4px; display: flex; align-items: flex-start; gap: 10px;">
+                        <i class="ph ph-warning-circle" style="color: #b45309; font-size: 20px; margin-top: 2px;"></i>
+                        <p style="margin: 0; color: #78350f; font-size: 13px; line-height: 1.4;">
+                            <strong>Atenção:</strong> Por favor, revise com cuidado a rua e o número da sua casa! Um endereço certinho garante que seu pedido Fit Bia chegue rapidinho até você.
+                        </p>
+                    </div>
                     <div class="form-grid">
                         <div class="input-group">
                             <label for="cep">CEP</label>
@@ -404,7 +429,7 @@
         document.getElementById('form-add-fixo').submit();
     }
 
-    // 4. MUDANÇA DE FASE: DO CARRINHO PARA O CHECKOUT (COM PROTEÇÃO DE LOGIN)
+    // 4. MUDANÇA DE FASE: DO CARRINHO PARA O CHECKOUT
     function iniciarCheckout() {
         @if(auth()->check())
             document.getElementById('fase-carrinho').style.display = 'none';
@@ -472,7 +497,7 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 6. BUSCA DE CEP AUTOMÁTICA
+    // 6. BUSCA DE CEP AUTOMÁTICA CORRIGIDA (Removeu o duplo return da Promise)
     document.addEventListener("DOMContentLoaded", function() {
         const inputCep = document.getElementById('cep');
         
@@ -481,14 +506,14 @@
                 let cepDigitado = this.value.replace(/\D/g, '');
                 if (cepDigitado.length === 8) {
                     fetch(`https://viacep.com.br/ws/${cepDigitado}/json/`)
-                        .then(resposta => response => resposta.json())
+                        .then(resposta => resposta.json())
                         .then(dados => {
                             if (!dados.erro) {
                                 document.getElementById('endereco_sp').value = dados.logradouro;
                                 document.getElementById('bairro_cond').value = dados.bairro;
                                 document.getElementById('numero_casa').focus();
                             } else {
-                                alert("CEP não encontrado. Por favor, verifique.");
+                                alert("CEP não encontrado. Por favor, verifique o número digitado.");
                             }
                         })
                         .catch(erro => console.error("Erro na busca do CEP:", erro));

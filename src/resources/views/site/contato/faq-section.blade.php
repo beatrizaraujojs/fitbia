@@ -1,5 +1,5 @@
 
-<section class="faq-section">
+<section class="faq-section" id="faq">
     <div class="container faq-container">
         
         <div class="faq-header">
