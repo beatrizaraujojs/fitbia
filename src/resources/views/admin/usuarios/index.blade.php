@@ -107,7 +107,7 @@
         {{-- MENU LATERAL --}}
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <h2>Fit Bia</h2>
+                <img src="{{ asset('fitbia/images/FITBIA LOGO.svg') }}" alt="Logótipo Fit Bia" style="max-width: 120px; height: auto;">
                 <button id="btn-fechar-menu" class="btn-fechar-menu" aria-label="Fechar Menu">
                     <i class="ph ph-x"></i>
                 </button>

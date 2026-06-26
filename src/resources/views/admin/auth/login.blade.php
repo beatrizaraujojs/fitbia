@@ -94,7 +94,7 @@
 
     <div class="login-container">
         <div class="login-header">
-            <h1>🔒 Área Restrita</h1>
+            <h1> Área Restrita</h1>
             <p>Painel de Controle - Fit Bia</p>
         </div>
 
