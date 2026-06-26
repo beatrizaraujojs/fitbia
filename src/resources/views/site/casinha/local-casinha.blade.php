@@ -1,4 +1,4 @@
-  <section class="local-casinha">
+<section class="local-casinha">
     <div class="container">
         
         <div class="local-header">
@@ -9,12 +9,22 @@
             </p>
         </div>
 
+        {{-- GRID DO MOSAICO: TEMA INSTAGRAM (VÍDEO NO BLOCO MAIOR) --}}
         <div class="galeria-grid">
-            <img src="https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=800&auto=format&fit=crop" alt="Visão geral do nosso espaço" class="img-galeria foto-destaque">
             
-            <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=600&auto=format&fit=crop" alt="Detalhe do ambiente" class="img-galeria foto-topo">
+            {{-- 1. REELS PRINCIPAL (BLOCO MAIOR - ESQUERDA) --}}
+            <a href="https://www.instagram.com/reel/DJCepK5pqJp/?utm_source=ig_web_copy_link&igsh=MzRlODBvNWFlZA==" target="_blank" class="img-galeria foto-destaque" style="display: block; text-decoration: none;">
+                <img src="{{ asset('fitbia/images/produto/capavideo1.jpg') }}" alt="Reels Principal" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+            </a>
             
-            <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=600&auto=format&fit=crop" alt="Nossa área de atendimento" class="img-galeria foto-base">
+            {{-- 2. IMAGEM DO FEED (TOPO DIREITA) --}}
+            <img src="{{ asset('fitbia/images/produto/instabia.png') }}" alt="Nosso Feed" class="img-galeria">
+            
+            {{-- 3. REELS SECUNDÁRIO (BASE DIREITA) --}}
+            <a href="https://www.instagram.com/reel/DI6LtGqx8eL/?utm_source=ig_web_copy_link&igsh=MzRlODBvNWFlZA==" target="_blank" class="img-galeria" style="display: block; text-decoration: none;">
+                <img src="{{ asset('fitbia/images/produto/capavideo2.jpg') }}" alt="Reels Secundário" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+            </a>
+
         </div>
 
         <div class="local-info">

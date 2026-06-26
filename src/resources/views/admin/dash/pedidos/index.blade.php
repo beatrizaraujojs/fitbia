@@ -152,11 +152,14 @@
                     <h1>Gestão de Pedidos</h1>
                     
                     {{-- 🌟 NOVO BOTÃO DE CADASTRAR PEDIDO 🌟 --}}
-                    {{-- Nota: Vamos precisar criar essa rota 'admin.pedidos.create' depois --}}
-                  <a href="{{ route('admin.pedidos.create') }}" class="btn-novo-pedido">
+                    <a href="{{ route('admin.pedidos.create') }}" class="btn-novo-pedido">
                         <i class="ph ph-plus-circle" style="font-size: 20px;"></i> Novo Pedido
                     </a>
-                    
+
+                    {{-- 🌟 BOTÃO PARA DESBLOQUEAR O ÁUDIO 🌟 --}}
+                    <button id="btn-ativar-som" style="background-color: #f8d7da; color: #721c24; padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 14px; transition: 0.3s;">
+                        <i class="ph ph-speaker-slash" style="font-size: 20px;"></i> <span>Ativar Som</span>
+                    </button>
                 </div>
                  
                 <div style="display: flex; align-items: center; gap: 20px;">
@@ -275,6 +278,103 @@
             </section>
         </main>
     </div>
-</body>
 
+    {{-- ÁUDIO DE NOTIFICAÇÃO --}}
+    <audio id="som-novo-pedido" preload="auto">
+        <source src="{{ asset('fitbia/audio/universfield-new-notification-051-494246.mp3') }}" type="audio/mpeg">
+    </audio>
+
+    {{-- SCRIPT PARA TOCAR O SOM E ATUALIZAR PEDIDOS AUTOMATICAMENTE (AJAX) --}}
+    <script>
+        // 1. Lógica do botão de desbloqueio de áudio
+        let somAtivado = false;
+        
+        document.getElementById('btn-ativar-som').addEventListener('click', function() {
+            const som = document.getElementById("som-novo-pedido");
+            const icone = this.querySelector('i');
+            const texto = this.querySelector('span');
+
+            // Toca o som "silenciosamente" só para forçar o navegador a desbloquear
+            som.volume = 0; 
+            som.play().then(() => {
+                som.pause();
+                som.currentTime = 0;
+                som.volume = 1; // Devolve o volume normal
+                
+                somAtivado = true;
+                
+                // Muda a aparência do botão para mostrar que está ativo (Verde)
+                this.style.backgroundColor = "#d4edda";
+                this.style.color = "#155724";
+                icone.classList.remove('ph-speaker-slash');
+                icone.classList.add('ph-speaker-high');
+                texto.innerText = "Alertas Ativados";
+            }).catch(error => console.log("Erro ao desbloquear som:", error));
+        });
+
+        // 2. Função para tocar o som de forma segura
+        function tocarSomPedido() {
+            if (!somAtivado) {
+                console.log("O admin ainda não ativou o botão de som.");
+                return;
+            }
+
+            const som = document.getElementById("som-novo-pedido");
+            som.currentTime = 0; // Zera o áudio para tocar do início
+            som.play().catch(error => console.log("O navegador bloqueou.", error));
+        }
+
+        // 3. Guarda o número do último pedido que está na tela no momento
+        let ultimoPedidoId = {{ $pedidos->first()->id_pedido ?? 0 }};
+
+        // 4. Função que verifica silenciosamente se há pedidos novos
+        function verificarNovosPedidos() {
+            let currentUrl = window.location.href;
+
+            fetch(currentUrl, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                let parser = new DOMParser();
+                let doc = parser.parseFromString(html, "text/html");
+
+                // Encontra a tabela que acabou de chegar do servidor
+                let novaTabela = doc.querySelector('.table-card');
+                let primeiraLinhaNova = novaTabela.querySelector('tbody tr td:first-child');
+                
+                if (primeiraLinhaNova && primeiraLinhaNova.textContent.trim() !== "Nenhum pedido encontrado para este filtro.") {
+                    let novoPedidoIdTexto = primeiraLinhaNova.textContent;
+                    let novoPedidoId = parseInt(novoPedidoIdTexto.replace(/\D/g, ''));
+
+                    // Se o ID for maior que o último guardado, significa que entrou um pedido novo!
+                    if (novoPedidoId > ultimoPedidoId) {
+                        console.log("NOVO PEDIDO DETETADO! A TOCAR O SOM...");
+                        
+                        // Atualiza a tabela na tela do utilizador
+                        document.querySelector('.table-card').innerHTML = novaTabela.innerHTML;
+                        
+                        // Atualiza os links de paginação (caso existam)
+                        let novaPaginacao = doc.querySelector('.content-area > div:last-child');
+                        if (novaPaginacao && document.querySelector('.content-area > div:last-child')) {
+                            document.querySelector('.content-area > div:last-child').innerHTML = novaPaginacao.innerHTML;
+                        }
+
+                        // Toca o alerta sonoro
+                        tocarSomPedido();
+
+                        // Atualiza a variável para não tocar o som repetido
+                        ultimoPedidoId = novoPedidoId;
+                    }
+                }
+            })
+            .catch(error => console.error('Erro ao verificar pedidos:', error));
+        }
+
+        // 5. Executa a função a cada 10 segundos (10000 milissegundos)
+        setInterval(verificarNovosPedidos, 10000); 
+    </script>
+</body>
 </html>

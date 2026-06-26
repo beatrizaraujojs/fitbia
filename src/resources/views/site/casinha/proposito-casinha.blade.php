@@ -1,10 +1,10 @@
- <section class="proposito-casinha" id="nossa-historia">
+<section class="proposito-casinha" id="nossa-historia">
     <div class="container proposito-grid">
         
+        {{-- LADO ESQUERDO: TEXTOS E METAS --}}
         <div class="proposito-texto">
             <span class="subtitulo">A NOSSA ESSÊNCIA</span>
-            <h2 class="titulo-secao">Nutrição a sério. <br>Sabor com alma.</h2>
-            
+            <h2 class="titulo-secao">Nutrição a sério.<br>Sabor com alma.</h2>
             <p class="desc-proposito">
                 Comida saudável de verdade, sem monotonia. Na nossa cozinha, unimos técnica profissional e muito afeto para entregar refeições nutritivas com aquele autêntico sabor de comida caseira.
             </p>
@@ -36,15 +36,18 @@
             </div>
         </div>
 
+        {{-- LADO DIREITO: FOTOS SOBREPOSTAS COM SELO --}}
         <div class="proposito-fotos">
+            
             <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop" alt="Ambiente do nosso restaurante" class="foto-comp f-principal">
             
             <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=600&auto=format&fit=crop" alt="Chef preparando o prato" class="foto-comp f-secundaria">
-            
+
             <div class="selo-qualidade">
                 <i class="ph ph-medal"></i>
                 <span>Padrão<br>Premium</span>
             </div>
+
         </div>
 
     </div>
