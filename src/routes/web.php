@@ -141,12 +141,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/usuarios', [App\Http\Controllers\Admin\UsuarioController::class, 'index'])->name('usuarios.index');
         // Rotas de Usuários/Clientes
         Route::get('/usuarios', [App\Http\Controllers\Admin\UsuarioController::class, 'index'])->name('usuarios.index');
-        Route::get('/usuarios/novo', [App\Http\Controllers\Admin\UsuarioController::class, 'create'])->name('usuarios.create'); 
-        Route::post('/usuarios/salvar', [App\Http\Controllers\Admin\UsuarioController::class, 'store'])->name('usuarios.store'); 
+        Route::get('/usuarios/novo', [App\Http\Controllers\Admin\UsuarioController::class, 'create'])->name('usuarios.create');
+        Route::post('/usuarios/salvar', [App\Http\Controllers\Admin\UsuarioController::class, 'store'])->name('usuarios.store');
 
 
         // Rotas de criação de Pedido Manual no Admin
         Route::get('/pedidos/novo', [App\Http\Controllers\Admin\PedidoController::class, 'create'])->name('pedidos.create');
         Route::post('/pedidos/salvar', [App\Http\Controllers\Admin\PedidoController::class, 'store'])->name('pedidos.store');
+        // Dentro do grupo admin, mude o final para apenas 'pedidos.pdf'
+        Route::get('/pedidos/{id}/pdf', [PedidoController::class, 'gerarPdf'])->name('pedidos.pdf');
     });
 });

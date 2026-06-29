@@ -49,7 +49,9 @@
     <div class="dash-container">
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <h2>Fit Bia</h2>
+                <img src="{{ asset('fitbia/images/produto/FITBIA%20LOGO.svg') }}"
+                    alt="Logo Fit Bia"
+                    style="width: 140px; height: auto; display: block; filter: brightness(0) invert(1);">
                 <button id="btn-fechar-menu" class="btn-fechar-menu" aria-label="Fechar Menu"><i class="ph ph-x"></i></button>
             </div>
             <nav class="sidebar-nav">
@@ -57,8 +59,8 @@
                 <a href="{{ route('admin.categoria.index') }}"><i class="ph ph-tag"></i> Categorias</a>
                 <a href="{{ route('admin.produto.index') }}" class="active"><i class="ph ph-package"></i> Produtos</a>
                 <a href="{{ route('admin.grupoadicional.index') }}"><i class="ph ph-plus-circle"></i> Grupos Adicionais</a>
-              <a href="{{ route('admin.pedidos') }}" class="{{ request()->routeIs('admin.pedidos')}}"><i class="ph ph-receipt"></i> Pedidos</a>
-              <a href="{{ route('admin.usuarios.index') }}" class="{{ request()->routeIs('admin.usuarios.*')}}"><i class="ph ph-users"></i> Usuários</a>
+                <a href="{{ route('admin.pedidos') }}" class="{{ request()->routeIs('admin.pedidos')}}"><i class="ph ph-receipt"></i> Pedidos</a>
+                <a href="{{ route('admin.usuarios.index') }}" class="{{ request()->routeIs('admin.usuarios.*')}}"><i class="ph ph-users"></i> Usuários</a>
             </nav>
             <div class="sidebar-footer" style="padding: 20px;">
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -79,10 +81,10 @@
                     <button id="btn-menu-mobile" class="btn-menu-mobile" aria-label="Abrir Menu"><i class="ph ph-list"></i></button>
                     <h1>Gerenciar Produtos</h1>
                 </div>
-                
-                 {{-- LADO DIREITO: Botão do Site + Perfil --}}
+
+                {{-- LADO DIREITO: Botão do Site + Perfil --}}
                 <div style="display: flex; align-items: center; gap: 20px;">
-                    
+
                     {{-- O NOVO BOTÃO DE VOLTAR PRO SITE --}}
                     <a href="{{ route('home') }}" style="display: flex; align-items: center; gap: 8px; color: #4b5563; text-decoration: none; font-weight: 600; font-size: 14px; background: #f3f4f6; padding: 8px 15px; border-radius: 8px; transition: background 0.3s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                         <i class="ph ph-storefront" style="font-size: 18px;"></i>
@@ -104,20 +106,20 @@
 
                     {{-- === SISTEMA DE ALERTAS EM HTML === --}}
                     @if(session('success'))
-                        <div style="background-color: #def7ec; color: #03543f; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #bcdecb; font-weight: bold;">
-                            ✅ {{ session('success') }}
-                        </div>
+                    <div style="background-color: #def7ec; color: #03543f; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #bcdecb; font-weight: bold;">
+                        ✅ {{ session('success') }}
+                    </div>
                     @endif
 
                     @if($errors->any())
-                        <div style="background-color: #fde8e8; color: #9b1c1c; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f8b4b4;">
-                            <strong style="display: block; margin-bottom: 5px;">❌ Erro ao salvar:</strong>
-                            <ul style="margin: 0; padding-left: 20px;">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
+                    <div style="background-color: #fde8e8; color: #9b1c1c; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f8b4b4;">
+                        <strong style="display: block; margin-bottom: 5px;">❌ Erro ao salvar:</strong>
+                        <ul style="margin: 0; padding-left: 20px;">
+                            @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                     @endif
                     {{-- ======================================= --}}
 
@@ -190,15 +192,15 @@
                             <label style="font-weight: 600; margin-bottom: 10px; display: block; color: #374151;">Selecione os Grupos:</label>
                             <div style="display: flex; flex-direction: column; gap: 10px;">
                                 @if(isset($grupos) && $grupos->count() > 0)
-                                    @foreach($grupos as $grupo)
-                                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                                            <input type="checkbox" name="grupos_adicionais[]" value="{{ $grupo->id_grupo_adicional }}"> 
-                                            {{ $grupo->nome_grupo_adicional }} 
-                                            <span style="color: #6b7280; font-size: 13px;">(Mín: {{ $grupo->qtd_min_grupo }} | Máx: {{ $grupo->qtd_max_grupo }})</span>
-                                        </label>
-                                    @endforeach
+                                @foreach($grupos as $grupo)
+                                <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" name="grupos_adicionais[]" value="{{ $grupo->id_grupo_adicional }}">
+                                    {{ $grupo->nome_grupo_adicional }}
+                                    <span style="color: #6b7280; font-size: 13px;">(Mín: {{ $grupo->qtd_min_grupo }} | Máx: {{ $grupo->qtd_max_grupo }})</span>
+                                </label>
+                                @endforeach
                                 @else
-                                    <p style="color: #ef4444; font-size: 14px; margin: 0;">Nenhum grupo adicional ativo encontrado no banco de dados.</p>
+                                <p style="color: #ef4444; font-size: 14px; margin: 0;">Nenhum grupo adicional ativo encontrado no banco de dados.</p>
                                 @endif
                             </div>
                         </div>
@@ -361,15 +363,15 @@
                     <label style="font-weight: 600; margin-bottom: 10px; display: block; color: #374151;">Selecione os Grupos:</label>
                     <div style="display: flex; flex-direction: column; gap: 10px;">
                         @if(isset($grupos) && $grupos->count() > 0)
-                            @foreach($grupos as $grupo)
-                                <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                                    <input type="checkbox" name="grupos_adicionais[]" value="{{ $grupo->id_grupo_adicional }}"> 
-                                    {{ $grupo->nome_grupo_adicional }} 
-                                    <span style="color: #6b7280; font-size: 13px;">(Mín: {{ $grupo->qtd_min_grupo }} | Máx: {{ $grupo->qtd_max_grupo }})</span>
-                                </label>
-                            @endforeach
+                        @foreach($grupos as $grupo)
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="grupos_adicionais[]" value="{{ $grupo->id_grupo_adicional }}">
+                            {{ $grupo->nome_grupo_adicional }}
+                            <span style="color: #6b7280; font-size: 13px;">(Mín: {{ $grupo->qtd_min_grupo }} | Máx: {{ $grupo->qtd_max_grupo }})</span>
+                        </label>
+                        @endforeach
                         @else
-                            <p style="color: #ef4444; font-size: 14px; margin: 0;">Nenhum grupo adicional ativo encontrado no banco de dados.</p>
+                        <p style="color: #ef4444; font-size: 14px; margin: 0;">Nenhum grupo adicional ativo encontrado no banco de dados.</p>
                         @endif
                     </div>
                 </div>
@@ -393,15 +395,15 @@
         function abrirModalEditar(botao) {
             let url = botao.getAttribute('data-url');
             document.getElementById('formEditarProduto').action = url;
-            
+
             document.getElementById('edit_nome_produto').value = botao.getAttribute('data-nome');
             document.getElementById('edit_preco_base_produto').value = botao.getAttribute('data-preco');
             document.getElementById('edit_descricao_produto').value = botao.getAttribute('data-descricao');
             document.getElementById('edit_status_produto').value = botao.getAttribute('data-status');
-            
+
             let destaqueSelect = document.getElementById('edit_destaque_produto');
-            if(destaqueSelect && botao.getAttribute('data-destaque')){
-                 destaqueSelect.value = botao.getAttribute('data-destaque');
+            if (destaqueSelect && botao.getAttribute('data-destaque')) {
+                destaqueSelect.value = botao.getAttribute('data-destaque');
             }
 
             document.getElementById('edit_id_categoria_fk').value = botao.getAttribute('data-categoria');
@@ -472,4 +474,5 @@
     </script>
 
 </body>
+
 </html>

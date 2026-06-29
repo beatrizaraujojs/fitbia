@@ -14,7 +14,9 @@
     <div class="dash-container">
         <aside class="sidebar">
             <div class="sidebar-logo">
-                <h2>Fit Bia</h2>
+                <img src="{{ asset('fitbia/images/produto/FITBIA%20LOGO.svg') }}"
+                    alt="Logo Fit Bia"
+                    style="width: 140px; height: auto; display: block; filter: brightness(0) invert(1);">
                 <button id="btn-fechar-menu" class="btn-fechar-menu" aria-label="Fechar Menu"><i class="ph ph-x"></i></button>
             </div>
             <nav class="sidebar-nav">
@@ -25,7 +27,7 @@
                 <a href="{{ route('admin.pedidos') }}" class="{{ request()->routeIs('admin.pedidos') }}"><i class="ph ph-receipt"></i> Pedidos</a>
                 <a href="{{ route('admin.usuarios.index') }}" class="{{ request()->routeIs('admin.usuarios.*')}}"><i class="ph ph-users"></i> Usuários</a>
             </nav>
-             <div class="sidebar-footer" style="padding: 20px;">
+            <div class="sidebar-footer" style="padding: 20px;">
                 <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                     style="display: flex; align-items: center; justify-content: center; gap: 8px; background-color: hsla(0, 73%, 33%, 1.00); color: #e4c2c2ff; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background-color 0.3s;">
                     <i class="ph ph-sign-out" style="font-size: 20px;"></i> Sair do Sistema
@@ -44,11 +46,11 @@
                     <button id="btn-menu-mobile" class="btn-menu-mobile" aria-label="Abrir Menu"><i class="ph ph-list"></i></button>
                     <h1>Gerenciar Categorias</h1>
                 </div>
-               
-                
-                 {{-- LADO DIREITO: Botão do Site + Perfil --}}
+
+
+                {{-- LADO DIREITO: Botão do Site + Perfil --}}
                 <div style="display: flex; align-items: center; gap: 20px;">
-                    
+
                     {{-- O NOVO BOTÃO DE VOLTAR PRO SITE --}}
                     <a href="{{ route('home') }}" style="display: flex; align-items: center; gap: 8px; color: #4b5563; text-decoration: none; font-weight: 600; font-size: 14px; background: #f3f4f6; padding: 8px 15px; border-radius: 8px; transition: background 0.3s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                         <i class="ph ph-storefront" style="font-size: 18px;"></i>
@@ -60,7 +62,7 @@
                         <i class="ph ph-user-circle"></i>
                     </div>
                 </div>
-                
+
             </header>
 
             <section class="content-area">

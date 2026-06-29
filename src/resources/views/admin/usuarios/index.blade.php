@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Usuários - Fit Bia</title>
-    
+
     {{-- CSS do Painel --}}
     <link rel="stylesheet" href="{{ asset('fitbia/css/dashboard.css') }}">
 
@@ -21,10 +21,12 @@
             gap: 15px;
             flex-wrap: wrap;
         }
+
         .filtros-usuarios {
             display: flex;
             gap: 15px;
         }
+
         .btn-filtro {
             padding: 10px 20px;
             border-radius: 8px;
@@ -38,14 +40,17 @@
             align-items: center;
             gap: 8px;
         }
+
         .btn-filtro.active {
             background-color: #2b4231;
             color: #ffffff;
             border-color: #2b4231;
         }
+
         .btn-filtro:hover:not(.active) {
             background-color: #e5e7eb;
         }
+
         .btn-novo-usuario {
             background-color: #2b4231;
             color: white;
@@ -58,9 +63,11 @@
             gap: 8px;
             transition: background-color 0.3s;
         }
+
         .btn-novo-usuario:hover {
             background-color: #1e2f23;
         }
+
         .badge {
             padding: 5px 10px;
             border-radius: 6px;
@@ -68,23 +75,37 @@
             font-weight: 700;
             text-transform: uppercase;
         }
-        .badge-admin { background-color: #fee2e2; color: #991b1b; }
-        .badge-funcionario { background-color: #eff6ff; color: #1e40af; }
-        .badge-cliente { background-color: #d1fae5; color: #065f46; }
-        
+
+        .badge-admin {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-funcionario {
+            background-color: #eff6ff;
+            color: #1e40af;
+        }
+
+        .badge-cliente {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
         /* Estilização básica para a tabela ficar idêntica à de pedidos */
         .tabela-container {
             background: #fff;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             overflow-x: auto;
         }
+
         .tabela-usuarios {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
         }
+
         .tabela-usuarios th {
             padding: 15px 10px;
             color: #6b7280;
@@ -92,6 +113,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .tabela-usuarios td {
             padding: 15px 10px;
             color: #111827;
@@ -106,8 +128,9 @@
 
         {{-- MENU LATERAL --}}
         <aside class="sidebar">
-            <div class="sidebar-logo">
-                <img src="{{ asset('fitbia/images/FITBIA LOGO.svg') }}" alt="Logótipo Fit Bia" style="max-width: 120px; height: auto;">
+            <div class="sidebar-logo"><img src="{{ asset('fitbia/images/produto/FITBIA%20LOGO.svg') }}"
+                    alt="Logo Fit Bia"
+                    style="width: 140px; height: auto; display: block; filter: brightness(0) invert(1);">
                 <button id="btn-fechar-menu" class="btn-fechar-menu" aria-label="Fechar Menu">
                     <i class="ph ph-x"></i>
                 </button>
@@ -144,9 +167,9 @@
                     <h1>Gestão de Usuários</h1>
                 </div>
 
-                 {{-- LADO DIREITO: Botão do Site + Perfil --}}
+                {{-- LADO DIREITO: Botão do Site + Perfil --}}
                 <div style="display: flex; align-items: center; gap: 20px;">
-                    
+
                     {{-- O NOVO BOTÃO DE VOLTAR PRO SITE --}}
                     <a href="{{ route('home') }}" style="display: flex; align-items: center; gap: 8px; color: #4b5563; text-decoration: none; font-weight: 600; font-size: 14px; background: #f3f4f6; padding: 8px 15px; border-radius: 8px; transition: background 0.3s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                         <i class="ph ph-storefront" style="font-size: 18px;"></i>
@@ -162,28 +185,28 @@
 
             {{-- ÁREA DE CONTEÚDO DAS ABAS --}}
             <section class="content-area">
-                
+
                 {{-- BLOCO SUPERIOR: FILTROS + BOTÃO CADASTRAR --}}
                 <div class="topo-acoes">
-                    
+
                     {{-- Alternador de Abas (Filtros) --}}
                     <div class="filtros-usuarios">
-                        <a href="{{ route('admin.usuarios.index', ['tipo' => 'admins']) }}" 
-                           class="btn-filtro {{ $tipo === 'admins' ? 'active' : '' }}">
-                           <i class="ph ph-shield-check"></i> Equipe Interna
+                        <a href="{{ route('admin.usuarios.index', ['tipo' => 'admins']) }}"
+                            class="btn-filtro {{ $tipo === 'admins' ? 'active' : '' }}">
+                            <i class="ph ph-shield-check"></i> Equipe Interna
                         </a>
-                        
-                        <a href="{{ route('admin.usuarios.index', ['tipo' => 'clientes']) }}" 
-                           class="btn-filtro {{ $tipo === 'clientes' ? 'active' : '' }}">
-                           <i class="ph ph-users"></i> Clientes do Site
+
+                        <a href="{{ route('admin.usuarios.index', ['tipo' => 'clientes']) }}"
+                            class="btn-filtro {{ $tipo === 'clientes' ? 'active' : '' }}">
+                            <i class="ph ph-users"></i> Clientes do Site
                         </a>
                     </div>
 
                     {{-- Botão criar novo: Só aparece visível se estiver listando a Equipe Interna --}}
                     @if($tipo === 'admins')
-                        <a href="{{ route('admin.usuarios.create') }}" class="btn-novo-usuario">
-                            <i class="ph ph-user-plus" style="font-size: 18px;"></i> Novo Usuário
-                        </a>
+                    <a href="{{ route('admin.usuarios.create') }}" class="btn-novo-usuario">
+                        <i class="ph ph-user-plus" style="font-size: 18px;"></i> Novo Usuário
+                    </a>
                     @endif
                 </div>
 
@@ -200,35 +223,35 @@
                         </thead>
                         <tbody>
                             @forelse($lista as $item)
-                                <tr style="border-bottom: 1px solid #f3f4f6;">
-                                    
-                                    @if($tipo === 'clientes')
-                                        {{-- Renderização dos dados estruturados da tbl_cliente --}}
-                                        <td style="font-weight: 600; padding: 15px 10px;">{{ $item->nome_cliente }}</td>
-                                        <td>{{ $item->email_cliente }}</td>
-                                        <td>{{ date('d/m/Y H:i', strtotime($item->created_at)) }}</td>
-                                        <td><span class="badge badge-cliente">Cliente</span></td>
+                            <tr style="border-bottom: 1px solid #f3f4f6;">
+
+                                @if($tipo === 'clientes')
+                                {{-- Renderização dos dados estruturados da tbl_cliente --}}
+                                <td style="font-weight: 600; padding: 15px 10px;">{{ $item->nome_cliente }}</td>
+                                <td>{{ $item->email_cliente }}</td>
+                                <td>{{ date('d/m/Y H:i', strtotime($item->created_at)) }}</td>
+                                <td><span class="badge badge-cliente">Cliente</span></td>
+                                @else
+                                {{-- Renderização dos dados estruturados da tbl_usuario --}}
+                                <td style="font-weight: 600; padding: 15px 10px;">{{ $item->nome_usuario }}</td>
+                                <td>{{ $item->email_usuario }}</td>
+                                <td>{{ date('d/m/Y H:i', strtotime($item->created_at)) }}</td>
+                                <td>
+                                    @if($item->nivel_acesso_usuario === 'ADMIN')
+                                    <span class="badge badge-admin">Admin</span>
                                     @else
-                                        {{-- Renderização dos dados estruturados da tbl_usuario --}}
-                                        <td style="font-weight: 600; padding: 15px 10px;">{{ $item->nome_usuario }}</td>
-                                        <td>{{ $item->email_usuario }}</td>
-                                        <td>{{ date('d/m/Y H:i', strtotime($item->created_at)) }}</td>
-                                        <td>
-                                            @if($item->nivel_acesso_usuario === 'ADMIN')
-                                                <span class="badge badge-admin">Admin</span>
-                                            @else
-                                                <span class="badge badge-funcionario">Funcionário</span>
-                                            @endif
-                                        </td>
+                                    <span class="badge badge-funcionario">Funcionário</span>
                                     @endif
-                                    
-                                </tr>
+                                </td>
+                                @endif
+
+                            </tr>
                             @empty
-                                <tr>
-                                    <td colspan="4" style="padding: 30px; text-align: center; color: #6b7280; font-weight: 500;">
-                                        Nenhum registro encontrado para esta seleção.
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td colspan="4" style="padding: 30px; text-align: center; color: #6b7280; font-weight: 500;">
+                                    Nenhum registro encontrado para esta seleção.
+                                </td>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -245,13 +268,13 @@
             const btnFecharMenu = document.getElementById("btn-fechar-menu");
             const sidebar = document.querySelector(".sidebar");
 
-            if(btnMenuMobile && sidebar) {
+            if (btnMenuMobile && sidebar) {
                 btnMenuMobile.addEventListener("click", () => {
                     sidebar.classList.add("aberta");
                 });
             }
 
-            if(btnFecharMenu && sidebar) {
+            if (btnFecharMenu && sidebar) {
                 btnFecharMenu.addEventListener("click", () => {
                     sidebar.classList.remove("aberta");
                 });
@@ -260,4 +283,5 @@
     </script>
 
 </body>
+
 </html>
