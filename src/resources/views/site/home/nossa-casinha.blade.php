@@ -13,7 +13,7 @@
                     <i class="ph-fill ph-map-pin-line"></i>
                 </div>
                 <div class="info-local">
-                    <h4>Venha nos visitar!</h4>
+                    <h4>Venha nos visitar!, </h4>
                     <p>Rua Exemplo das Flores, 123 - Centro<br>
                     Aberto de Segunda a Sábado: 09h às 21h</p>
                 </div>
