@@ -8,9 +8,7 @@ class Categoria extends Model
 {
    
 
-    // O Laravel já entende "created_at" e "updated_at" nativamente, 
-    // por isso basta deixar as timestamps ativas.
-    public $timestamps = true;
+      public $timestamps = true;
 
     protected $fillable = [
         'nome_categoria',
