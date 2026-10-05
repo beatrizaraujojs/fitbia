@@ -21,14 +21,18 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'guards' => [
-        // Guard padrão para os clientes do site
+   'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
 
-        // 🌟 NOVO: Guard exclusivo para o painel de Administração
+        // 🌟 NOVO: Guard de API usando o Sanctum para os clientes
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
+
         'admin' => [
             'driver' => 'session',
             'provider' => 'admins',

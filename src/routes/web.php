@@ -52,6 +52,9 @@ Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('site.carrin
 Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
 Route::delete('/carrinho/remover/{id}', [CarrinhoController::class, 'remover'])->name('carrinho.remover');
 
+// Coloca esta rota fora de qualquer grupo para ficar limpa em /api/documentacao
+Route::view('/api/documentacao', 'api.documentacao')->name('api.documentacao');
+
 // === ROTAS DO CARRINHO ===
 Route::get('/carrinho', [CarrinhoController::class, 'index'])->name('site.carrinho');
 Route::post('/carrinho/adicionar', [CarrinhoController::class, 'adicionar'])->name('carrinho.adicionar');
@@ -77,6 +80,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/painel', function () {
         return view('site.painel.index');
     })->name('site.painel');
+    
 
     // A rota que processa o salvamento do perfil
     Route::post('/painel/atualizar', [App\Http\Controllers\ClienteController::class, 'atualizarPerfil'])->name('cliente.atualizar');
@@ -106,6 +110,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [App\Http\Controllers\Admin\AuthController::class, 'mostrarLogin'])->name('login');
     Route::post('/login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login.post');
     Route::post('/logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
+
+
+    
 
     // 2. Rotas Protegidas do Admin (Só entra se estiver logado como Admin)
     Route::middleware('auth:admin')->group(function () {

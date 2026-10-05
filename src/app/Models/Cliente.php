@@ -5,10 +5,11 @@ namespace App\Models;
 // Mudamos de Model para Authenticatable para habilitar o Login nesta tabela
 use Illuminate\Foundation\Auth\User as Authenticatable; 
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // <--- 1. Importa o trait do Sanctum
 
 class Cliente extends Authenticatable
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable; // <--- 2. Adiciona o HasApiTokens aqui
 
     // Avisa o Laravel qual é a tabela real do banco
     protected $table = 'tbl_cliente';
@@ -25,6 +26,11 @@ class Cliente extends Authenticatable
         'cpf_cliente',
         'data_nascimento',
         'status_cliente'
+    ];
+
+    // Ocultar a senha ao retornar JSON
+    protected $hidden = [
+        'senha_cliente',
     ];
 
     // Avisa o Laravel que o campo de senha no seu banco tem um nome diferente
