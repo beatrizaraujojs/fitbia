@@ -34,6 +34,7 @@ class ClienteController extends Controller
             'whatsapp_cliente' => 'nullable|string|max:20',
             'cpf_cliente' => 'nullable|string|max:14|unique:tbl_cliente,cpf_cliente,' . $cliente->id_cliente . ',id_cliente',
             'data_nascimento' => 'nullable|date',
+            'foto_cliente' => 'nullable|string|max:255', // <--- Adicionado para suportar a foto
         ]);
 
         $cliente->update($dados);

@@ -22,6 +22,7 @@ class Cliente extends Authenticatable
         'nome_cliente',
         'email_cliente',
         'senha_cliente',
+        'foto_cliente',
         'whatsapp_cliente',
         'cpf_cliente',
         'data_nascimento',
