@@ -28,7 +28,7 @@
         <div class="info-box">
             <p><strong>Nome da API:</strong> FitBia Backend API</p>
             <p><strong>URL Base:</strong> <code>https://colegasdev.tipi5.smpsistema.br/bia/api/v1</code></p>
-            <p><strong>Versão:</strong> <code>v1</code>[cite: 3, 8]</p>
+            <p><strong>Versão:</strong> <code>v1</code></p>
             <p><strong>Descrição:</strong> Documentação oficial dos endpoints RESTful desenvolvidos para o sistema FitBia e integrados com o aplicativo mobile.</p>
         </div>
 
@@ -47,43 +47,43 @@
                     <td><code>/status</code></td>
                     <td><span class="badge get">GET</span></td>
                     <td><span class="auth-pub">Pública</span></td>
-                    <td>Verifica o estado de funcionamento da API[cite: 8].</td>
+                    <td>Verifica o estado de funcionamento da API.</td>
                 </tr>
                 <tr>
                     <td><code>/categorias</code></td>
                     <td><span class="badge get">GET</span></td>
                     <td><span class="auth-pub">Pública</span></td>
-                    <td>Lista todas as categorias de produtos disponíveis[cite: 8, 9].</td>
+                    <td>Lista todas as categorias de produtos disponíveis.</td>
                 </tr>
                 <tr>
                     <td><code>/categorias/{id}/produtos</code></td>
                     <td><span class="badge get">GET</span></td>
                     <td><span class="auth-pub">Pública</span></td>
-                    <td>Lista os produtos associados a uma categoria específica[cite: 8].</td>
+                    <td>Lista os produtos associados a uma categoria específica.</td>
                 </tr>
                 <tr>
                     <td><code>/produtos</code></td>
                     <td><span class="badge get">GET</span></td>
                     <td><span class="auth-pub">Pública</span></td>
-                    <td>Lista todos os produtos registados[cite: 8, 10].</td>
+                    <td>Lista todos os produtos registados.</td>
                 </tr>
                 <tr>
                     <td><code>/produtos/{slug}</code></td>
                     <td><span class="badge get">GET</span></td>
                     <td><span class="auth-pub">Pública</span></td>
-                    <td>Retorna os detalhes de um produto através do seu slug[cite: 8].</td>
+                    <td>Retorna os detalhes de um produto através do seu slug.</td>
                 </tr>
                 <tr>
                     <td><code>/auth/login</code></td>
                     <td><span class="badge post">POST</span></td>
                     <td><span class="auth-pub">Pública</span></td>
-                    <td>Autentica o cliente e gera o token de acesso (Sanctum).<br><strong>Parâmetros (JSON):</strong> <code>email_cliente</code>, <code>senha_cliente</code>[cite: 8].</td>
+                    <td>Autentica o cliente e gera o token de acesso (Sanctum).<br><strong>Parâmetros (JSON):</strong> <code>email_cliente</code>, <code>senha_cliente</code>.</td>
                 </tr>
                 <tr>
                     <td><code>/cliente</code></td>
                     <td><span class="badge get">GET</span></td>
                     <td><span class="auth-req">Autenticada</span></td>
-                    <td>Retorna os dados detalhados do cliente autenticado (incluindo foto de perfil).<br><strong>Headers:</strong> <code>Authorization: Bearer {token}</code>[cite: 3, 8].</td>
+                    <td>Retorna os dados detalhados do cliente autenticado (incluindo foto de perfil).<br><strong>Headers:</strong> <code>Authorization: Bearer {token}</code>.</td>
                 </tr>
             </tbody>
         </table>
