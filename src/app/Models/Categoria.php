@@ -13,13 +13,10 @@ class Categoria extends Model
 
     protected $fillable = [
         'nome_categoria',
-        'ordem_categoria',
-        'status_categoria',
+        'ordem_exibicao_categoria',
+        'ativa_categoria',
     ];
 
-    /**
-     * Relacionamento de uma categoria para muitos produtos.
-     */
     public function produtos()
     {
         return $this->hasMany(Produto::class, 'id_categoria_fk', 'id_categoria');
