@@ -29,4 +29,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/cliente', [ClienteController::class, 'show']);
     });
 
+    // Documentação da API (Acessível via navegador)
+    Route::get('/documentacao', function () {
+        return view('api.documentacao');
+    });
+
 });
