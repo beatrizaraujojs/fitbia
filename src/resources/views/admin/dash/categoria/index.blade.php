@@ -220,10 +220,8 @@
             document.getElementById('edit_ordem').value = ordem;
             document.getElementById('edit_status').value = status;
 
-            const modal = document.getElementById('modal-editar');
-            modal.style.display = 'flex';
-            modal.style.opacity = '1';
-            modal.style.visibility = 'visible';
+            // Exibe o modal centralizado usando flex
+            document.getElementById('modal-editar').style.display = 'flex';
         }
 
         document.addEventListener("DOMContentLoaded", () => {
