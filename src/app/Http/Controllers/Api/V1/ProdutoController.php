@@ -11,7 +11,6 @@ class ProdutoController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        // Traz também os grupos adicionais e os adicionais de cada grupo
         $query = Produto::with(['categoria', 'gruposAdicionais.adicionais'])
             ->where('status_produto', 'ATIVO')
             ->whereHas('categoria', function ($q) {
@@ -34,7 +33,6 @@ class ProdutoController extends Controller
 
     public function show(string $id): JsonResponse
     {
-        // Permite buscar por ID ou slug se preferires, trazido com os grupos e adicionais
         $produto = Produto::with(['categoria', 'gruposAdicionais.adicionais'])
             ->where('status_produto', 'ATIVO')
             ->whereHas('categoria', function ($query) {

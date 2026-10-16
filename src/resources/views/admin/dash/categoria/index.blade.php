@@ -33,7 +33,6 @@
                     <i class="ph ph-sign-out" style="font-size: 20px;"></i> Sair do Sistema
                 </a>
 
-                {{-- Formulário invisível de segurança do Laravel para fazer o Logout --}}
                 <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
@@ -47,11 +46,7 @@
                     <h1>Gerenciar Categorias</h1>
                 </div>
 
-
-                {{-- LADO DIREITO: Botão do Site + Perfil --}}
                 <div style="display: flex; align-items: center; gap: 20px;">
-
-                    {{-- O NOVO BOTÃO DE VOLTAR PRO SITE --}}
                     <a href="{{ route('home') }}" style="display: flex; align-items: center; gap: 8px; color: #4b5563; text-decoration: none; font-weight: 600; font-size: 14px; background: #f3f4f6; padding: 8px 15px; border-radius: 8px; transition: background 0.3s;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
                         <i class="ph ph-storefront" style="font-size: 18px;"></i>
                         Ver o Site
@@ -62,16 +57,23 @@
                         <i class="ph ph-user-circle"></i>
                     </div>
                 </div>
-
             </header>
 
-            <section class="content-area">
+            <section class="content-area" style="padding: 30px;">
 
-                {{-- MENSAGEM DE SUCESSO --}}
+                {{-- MENSAGEM DE SUCESSO (VERDE) --}}
                 @if(session('sucesso'))
-                <div style="background-color: #def7ec; color: #03543f; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid #31c48d;">
-                    <i class="ph ph-check-circle" style="vertical-align: middle; margin-right: 0.5rem; font-size: 1.25rem;"></i>
+                <div style="background-color: #def7ec; color: #03543f; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid #31c48d; display: flex; align-items: center;">
+                    <i class="ph ph-check-circle" style="margin-right: 0.5rem; font-size: 1.25rem;"></i>
                     {{ session('sucesso') }}
+                </div>
+                @endif
+
+                {{-- MENSAGEM DE ALERTA / DESATIVAÇÃO (VERMELHO) --}}
+                @if(session('alerta'))
+                <div style="background-color: #fde8e8; color: #9b1c1c; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-weight: 500; border: 1px solid #f8b4b4; display: flex; align-items: center;">
+                    <i class="ph ph-warning-circle" style="margin-right: 0.5rem; font-size: 1.25rem;"></i>
+                    {{ session('alerta') }}
                 </div>
                 @endif
 
@@ -105,7 +107,7 @@
                     </form>
                 </div>
 
-                <div class="admin-card mt-4">
+                <div class="admin-card mt-4" style="margin-top: 30px;">
                     <h2 class="card-title">Categorias Cadastradas</h2>
 
                     <div class="table-responsive">
@@ -146,7 +148,7 @@
                                             <i class="ph ph-pencil-simple"></i>
                                         </button>
 
-                                        {{-- Formulário de Desativar Categoria --}}
+                                        {{-- Botão Desativar Direto --}}
                                         <form action="{{ route('admin.categoria.destroy', $categoria->id_categoria) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja realmente desativar esta categoria?')">
                                             @csrf
                                             @method('DELETE')
@@ -166,9 +168,7 @@
         </main>
     </div>
 
-    {{-- ========================================== --}}
-    {{-- MODAL DE EDITAR CATEGORIA                  --}}
-    {{-- ========================================== --}}
+    {{-- MODAL DE EDITAR CATEGORIA --}}
     <div class="admin-modal-overlay" id="modal-editar" style="display: none;">
         <div class="admin-modal-box">
 
@@ -207,31 +207,24 @@
         </div>
     </div>
 
-    {{-- ========================================== --}}
-    {{-- SCRIPTS                                    --}}
-    {{-- ========================================== --}}
+    {{-- SCRIPTS --}}
     <script>
-        // Função para abrir o modal e preencher os dados
         function abrirModalEditarCategoria(botao) {
             let url = botao.getAttribute('data-url');
             let nome = botao.getAttribute('data-nome');
             let ordem = botao.getAttribute('data-ordem');
             let status = botao.getAttribute('data-status');
 
-            // Preenche o formulário
             document.getElementById('form-editar').action = url;
             document.getElementById('edit_nome_categoria').value = nome;
             document.getElementById('edit_ordem').value = ordem;
             document.getElementById('edit_status').value = status;
 
-            // Exibe o modal (pode mudar para 'flex' se ficar desalinhado)
             // Exibe o modal centralizado usando flex
             document.getElementById('modal-editar').style.display = 'flex';
         }
 
-        // Lógica geral da página (Menu e Fechar Modal)
         document.addEventListener("DOMContentLoaded", () => {
-            // -- Menu Mobile --
             const btnMenuMobile = document.getElementById("btn-menu-mobile");
             const btnFecharMenu = document.getElementById("btn-fechar-menu");
             const sidebar = document.querySelector(".sidebar");
@@ -243,20 +236,24 @@
                 btnFecharMenu.addEventListener("click", () => sidebar.classList.remove("aberta"));
             }
 
-            // -- Fechar Modal --
             const modalEditar = document.getElementById("modal-editar");
             const btnFecharEditar = document.getElementById("btn-fechar-editar");
 
-            if (btnFecharEditar) {
-                btnFecharEditar.addEventListener("click", () => {
+            function fecharModal() {
+                modalEditar.style.opacity = '0';
+                modalEditar.style.visibility = 'hidden';
+                setTimeout(() => {
                     modalEditar.style.display = 'none';
-                });
+                }, 300);
             }
 
-            // Fecha clicando fora da caixa do modal
+            if (btnFecharEditar) {
+                btnFecharEditar.addEventListener("click", fecharModal);
+            }
+
             window.addEventListener("click", (e) => {
                 if (e.target === modalEditar) {
-                    modalEditar.style.display = 'none';
+                    fecharModal();
                 }
             });
         });

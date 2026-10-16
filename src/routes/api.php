@@ -35,4 +35,9 @@ Route::prefix('v1')->group(function () {
         return view('api.documentacao');
     });
 
+    // Documentação da API (Acessível via navegador)
+    Route::get('/documentacao', function () {
+        return view('api.documentacao');
+    });
+
 });

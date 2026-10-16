@@ -3,21 +3,18 @@
 namespace App\Models;
 
 // Mudamos de Model para Authenticatable para habilitar o Login nesta tabela
-use Illuminate\Foundation\Auth\User as Authenticatable; 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; // <--- 1. Importa o trait do Sanctum
+use Laravel\Sanctum\HasApiTokens;
 
 class Cliente extends Authenticatable
 {
-    use HasApiTokens, Notifiable; // <--- 2. Adiciona o HasApiTokens aqui
+    use HasApiTokens, Notifiable;
 
-    // Avisa o Laravel qual é a tabela real do banco
     protected $table = 'tbl_cliente';
-    
-    // Avisa qual é a chave primária (já que não é o padrão 'id')
     protected $primaryKey = 'id_cliente';
+    public $timestamps = true;
 
-    // Os campos que podem ser preenchidos no cadastro
     protected $fillable = [
         'nome_cliente',
         'email_cliente',
@@ -26,12 +23,16 @@ class Cliente extends Authenticatable
         'whatsapp_cliente',
         'cpf_cliente',
         'data_nascimento',
-        'status_cliente'
+        'status_cliente',
     ];
 
     // Ocultar a senha ao retornar JSON
     protected $hidden = [
         'senha_cliente',
+    ];
+
+    protected $casts = [
+        'data_nascimento' => 'date',
     ];
 
     // Avisa o Laravel que o campo de senha no seu banco tem um nome diferente
