@@ -221,7 +221,9 @@
             document.getElementById('edit_status').value = status;
 
             // Exibe o modal centralizado usando flex
-            document.getElementById('modal-editar').style.display = 'flex';
+            let modal = document.getElementById('modal-editar');
+            modal.style.display = 'flex';
+            modal.classList.add('ativo');
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -236,24 +238,22 @@
                 btnFecharMenu.addEventListener("click", () => sidebar.classList.remove("aberta"));
             }
 
+            // -- Fechar Modal --
             const modalEditar = document.getElementById("modal-editar");
             const btnFecharEditar = document.getElementById("btn-fechar-editar");
 
-            function fecharModal() {
-                modalEditar.style.opacity = '0';
-                modalEditar.style.visibility = 'hidden';
-                setTimeout(() => {
-                    modalEditar.style.display = 'none';
-                }, 300);
-            }
-
             if (btnFecharEditar) {
-                btnFecharEditar.addEventListener("click", fecharModal);
+                btnFecharEditar.addEventListener("click", () => {
+                    modalEditar.style.display = 'none';
+                    modalEditar.classList.remove('ativo');
+                });
             }
 
+            // Fecha clicando fora da caixa do modal
             window.addEventListener("click", (e) => {
                 if (e.target === modalEditar) {
-                    fecharModal();
+                    modalEditar.style.display = 'none';
+                    modalEditar.classList.remove('ativo');
                 }
             });
         });
