@@ -27,6 +27,7 @@ Route::prefix('v1')->group(function () {
     // Rota protegida pelo Sanctum
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/cliente', [ClienteController::class, 'show']);
+        Route::put('/cliente', [ClienteController::class, 'update']);
     });
 
     // Documentação da API (Acessível via navegador)
