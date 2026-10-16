@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -13,11 +12,6 @@ class ClienteController extends Controller
     /**
      * Retorna os dados do cliente autenticado.
      */
-=======
-
-class ClienteController extends Controller
-{
->>>>>>> a757d20 (feat: atualizacoes na home e controller)
     public function show(Request $request)
     {
         return response()->json([
@@ -25,7 +19,6 @@ class ClienteController extends Controller
             'data' => $request->user()
         ]);
     }
-<<<<<<< HEAD
 
     /**
      * Atualiza os dados cadastrais do cliente autenticado (suporta PUT e PATCH).
@@ -83,6 +76,4 @@ class ClienteController extends Controller
             'message' => 'Senha atualizada com sucesso.'
         ]);
     }
-=======
->>>>>>> a757d20 (feat: atualizacoes na home e controller)
 }

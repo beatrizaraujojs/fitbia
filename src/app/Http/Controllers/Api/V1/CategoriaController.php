@@ -11,8 +11,8 @@ class CategoriaController extends Controller
 {
     public function index(): JsonResponse
     {
-        // Usa ativa_categoria para corresponder exatamente à sua base de dados
         $categorias = Categoria::where('ativa_categoria', 'ATIVO')
+            ->orderBy('ordem_exibicao_categoria')
             ->orderBy('nome_categoria')
             ->get();
 
@@ -24,7 +24,6 @@ class CategoriaController extends Controller
 
     public function produtos(int $id): JsonResponse
     {
-        // Garante que a categoria solicitada existe e está ATIVA
         $categoria = Categoria::where('id_categoria', $id)
             ->where('ativa_categoria', 'ATIVO')
             ->firstOrFail();
@@ -38,7 +37,7 @@ class CategoriaController extends Controller
             'success' => true,
             'data' => [
                 'categoria' => $categoria,
-                'produtos' => $produtos
+                'produtos'  => $produtos
             ]
         ]);
     }
