@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\StatusController;
 use App\Http\Controllers\Api\V1\CategoriaController;
 use App\Http\Controllers\Api\V1\ProdutoController;
 use App\Http\Controllers\Api\V1\ClienteController;
+use App\Http\Controllers\Api\V1\FavoritoController;
 use App\Http\Controllers\Api\V1\AuthController; // <--- Importa o AuthController
 
 Route::prefix('v1')->group(function () {
@@ -30,9 +31,9 @@ Route::prefix('v1')->group(function () {
         Route::put('/cliente', [ClienteController::class, 'update']);
     });
 
-    // Documentação da API (Acessível via navegador)
-    Route::get('/documentacao', function () {
-        return view('api.documentacao');
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/favoritos', [FavoritoController::class, 'index']);
+        Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle']);
     });
 
     // Documentação da API (Acessível via navegador)
@@ -40,4 +41,8 @@ Route::prefix('v1')->group(function () {
         return view('api.documentacao');
     });
 
+    // Documentação da API (Acessível via navegador)
+    Route::get('/documentacao', function () {
+        return view('api.documentacao');
+    });
 });

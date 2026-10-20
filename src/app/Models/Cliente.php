@@ -40,4 +40,10 @@ class Cliente extends Authenticatable
     {
         return $this->senha_cliente;
     }
+
+    // Informa ao Laravel qual é a coluna da chave primária
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'id_cliente';
+    // }
 }
