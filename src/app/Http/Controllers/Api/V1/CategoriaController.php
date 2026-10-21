@@ -12,6 +12,7 @@ class CategoriaController extends Controller
     public function index(): JsonResponse
     {
         $categorias = Categoria::where('ativa_categoria', 'ATIVO')
+            ->orderBy('ordem_exibicao_categoria')
             ->orderBy('nome_categoria')
             ->get();
 
@@ -36,7 +37,7 @@ class CategoriaController extends Controller
             'success' => true,
             'data' => [
                 'categoria' => $categoria,
-                'produtos' => $produtos
+                'produtos'  => $produtos
             ]
         ]);
     }
