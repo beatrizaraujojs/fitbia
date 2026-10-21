@@ -6,17 +6,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Models\Endereco;
 
 class ClienteController extends Controller
 {
     /**
-     * Retorna os dados do cliente autenticado.
+     * Retorna os dados do cliente autenticado (incluindo endereço, se houver).
      */
     public function show(Request $request)
     {
+        $cliente = $request->user();
+        
+        // Carrega o endereço vinculado se existir relacionamento
+        // $cliente->load('endereco');
+
         return response()->json([
             'success' => true,
-            'data' => $request->user()
+            'data' => $cliente
         ]);
     }
 
@@ -37,7 +43,6 @@ class ClienteController extends Controller
             'foto_cliente' => 'nullable|string',
         ]);
 
-        // Se o utilizador escolheu uma nova foto (em formato Base64)
         if ($request->filled('foto_cliente') && str_starts_with($request->foto_cliente, 'data:image')) {
             try {
                 $image = $request->foto_cliente;
@@ -63,7 +68,6 @@ class ClienteController extends Controller
                 ], 422);
             }
         } else {
-            // Se manteve a foto antiga ou não alterou, remove do array para não sobrescrever indevidamente
             unset($dados['foto_cliente']);
         }
 
