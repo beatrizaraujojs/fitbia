@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\ClienteController;
 use App\Http\Controllers\Api\V1\FavoritoController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EnderecoController; // <--- ADICIONE ESTA LINHA
+use App\Http\Controllers\Api\V1\CupomController;
 
 Route::prefix('v1')->group(function () {
 
@@ -18,6 +19,7 @@ Route::prefix('v1')->group(function () {
     Route::get('/produtos', [ProdutoController::class, 'index']);
     Route::get('/produtos/{slug}', [ProdutoController::class, 'show']);
     Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/cupons/validar', [CupomController::class, 'validarCupom']);
 
     // Rotas do Cliente e Endereços protegidas pelo Sanctum
     Route::middleware('auth:sanctum')->group(function () {
