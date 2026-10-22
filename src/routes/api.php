@@ -8,8 +8,9 @@ use App\Http\Controllers\Api\V1\ProdutoController;
 use App\Http\Controllers\Api\V1\ClienteController;
 use App\Http\Controllers\Api\V1\FavoritoController;
 use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Controllers\Api\V1\EnderecoController; // <--- ADICIONE ESTA LINHA
+use App\Http\Controllers\Api\V1\EnderecoController;
 use App\Http\Controllers\Api\V1\CupomController;
+use App\Http\Controllers\Api\V1\PedidoController; // <--- ADICIONE ESTA LINHA
 
 Route::prefix('v1')->group(function () {
 
@@ -21,17 +22,21 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login']);
     Route::post('/cupons/validar', [CupomController::class, 'validarCupom']);
 
-    // Rotas do Cliente e Endereços protegidas pelo Sanctum
+    // Rotas protegidas pelo Sanctum
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/cliente', [ClienteController::class, 'show']);
         Route::put('/cliente', [ClienteController::class, 'update']);
         Route::put('/cliente/senha', [ClienteController::class, 'updateSenha']);
 
-        // ROTAS DE ENDEREÇO (ADICIONE ESTAS 4 LINHAS):
+        // Rotas de Endereço
         Route::get('/enderecos', [EnderecoController::class, 'index']);
         Route::post('/enderecos', [EnderecoController::class, 'store']);
         Route::put('/enderecos/{id}', [EnderecoController::class, 'update']);
         Route::delete('/enderecos/{id}', [EnderecoController::class, 'destroy']);
+
+        // ROTAS DE PEDIDOS (ADICIONE ESTAS LINHAS):
+        Route::get('/pedidos', [PedidoController::class, 'index']); // Lista os pedidos do cliente
+        Route::post('/pedidos', [PedidoController::class, 'store']); // Salva o novo pedido do checkout
     });
 
     Route::middleware('auth:sanctum')->group(function () {
