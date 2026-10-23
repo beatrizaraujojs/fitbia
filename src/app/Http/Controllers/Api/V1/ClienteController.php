@@ -10,25 +10,19 @@ use App\Models\Endereco;
 
 class ClienteController extends Controller
 {
-    /**
-     * Retorna os dados do cliente autenticado (incluindo endereço, se houver).
-     */
+    
     public function show(Request $request)
     {
         $cliente = $request->user();
         
-        // Carrega o endereço vinculado se existir relacionamento
-        // $cliente->load('endereco');
-
+        
         return response()->json([
             'success' => true,
             'data' => $cliente
         ]);
     }
 
-    /**
-     * Atualiza os dados cadastrais do cliente autenticado.
-     */
+    
     public function update(Request $request)
     {
         /** @var \App\Models\Cliente $cliente */

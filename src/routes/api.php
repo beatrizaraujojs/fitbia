@@ -10,35 +10,39 @@ use App\Http\Controllers\Api\V1\FavoritoController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EnderecoController;
 use App\Http\Controllers\Api\V1\CupomController;
-use App\Http\Controllers\Api\V1\PedidoController; // <--- ADICIONE ESTA LINHA
+use App\Http\Controllers\Api\V1\PedidoController;
 
 Route::prefix('v1')->group(function () {
 
+    // Rotas Públicas (sem autenticação)
     Route::get('/status', [StatusController::class, 'index']);
     Route::get('/categorias', [CategoriaController::class, 'index']);
     Route::get('/categorias/{id}/produtos', [CategoriaController::class, 'produtos']);
     Route::get('/produtos', [ProdutoController::class, 'index']);
     Route::get('/produtos/{slug}', [ProdutoController::class, 'show']);
     Route::post('/auth/login', [AuthController::class, 'login']);
+    Route::post('/auth/register', [AuthController::class, 'register']); 
     Route::post('/cupons/validar', [CupomController::class, 'validarCupom']);
 
-    // Rotas protegidas pelo Sanctum
+    // Rotas protegidas pelo Sanctum (exigem token de autenticação)
     Route::middleware('auth:sanctum')->group(function () {
+        // Dados do Cliente
         Route::get('/cliente', [ClienteController::class, 'show']);
         Route::put('/cliente', [ClienteController::class, 'update']);
         Route::put('/cliente/senha', [ClienteController::class, 'updateSenha']);
 
-        // Rotas de Endereço
+        // Endereços
         Route::get('/enderecos', [EnderecoController::class, 'index']);
         Route::post('/enderecos', [EnderecoController::class, 'store']);
         Route::put('/enderecos/{id}', [EnderecoController::class, 'update']);
         Route::delete('/enderecos/{id}', [EnderecoController::class, 'destroy']);
 
-        // ROTAS DE PEDIDOS (ADICIONE ESTAS LINHAS):
-        Route::get('/pedidos', [PedidoController::class, 'index']); // Lista os pedidos do cliente
-        Route::post('/pedidos', [PedidoController::class, 'store']); // Salva o novo pedido do checkout
+        // Pedidos (Checkout e Listagem em Andamento)
+        Route::get('/pedidos', [PedidoController::class, 'index']);
+        Route::post('/pedidos', [PedidoController::class, 'store']);
     });
 
+    // Favoritos
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/favoritos', [FavoritoController::class, 'index']);
         Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle']);
