@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\ProdutoController;
 use App\Http\Controllers\Api\V1\ClienteController;
 use App\Http\Controllers\Api\V1\FavoritoController;
 use App\Http\Controllers\Api\V1\AuthController; // <--- Importa o AuthController
+use App\Http\Controllers\Api\V1\EnderecoController;
 
 Route::prefix('v1')->group(function () {
 
@@ -34,6 +35,12 @@ Route::prefix('v1')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/favoritos', [FavoritoController::class, 'index']);
         Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle']);
+
+
+        Route::get('/enderecos', [EnderecoController::class, 'index']);
+        Route::post('/enderecos', [EnderecoController::class, 'store']);
+        Route::put('/enderecos/{id}', [EnderecoController::class, 'update']);
+        Route::delete('/enderecos/{id}', [EnderecoController::class, 'destroy']);
     });
 
     // Documentação da API (Acessível via navegador)
