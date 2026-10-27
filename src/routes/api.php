@@ -31,7 +31,7 @@ Route::prefix('v1')->group(function () {
         Route::put('/cliente', [ClienteController::class, 'update']);
         Route::put('/cliente/senha', [ClienteController::class, 'updateSenha']);
 
-        // Endereços
+        // ROTAS DE ENDEREÇO
         Route::get('/enderecos', [EnderecoController::class, 'index']);
         Route::post('/enderecos', [EnderecoController::class, 'store']);
         Route::put('/enderecos/{id}', [EnderecoController::class, 'update']);
@@ -42,7 +42,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/pedidos', [PedidoController::class, 'store']);
     });
 
-    // Favoritos
+    // ROTAS FAVORITOS
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/favoritos', [FavoritoController::class, 'index']);
         Route::post('/favoritos/toggle', [FavoritoController::class, 'toggle']);
