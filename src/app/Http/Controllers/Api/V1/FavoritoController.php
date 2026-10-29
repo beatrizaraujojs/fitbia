@@ -35,7 +35,9 @@ class FavoritoController extends Controller
                 'id' => $prod->id_produto,
                 'titulo' => $prod->nome_produto ?? '',
                 'descricao' => $prod->descricao_produto ?? '',
-                'id_categoria' => $prod->id_categoria ?? $prod->categoria_id ?? $prod->categoria?->id_categoria,
+                // Adicionado o preço base do produto que vem da tabela tbl_produto
+                'preco_base_produto' => $prod->preco_base_produto ?? 0, 
+                'id_categoria' => $prod->id_categoria_fk ?? $prod->id_categoria ?? $prod->categoria?->id_categoria,
                 'categoria' => $prod->categoria->nome_categoria ?? '',
                 'imagem' => $prod->foto_produto ? "http://localhost:8081/fitbia/images/produto/" . $prod->foto_produto : null,
             ];

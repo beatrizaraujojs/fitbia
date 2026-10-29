@@ -11,10 +11,12 @@ class Endereco extends Model
 
     protected $table = 'tbl_endereco';
     protected $primaryKey = 'id_endereco';
-    public $timestamps = true; 
+
+    public $timestamps = true;
+
     protected $fillable = [
         'id_cliente_fk',
-        'nome_endereco',             
+        'nome_endereco',
         'cep_endereco',
         'rua_endereco',
         'numero_endereco',
@@ -26,6 +28,10 @@ class Endereco extends Model
 
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'id_cliente_fk', 'id_cliente');
+        return $this->belongsTo(
+            Cliente::class,
+            'id_cliente_fk',
+            'id_cliente'
+        );
     }
 }
