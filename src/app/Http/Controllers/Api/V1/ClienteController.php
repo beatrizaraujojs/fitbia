@@ -6,23 +6,23 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Models\Endereco;
 
 class ClienteController extends Controller
 {
-    /**
-     * Retorna os dados do cliente autenticado.
-     */
+    
     public function show(Request $request)
     {
+        $cliente = $request->user();
+        
+        
         return response()->json([
             'success' => true,
-            'data' => $request->user()
+            'data' => $cliente
         ]);
     }
 
-    /**
-     * Atualiza os dados cadastrais do cliente autenticado.
-     */
+    
     public function update(Request $request)
     {
         /** @var \App\Models\Cliente $cliente */
@@ -37,7 +37,6 @@ class ClienteController extends Controller
             'foto_cliente' => 'nullable|string',
         ]);
 
-        // Se o utilizador escolheu uma nova foto (em formato Base64)
         if ($request->filled('foto_cliente') && str_starts_with($request->foto_cliente, 'data:image')) {
             try {
                 $image = $request->foto_cliente;
@@ -63,7 +62,6 @@ class ClienteController extends Controller
                 ], 422);
             }
         } else {
-            // Se manteve a foto antiga ou não alterou, remove do array para não sobrescrever indevidamente
             unset($dados['foto_cliente']);
         }
 

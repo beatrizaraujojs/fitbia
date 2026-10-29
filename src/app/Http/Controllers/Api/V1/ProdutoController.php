@@ -4,48 +4,47 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Produto;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProdutoController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function index()
     {
-        $query = Produto::with(['categoria', 'gruposAdicionais.adicionais'])
-            ->where('status_produto', 'ATIVO')
-            ->whereHas('categoria', function ($q) {
-                $q->where('ativa_categoria', 'ATIVO');
-            });
+        try {
+            // Busca os produtos aceitando variações de status ativo
+            $produtos = Produto::with(['categoria', 'gruposAdicionais'])
+                ->whereIn('status_produto', ['ATIVO', 'Ativo', 'ativo'])
+                ->get();
 
-        $categoriaId = $request->input('categoria_id') ?? $request->input('cat');
-        
-        if ($categoriaId && $categoriaId !== 'Todos') {
-            $query->where('id_categoria_fk', $categoriaId);
+            return response()->json([
+                'success' => true,
+                'data' => $produtos
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao carregar produtos',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $produtos = $query->orderBy('nome_produto')->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $produtos
-        ]);
     }
 
-    public function show(string $id): JsonResponse
+    public function show($slug)
     {
-        $produto = Produto::with(['categoria', 'gruposAdicionais.adicionais'])
-            ->where('status_produto', 'ATIVO')
-            ->whereHas('categoria', function ($query) {
-                $query->where('ativa_categoria', 'ATIVO');
-            })
-            ->where(function($q) use ($id) {
-                $q->where('id_produto', $id)->orWhere('slug_produto', $id);
-            })
-            ->firstOrFail();
+        $produto = Produto::with(['categoria', 'gruposAdicionais'])
+            ->where('slug_produto', $slug)
+            ->first();
+
+        if (!$produto) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produto não encontrado'
+            ], 404);
+        }
 
         return response()->json([
             'success' => true,
             'data' => $produto
-        ]);
+        ], 200);
     }
 }

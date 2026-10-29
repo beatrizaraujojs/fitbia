@@ -157,5 +157,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/pedidos/salvar', [App\Http\Controllers\Admin\PedidoController::class, 'store'])->name('pedidos.store');
         // Dentro do grupo admin, mude o final para apenas 'pedidos.pdf'
         Route::get('/pedidos/{id}/pdf', [PedidoController::class, 'gerarPdf'])->name('pedidos.pdf');
+
+        // Rotas para a criação dos cupons
+        Route::get('/cupons', [App\Http\Controllers\Admin\CupomController::class, 'index'])->name('cupons.index');
+        Route::post('/cupons', [App\Http\Controllers\Admin\CupomController::class, 'store'])->name('cupons.store');
+        Route::patch('/cupons/{id}/status', [App\Http\Controllers\Admin\CupomController::class, 'toggleStatus'])->name('cupons.status');
+        Route::put('/cupons/{id}', [App\Http\Controllers\Admin\CupomController::class, 'update'])->name('cupons.update');
+        Route::delete('/cupons/{id}', [App\Http\Controllers\Admin\CupomController::class, 'destroy'])->name('cupons.destroy');
     });
 });
