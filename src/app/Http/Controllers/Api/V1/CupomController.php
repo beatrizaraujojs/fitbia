@@ -14,10 +14,13 @@ class CupomController extends Controller
             'codigo' => 'required|string'
         ]);
 
-        // Procura pelo código ignorando maiúsculas/minúsculas e verifica se está ATIVO
-        $cupom = Cupom::where('codigo_cupom', trim($request->codigo))
-                      ->where('status_cupom', 'ATIVO')
-                      ->first();
+        // Limpa e padroniza para minúsculas para comparar com segurança no banco
+        $codigoInput = strtolower(trim($request->codigo));
+
+        // Procura ignorando diferenças de maiúsculas/minúsculas e valida se está ATIVO
+        $cupom = Cupom::whereRaw('LOWER(codigo_cupom) = ?', [$codigoInput])
+                    ->where('status_cupom', 'ATIVO')
+                    ->first();
 
         if (!$cupom) {
             return response()->json([
@@ -31,7 +34,7 @@ class CupomController extends Controller
             'message' => 'Cupom aplicado com sucesso!',
             'data' => [
                 'codigo' => $cupom->codigo_cupom,
-                'desconto' => $cupom->porcentagem_desconto // ex: 5.00 (%)
+                'desconto' => floatval($cupom->porcentagem_desconto)
             ]
         ], 200);
     }
