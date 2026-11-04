@@ -52,20 +52,18 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-       
         $request->validate([
-            'name' => 'required|string|max:100',
+            'nome_cliente' => 'required|string|max:100',
             'email_cliente' => 'required|email|max:100|unique:tbl_cliente,email_cliente',
-            'telefone' => 'nullable|string|max:20',
-            'password' => 'required|string|min:6',
+            'whatsapp_cliente' => 'nullable|string|max:20',
+            'senha_cliente' => 'required|string|min:6',
         ]);
 
-      
         $cliente = Cliente::create([
-            'nome_cliente' => $request->name,
+            'nome_cliente' => $request->nome_cliente,
             'email_cliente' => $request->email_cliente,
-            'whatsapp_cliente' => $request->telefone,
-            'senha_cliente' => Hash::make($request->password),
+            'whatsapp_cliente' => $request->whatsapp_cliente,
+            'senha_cliente' => Hash::make($request->senha_cliente),
             'status_cliente' => 'ATIVO',
         ]);
 

@@ -12,7 +12,10 @@ class ProdutoController extends Controller
     {
         try {
             // Busca os produtos aceitando variações de status ativo
-            $produtos = Produto::with(['categoria', 'gruposAdicionais'])
+            // $produtos = Produto::with(['categoria', 'gruposAdicionais'])
+            //     ->whereIn('status_produto', ['ATIVO', 'Ativo', 'ativo'])
+            //     ->get();   
+            $produtos = Produto::with(['categoria', 'gruposAdicionais.adicionais'])
                 ->whereIn('status_produto', ['ATIVO', 'Ativo', 'ativo'])
                 ->get();
 
@@ -31,9 +34,12 @@ class ProdutoController extends Controller
 
     public function show($slug)
     {
-        $produto = Produto::with(['categoria', 'gruposAdicionais'])
-            ->where('slug_produto', $slug)
-            ->first();
+        // $produto = Produto::with(['categoria', 'gruposAdicionais'])
+        //     ->where('slug_produto', $slug)
+        //     ->first();
+        $produto = Produto::with(['categoria', 'gruposAdicionais.adicionais'])
+       ->where('slug_produto', $slug)
+       ->first();
 
         if (!$produto) {
             return response()->json([
