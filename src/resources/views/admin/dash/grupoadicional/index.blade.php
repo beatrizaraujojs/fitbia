@@ -10,6 +10,7 @@
 </head>
 
 <body>
+    di
 
     <div class="dash-container">
         @include('admin.dash.partials.side-bar')
