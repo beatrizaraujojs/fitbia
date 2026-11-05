@@ -6,23 +6,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use App\Models\Endereco;
+use App\Models\Cliente;
 
 class ClienteController extends Controller
 {
-    
+    // Buscar dados do cliente
     public function show(Request $request)
     {
         $cliente = $request->user();
-        
-        
+
         return response()->json([
             'success' => true,
             'data' => $cliente
         ]);
     }
 
-    
+    // Atualizar perfil e foto
     public function update(Request $request)
     {
         /** @var \App\Models\Cliente $cliente */
@@ -30,42 +29,56 @@ class ClienteController extends Controller
 
         $dados = $request->validate([
             'nome_cliente' => 'required|string|max:100',
-            'email_cliente' => 'required|email|max:100|unique:tbl_cliente,email_cliente,' . $cliente->id_cliente . ',id_cliente',
+
+            'email_cliente' =>
+                'required|email|max:100|unique:tbl_cliente,email_cliente,'
+                . $cliente->id_cliente . ',id_cliente',
+
             'whatsapp_cliente' => 'nullable|string|max:20',
-            'cpf_cliente' => 'nullable|string|max:14|unique:tbl_cliente,cpf_cliente,' . $cliente->id_cliente . ',id_cliente',
+
+            'cpf_cliente' =>
+                'nullable|string|max:14|unique:tbl_cliente,cpf_cliente,'
+                . $cliente->id_cliente . ',id_cliente',
+
             'data_nascimento' => 'nullable|date',
-            'foto_cliente' => 'nullable|string',
+
+            // Agora recebe arquivo de imagem
+            'foto_cliente' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
-        if ($request->filled('foto_cliente') && str_starts_with($request->foto_cliente, 'data:image')) {
-            try {
-                $image = $request->foto_cliente;
-                
-                list($type, $image) = explode(';', $image);
-                list(, $image)      = explode(',', $image);
-                
-                $extension = explode('/', $type)[1] ?? 'jpg';
-                $imageName = 'cliente_' . $cliente->id_cliente . '_' . time() . '.' . $extension;
-                
-                $destinationPath = public_path('clientes');
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
-                
-                file_put_contents($destinationPath . '/' . $imageName, base64_decode($image));
-                
-                $dados['foto_cliente'] = $imageName;
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Erro ao processar a imagem: ' . $e->getMessage()
-                ], 422);
+        // Processar upload da foto
+        if ($request->hasFile('foto_cliente')) {
+
+            $foto = $request->file('foto_cliente');
+
+            $nomeFoto = 'cliente_'
+                . $cliente->id_cliente
+                . '_'
+                . time()
+                . '.'
+                . $foto->extension();
+
+            $destino = public_path('clientes');
+
+            // Criar pasta caso não exista
+            if (!is_dir($destino)) {
+                mkdir($destino, 0755, true);
             }
+
+            // Salvar imagem na pasta public/clientes
+            $foto->move($destino, $nomeFoto);
+
+            // Salvar nome da foto no banco
+            $dados['foto_cliente'] = $nomeFoto;
         } else {
+            // Preservar foto atual
             unset($dados['foto_cliente']);
         }
 
+        // Atualizar dados do cliente
         $cliente->update($dados);
+
+        $cliente->refresh();
 
         return response()->json([
             'success' => true,
@@ -74,9 +87,7 @@ class ClienteController extends Controller
         ]);
     }
 
-    /**
-     * Atualiza a senha do cliente autenticado.
-     */
+    // Atualizar senha do cliente
     public function updateSenha(Request $request)
     {
         /** @var \App\Models\Cliente $cliente */
@@ -87,14 +98,21 @@ class ClienteController extends Controller
             'nova_senha' => 'required|string|min:6|confirmed',
         ]);
 
-        if (!Hash::check($request->senha_atual, $cliente->senha_cliente)) {
+        if (!Hash::check(
+            $request->senha_atual,
+            $cliente->senha_cliente
+        )) {
             throw ValidationException::withMessages([
-                'senha_atual' => ['A senha atual está incorreta.'],
+                'senha_atual' => [
+                    'A senha atual está incorreta.'
+                ],
             ]);
         }
 
         $cliente->update([
-            'senha_cliente' => Hash::make($request->nova_senha)
+            'senha_cliente' => Hash::make(
+                $request->nova_senha
+            )
         ]);
 
         return response()->json([
